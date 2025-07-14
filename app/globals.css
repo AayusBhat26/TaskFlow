@@ -1,0 +1,173 @@
+/* Auth Component Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(1deg); }
+  66% { transform: translateY(5px) rotate(-1deg); }
+}
+
+@keyframes slideInFromTop {
+  0% { 
+    opacity: 0; 
+    transform: translateY(-20px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes scaleIn {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.95); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+/* Square animation enhancements */
+@keyframes squareFloat {
+  0%, 100% { 
+    transform: translateY(0px) rotateZ(0deg); 
+    opacity: 0.6;
+  }
+  25% { 
+    transform: translateY(-8px) rotateZ(2deg); 
+    opacity: 0.8;
+  }
+  50% { 
+    transform: translateY(-15px) rotateZ(0deg); 
+    opacity: 1;
+  }
+  75% { 
+    transform: translateY(-8px) rotateZ(-2deg); 
+    opacity: 0.8;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-slide-in {
+  animation: slideInFromTop 0.5s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.animate-square-float {
+  animation: squareFloat 8s ease-in-out infinite;
+}
+
+/* Grid background pattern */
+.bg-grid-small-black\/\[0\.02\] {
+  background-image: 
+    linear-gradient(to right, rgba(0,0,0,0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.dark .bg-grid-small-white\/\[0\.02\] {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Square Background Pattern */
+.bg-square-pattern {
+  background-image: 
+    linear-gradient(90deg, rgba(var(--primary-rgb), 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(var(--primary-rgb), 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--accent-rgb), 0.02) 1px, transparent 1px),
+    linear-gradient(rgba(var(--accent-rgb), 0.02) 1px, transparent 1px);
+  background-size: 30px 30px, 30px 30px, 10px 10px, 10px 10px;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--primary-rgb), 0.3) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(var(--primary-rgb), 0.3);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--primary-rgb), 0.5);
+}
+
+/* CSS Variables for RGB values */
+:root {
+  --primary-rgb: 59, 130, 246;
+  --accent-rgb: 168, 85, 247;
+}
+
+.dark {
+  --primary-rgb: 96, 165, 250;
+  --accent-rgb: 196, 181, 253;
+}
+
+/* Update theme-specific square patterns */
+.light .bg-square-pattern {
+  background-image: 
+    linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(168, 85, 247, 0.03) 1px, transparent 1px);
+}
+
+.dark .bg-square-pattern {
+  background-image: 
+    linear-gradient(90deg, rgba(96, 165, 250, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(96, 165, 250, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(196, 181, 253, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(196, 181, 253, 0.04) 1px, transparent 1px);
+}
+
+.ocean .bg-square-pattern {
+  background-image: 
+    linear-gradient(90deg, rgba(34, 197, 199, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(34, 197, 199, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+}
+
+.forest .bg-square-pattern {
+  background-image: 
+    linear-gradient(90deg, rgba(34, 197, 94, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(34, 197, 94, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(101, 163, 13, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(101, 163, 13, 0.03) 1px, transparent 1px);
+}
+
+.sunset .bg-square-pattern {
+  background-image: 
+    linear-gradient(90deg, rgba(249, 115, 22, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(249, 115, 22, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(251, 191, 36, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(251, 191, 36, 0.03) 1px, transparent 1px);
+}
+
+.midnight .bg-square-pattern {
+  background-image: 
+    linear-gradient(90deg, rgba(139, 92, 246, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(139, 92, 246, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(168, 85, 247, 0.04) 1px, transparent 1px);
+}

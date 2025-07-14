@@ -1,0 +1,18 @@
+version: "3.5"
+name: "taskflow-services"
+services:
+  db:
+    image: "postgres"
+    restart: always
+    container_name: taskflow-db
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "taskflow"
+      POSTGRES_PASSWORD: password
+    volumes:
+      - database-data:/var/lib/postgresql-data/
+    ports:
+      - 8010:5432
+
+volumes:
+  database-data:

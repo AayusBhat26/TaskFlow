@@ -1,0 +1,410 @@
+{
+  "Index": {
+    "title": "Hello world!"
+  },
+  "AUTH": {
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "USERNAME": "Username",
+    "SIGN_IN": {
+      "TITLE": "Sign in Telugu",
+      "DESC": "Welcome back to ....",
+      "SUBMIT_BTN": "Sign in",
+      "FORGOT_PASSWORD": "Forgot password?",
+      "DONT_HAVE_ACCOUNT": {
+        "FIRST": "Don't have an account?",
+        "SECOND": "Sign up"
+      },
+      "PROVIDERS": {
+        "GOOGLE": "Sign in with Google",
+        "APPLE": "Sign in with Apple",
+        "GITHUB": "Sign in with Github"
+      }
+    },
+    "SIGN_UP": {
+      "TITLE": "Sign up",
+      "DESC": "Create your account",
+      "SUBMIT_BTN": "Sign up",
+      "FORGOT_PASSWORD": "Forgot password?",
+      "HAVE_ACCOUNT": {
+        "FIRST": "Already have an account?",
+        "SECOND": "Sign in"
+      },
+      "TERMS": {
+        "FIRST": "By signing up you agree to our",
+        "SECOND": "Terms of Service"
+      },
+      "PROVIDERS": {
+        "GOOGLE": "Sign up with Google",
+        "APPLE": "Sign up with Apple",
+        "GITHUB": "Sign up with Github"
+      }
+    },
+    "NEW_WORKSPACE": {
+      "INPUTS": {
+        "NAME": "Workspace name",
+        "FILE": "Workspace icon (optional)"
+      },
+      "PLACEHOLDERS": {
+        "NAME": "eg. OpenStudio"
+      },
+      "IMAGE": "Only .jpeg, .jpg, .png, .webp, .gif types are supported",
+      "BTN_ADD": "Create",
+      "BTN_PENDING": "Creating. Please wait"
+    }
+  },
+  "CHANGE_PROFILE_IMAGE": {
+    "TITLE": "Send a photo!",
+    "BUTTON": "Choose a photo"
+  },
+  "ONBOARDING_FORM": {
+    "FIRST_STEP": {
+      "TITLE": {
+        "FIRST": "Let's prepare you",
+        "SECOND": "ready"
+      },
+      "PHOTO": "Add photo",
+      "INPUTS": {
+        "NAME": "First name",
+        "SURNAME": "Surname"
+      },
+      "PLACEHOLDER": {
+        "NAME": "Vineeth",
+        "SURNAME": "Reddy"
+      }
+    },
+    "SECOND_STEP": {
+      "TITLE": "How will you use",
+      "INFO": "We use this information to personalize your experience",
+      "WORK": "For work",
+      "STUDY": "For study",
+      "PERSONAL": "For personal use"
+    },
+    "THIRD_STEP": {
+      "TITLE": "Create a workspace",
+      "INPUTS": {
+        "NAME": "Workspace name",
+        "FILE": "Workspace icon (optional)"
+      },
+      "PLACEHOLDERS": {
+        "NAME": "eg. Open Studio"
+      },
+      "IMAGE": "Only .jpeg, .jpg, .png, .webp, .gif types are supported"
+    },
+    "FINISH": {
+      "TITLE": "That's it!",
+      "DESC_FIRST": "You can already start using",
+      "DESC_SECOND": "by clicking the button below"
+    },
+    "START_BTN": "Start",
+    "NEXT_BTN": "Continue"
+  },
+  "UPLOAD_FILE": {
+    "UPLOAD": "Upload"
+  },
+  "INVITE": {
+    "INVITE": "Invite",
+    "TITLE": "Invite to",
+    "DESC": "Copy the invitation link and send it to the people you want to invite to this workspace. You can set up roles and generate a new link."
+  },
+  "MESSAGES": {
+    "ERRORS": {
+      "DEFAULT": "Oh no..Something went wrong. Please try again",
+      "TAKEN_USERNAME": "This username is already taken",
+      "TAKEN_EMAIL": "This email is already in use...",
+      "DB_ERROR": "We are currently having problems. Please try again later",
+      "WRONG_DATA": "The data you provided is incorrect. Please provide the correct ones.",
+      "NO_USER": "User was not found. Please enter a valid email",
+      "WRONG_PASSWORD": "The entered password is incorrect. Please enter the correct one.",
+      "WORKSPACE_ICON_ADDED": "Failed to add workspace icon. Please try again",
+      "NO_USER_API": "User not Found",
+      "UNAUTHORIZED": "Unauthorized. Please sign in!",
+      "TOO_MANY_WORKSPACES": "The limit on the number of workspaces that can be created has been reached"
+    },
+    "SUCCESS": {
+      "SIGN_UP": "Account was created!",
+      "SIGN_IN": "You have been logged in!",
+      "IMAGE_PROFILE_UPDATE": "Your profile image has been updated!",
+      "IMAGE_PROFILE_DELETE": "Your profile image has been deleted!",
+      "ONBOARDING_COMPLETE": "Welcome to TaskFlow!",
+      "PASSWORD_CHANGED": "Password has been changed!",
+      "NEW_WORKSPACE": "The workspace has been created!"
+    },
+    "PENDING": {
+      "LOADING": "Please wait"
+    },
+    "SCHEMA": {
+      "PASSWORD": {
+        "MIN": "Password must have at least 6 characters",
+        "UPPERCASE": "Password must contain at least one uppercase letter",
+        "LOWERCASE": "Password must contain at least one lowercase letter",
+        "DIGIT": "Password must contain at least one digit"
+      },
+      "EMAIL": "Please enter a valid email",
+      "USERNAME": {
+        "SHORT": "Username is too short",
+        "SPECIAL_CHARS": "Username must only contain letters and digits"
+      },
+      "IMAGE": {
+        "MAX": "Max image size is 5MB",
+        "SUPPORTED": "Only .jpeg, .jpg, .png, .webp, .gif types are supported"
+      },
+      "WORKSPACE": {
+        "SHORT": "Workspace name is too short",
+        "SPECIAL_CHARS": "Workspace name must only contain letters and digits"
+      },
+      "LANGUAGE": "Please select a language",
+      "CHOOSE_ONE": "Please select one of the options"
+    }
+  },
+  "SIDEBAR": {
+    "MAIN": {
+      "HOME_HOVER": "Home",
+      "LOG_OUT_HOVER": "Log out",
+      "SETTINGS_HOVER": "Settings",
+      "NEW_WORKSPACE_HOVER": "New Workspace",
+      "NEW_WORKSPACE_DIALOG_TITLE": "Create new workspace",
+      "NEW_WORKSPACE_DIALOG_DESC": "some text"
+    },
+    "SETTINGS": {
+      "GENERAL": "General",
+      "ACCOUNT": "Account",
+      "SECURITY": "Security",
+      "THEME": "Theme",
+      "WORKSPACE": "Workspace"
+    },
+    "WORKSPACE_OPTIONS": {
+      "SHORTCUTS": "Shortcuts",
+      "TASKS": "Tasks",
+      "MIND_MAPS": "Mind maps",
+      "SCHEDULES": "Schedules",
+      "STUDY": "Study",
+      "FILES": "Files"
+    }
+  },
+  "SETTINGS": {
+    "ACCOUNT": {
+      "TITLE": "Account",
+      "DESC": "Manage your TaskFlow account. All changes to your account will be applied to all workspaces.",
+      "IMAGE": "PROFILE IMAGE",
+      "USERNAME": "USERNAME",
+      "FIRST_NAME": "FIRST NAME (OPTIONAL)",
+      "SURNAME": "SURNAME (OPTIONAL)",
+      "USERNAME_PLACEHOLDER": "Username",
+      "FIRST_NAME_PLACEHOLDER": "First name",
+      "SURNAME_PLACEHOLDER": "Surname",
+      "LANG": "LANGUAGE",
+      "SEARCH_LANGUAGE": "Search language...",
+      "SELECT_LANGUAGE": "Select language",
+      "UPDATE_BTN": "Update",
+      "DELETE_TITLE": "Delete account",
+      "DELETE_DESC": "Once the account and data are deleted, there is no way to recover them.",
+      "DELETE_LABEL": "DELETE MY ACCOUNT AND DATA",
+      "DELETE_PLACEHOLDER": "Confirm your email",
+      "DELETE_BTN": "Delete",
+      "DIALOG": {
+        "TITLE": "Delete account",
+        "DESC": "You will loose access to all your workspaces and projects",
+        "WARNING": "Account deletion is permanent and cannot be undone,click 'Delete my account' to delete your account.",
+        "BUTTON": "DELETE MY ACCOUNT"
+      }
+    },
+    "SECURITY": {
+      "TITLE": "Security",
+      "DESC": "You can change your password here. Remember that it should contain atleast 6 characters, at least one upper and lower case letter and at least one number",
+      "WARNING": {
+        "FIRST": "The password can be changed",
+        "SECOND": "only for accounts created through the form on the site",
+        "THIRD": "If you have created an account via Google or Github button, ",
+        "FOURTH": "it is not possible to change the password",
+        "FIFTH": "due to another method of account authorization."
+      },
+      "FORM": {
+        "CURRENT": {
+          "LABEL": "CURRENT PASSWORD",
+          "PLACEHOLDER": "Current password"
+        },
+        "NEW": {
+          "LABEL": "NEW PASSWORD",
+          "PLACEHOLDER": "New password"
+        },
+        "REPEAT": {
+          "LABEL": "CONFIRM PASSWORD",
+          "PLACEHOLDER": "Confirm password"
+        },
+        "BTN": "Change password",
+        "BTN_PENDING": "Changing password"
+      }
+    }
+  },
+  "COMMON": {
+    "WELCOMEBACK": "Welcome back",
+    "LANG_HOVER": "Change language",
+    "THEME_HOVER": "Change Theme",
+    "DARK": "Dark",
+    "LIGHT": "Light",
+    "SYSTEM": "System",
+    "LOG_OUT": "Log out",
+    "SETTINGS": "Settings",
+    "WARNING": "WARNING",
+    "NOTICE": "NOTICE",
+    "ACTIVE_WORKSPACES": {
+      "FIRST": "You have",
+      "SECOND": "out of",
+      "THIRD": "active workspaces"
+    }
+  },
+  "PERMISSIONS": {
+    "WAIT": "Please wait",
+    "PERMISSIONS": "PERMISSIONS",
+    "COPY": "Copy link",
+    "OWNER": {
+      "TITLE": "Owner"
+    },
+    "ADMIN": {
+      "TITLE": "Admin",
+      "DESC": "It has all possible rights, including to change the settings of the workspace and to manage other users."
+    },
+    "EDITOR": {
+      "TITLE": "Editor",
+      "DESC": "He has all full access to the workspace and has rights to edit and delete content in the workspace. However, he does hot have access to the settings of the area."
+    },
+    "VIEWER": {
+      "TITLE": "Viewer",
+      "DESC": "He has full access to the workspace, but cannot edit or delete anything. He also does not have access to the area settings."
+    }
+  },
+  "TASK": {
+    "HEADER": {
+      "PLACEHOLDER": "Untitled task",
+      "DATE": {
+        "PICK": "Pic a date",
+        "INFO": "If you select a date, the task will be added to your calendar"
+      },
+      "TAG": {
+        "FILTER": "Filter",
+        "NEW_TAG": "New tag",
+        "TAG": "Tag",
+        "ERROR": "Oops... Something went wrong",
+        "ERROR_BTN": "Try again",
+        "NOT_FOUND": "Not found",
+        "TAGS_HEADING": "TAGS",
+        "NEW_HEADING": "NEW",
+        "ADD_TAG": "Add tag",
+        "COLORS": "Colors",
+        "TAG_NAME": "Name",
+        "BTNS": {
+          "CREATE": "Create",
+          "CANCEL": "Cancel",
+          "DELETE": "Delete",
+          "UPDATE": "Update"
+        }
+      }
+    },
+    "EDITOR": {
+      "PLACEHOLDER": "Write something cool 📝",
+      "WORDS": "number of words:",
+      "CHARS": "chars",
+      "IMAGE": {
+        "TITLE": "Add image",
+        "DESC": "You can add a photo by providing a link to it or you can import it from your device.",
+        "LINK": "Add via the link",
+        "UPLOAD": "Import from device",
+        "LINK_TAB": {
+          "PLACEHOLDER": "Photo link",
+          "BTN_ADD": "Add image",
+          "BTN_PENDING": "Checking the link"
+        },
+        "UPLOAD_TAB": {
+          "TYPES": "Only the types .jpeg, .jpg, .png, .webp, .gif are allowed",
+          "BTN_ADD": "Add image",
+          "BTN_PENDING": "Adding"
+        }
+      },
+      "HOVER": {
+        "H1": "Title 1",
+        "H2": "Title 2",
+        "H3": "Title 3",
+        "H4": "Title 4",
+        "H5": "Title 5",
+        "H6": "Title 6",
+        "BOLD": "Bold",
+        "ITALIC": "Italic",
+        "STRIKETHROUGH": "Strikethrough",
+        "UNDERLINE": "Underline",
+        "CODE": "Code",
+        "UL": "Unordered list",
+        "OL": "Ordered list",
+        "LINK": "Add hyperlink",
+        "IMAGE": "Add image",
+        "COLOR": "Highlight",
+        "COLOR_DEAFULT": "Deafult color",
+        "UNDO": "Undo",
+        "REDO": "Redo",
+        "DELETE": "Delete"
+      }
+    },
+    "BTN": {
+      "SAVE_TASK": "Add task"
+    }
+  },
+  "ROUTES": {
+    "DASHBOARD": "Home",
+    "SETTINGS": "Settings",
+    "SECURITY": "Security",
+    "THEME": "Theme",
+    "TASKS": "Tasks"
+  },
+  "EDIT_WORKSPACE": {
+    "TITLE": "Edit workspace",
+    "DESC": "Here you can change the name of the workspace and its icon.",
+    "PICTURE": {
+      "LABEL": "WORKSPACE ICON",
+      "TITLE": "Change icon",
+      "BTN": "Choose image"
+    },
+    "DATA": {
+      "INPUTS": {
+        "NAME": "WORKSPACE NAME",
+        "COLOR": "WORKSPACE COLOR ICON"
+      },
+      "PLACEHOLDERS": {
+        "NAME": "eg. openstudio"
+      },
+      "INFO": "Changing the color only affects the appearance of the workspace icon only when no image has been added",
+      "BTN": "Update",
+      "BTN_PENDING": "Updating"
+    },
+    "DELETE": {
+      "TITLE": "Delete the workspace",
+      "DESC": "Once a workspace and the data belonging to it are deleted, there is no way to recover them.",
+      "LABEL": "CONFIRM WORKSPACE NAME",
+      "BTN": "Delete",
+      "DIALOG": {
+        "TITLE": "Delete the workspace",
+        "DESC": "All data will be permanently deleted, and all users belonging to this workspace will lose access to it",
+        "WARNING": "Deletion of workspace is permanent and cannot be undone, click 'Delete workspace' to delete the workspace",
+        "BUTTON": "DELETE WORKSPACE",
+        "PENDING_BTN": "Deleting. Please wait"
+      }
+    },
+    "MEMBERS": {
+      "TITLE": "Members",
+      "DESC": "Here you can manage the members of the workspace. You can change their roles as well as remove them from the workspace.",
+      "TABLE": {
+        "USERNAME": "USERNAME",
+        "PERMISSION_SMALL": "PERMISSIONS",
+        "PERMISSION_BIG": "WORKSPACE PERMISSIONS"
+      },
+      "OPTIONS": {
+        "REMOVE_BTN": "Remove",
+        "REMOVE": {
+          "TITLE": "Remove from workspace",
+          "NOTE": "You can invite this user to this workspace again at any time. To confirm click 'Remove form workspace'",
+          "BTN": "Remove from workspace",
+          "BTN_PENDING": "Removing"
+        }
+      }
+    }
+  }
+}
