@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSocket } from "@/context/SocketProvider";
 import { cn } from "@/lib/utils";
+import { getUserDisplayName, getUserInitials } from "@/lib/userUtils";
 
 interface MessageItemProps {
   message: ExtendedMessage;
@@ -51,14 +52,6 @@ export const MessageItem: React.FC<MessageItemProps> = ({
     return format(new Date(date), "HH:mm");
   };
 
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -82,7 +75,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
           <Avatar className="h-8 w-8 mt-1">
             <AvatarImage src={message.sender.image || ""} />
             <AvatarFallback className="text-xs bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-              {getInitials(message.sender.name || message.sender.username || "U")}
+              {getUserInitials(message.sender)}
             </AvatarFallback>
           </Avatar>
         )}

@@ -21,28 +21,40 @@ import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
+import { getUserDisplayName, getUserInitials } from "@/lib/userUtils";
 
 interface Props {
   profileImage?: string | null;
   username: string;
   email: string;
+  name?: string | null;
+  surname?: string | null;
 }
 
-export const User = ({ profileImage, username, email }: Props) => {
+export const User = ({ profileImage, username, email, name, surname }: Props) => {
   const { theme, setTheme } = useTheme();
   const { onSelectChange } = useChangeLocale();
   const lang = useLocale();
   const t = useTranslations("COMMON");
+
+  const user = { name, surname, username, email, image: profileImage };
+  const displayName = getUserDisplayName(user);
+  const initials = getUserInitials(user);
 
   const logOutHandler = () => {
     signOut({
       callbackUrl: `${window.location.origin}/${lang}`,
     });
   };
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background ml-2">
-        <UserAvatar className="w-10 h-10" />
+        <UserAvatar 
+          className="w-10 h-10" 
+          profileImage={profileImage} 
+          fallbackText={initials}
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" sideOffset={10} className="">
         <div className="flex items-center gap-1 px-2">
@@ -55,12 +67,18 @@ export const User = ({ profileImage, username, email }: Props) => {
               height={300}
             />
           ) : (
-            <UserAvatar className="w-8 h-8" />
+            <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
+              {initials}
+            </div>
           )}
 
           <div>
-            <DropdownMenuLabel>{username}</DropdownMenuLabel>
-            <DropdownMenuLabel>{email}</DropdownMenuLabel>
+            <DropdownMenuLabel className="text-sm font-medium">
+              {displayName}
+            </DropdownMenuLabel>
+            <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">
+              {email}
+            </DropdownMenuLabel>
           </div>
         </div>
         <DropdownMenuSeparator />

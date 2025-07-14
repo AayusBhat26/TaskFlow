@@ -6,9 +6,15 @@ interface Props {
   size?: number;
   className?: string;
   profileImage?: string | null;
+  fallbackText?: string;
 }
 
-export const UserAvatar = ({ className, profileImage, size = 16 }: Props) => {
+export const UserAvatar = ({ 
+  className, 
+  profileImage, 
+  size = 16, 
+  fallbackText 
+}: Props) => {
   return (
     <div
       className={cn(
@@ -18,6 +24,10 @@ export const UserAvatar = ({ className, profileImage, size = 16 }: Props) => {
     >
       {profileImage ? (
         <Image src={profileImage} fill alt="Profile Avatar" priority />
+      ) : fallbackText ? (
+        <span className="text-sm font-medium text-primary-foreground bg-primary w-full h-full flex items-center justify-center rounded-full">
+          {fallbackText}
+        </span>
       ) : (
         <User size={size} />
       )}

@@ -230,6 +230,228 @@ body {
     --chart-4: 320 90% 70%;
     --chart-5: 60 100% 75%;
   }
+
+  .cherry {
+    /* Cherry Blossom Theme - Pink/Rose */
+    --background: 330 100% 98%;
+    --foreground: 330 30% 15%;
+    
+    --card: 330 100% 99%;
+    --card-foreground: 330 30% 15%;
+    
+    --popover: 330 100% 99%;
+    --popover-foreground: 330 30% 15%;
+    
+    --primary: 340 82% 52%;
+    --primary-foreground: 330 100% 99%;
+    
+    --secondary: 330 40% 92%;
+    --secondary-foreground: 330 30% 15%;
+    
+    --muted: 330 40% 92%;
+    --muted-foreground: 330 15% 45%;
+    
+    --accent: 315 85% 75%;
+    --accent-foreground: 330 30% 15%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 330 100% 99%;
+    
+    --border: 330 30% 87%;
+    --input: 330 30% 87%;
+    --ring: 340 82% 52%;
+    
+    --chart-1: 340 82% 52%;
+    --chart-2: 315 85% 60%;
+    --chart-3: 290 70% 65%;
+    --chart-4: 270 60% 70%;
+    --chart-5: 350 90% 65%;
+  }
+
+  .cyber {
+    /* Cyberpunk Theme - Neon Green/Purple */
+    --background: 180 2% 8%;
+    --foreground: 140 100% 85%;
+    
+    --card: 180 2% 10%;
+    --card-foreground: 140 100% 85%;
+    
+    --popover: 180 2% 10%;
+    --popover-foreground: 140 100% 85%;
+    
+    --primary: 140 100% 50%;
+    --primary-foreground: 180 2% 8%;
+    
+    --secondary: 180 3% 18%;
+    --secondary-foreground: 140 100% 85%;
+    
+    --muted: 180 3% 18%;
+    --muted-foreground: 140 50% 60%;
+    
+    --accent: 300 100% 70%;
+    --accent-foreground: 180 2% 8%;
+    
+    --destructive: 0 100% 60%;
+    --destructive-foreground: 140 100% 85%;
+    
+    --border: 180 3% 20%;
+    --input: 180 3% 20%;
+    --ring: 140 100% 50%;
+    
+    --chart-1: 140 100% 50%;
+    --chart-2: 300 100% 70%;
+    --chart-3: 60 100% 60%;
+    --chart-4: 280 100% 75%;
+    --chart-5: 200 100% 65%;
+  }
+
+  .autumn {
+    /* Autumn Theme - Warm Browns/Orange */
+    --background: 30 40% 96%;
+    --foreground: 20 25% 15%;
+    
+    --card: 30 40% 98%;
+    --card-foreground: 20 25% 15%;
+    
+    --popover: 30 40% 98%;
+    --popover-foreground: 20 25% 15%;
+    
+    --primary: 25 85% 45%;
+    --primary-foreground: 30 40% 98%;
+    
+    --secondary: 30 25% 88%;
+    --secondary-foreground: 20 25% 15%;
+    
+    --muted: 30 25% 88%;
+    --muted-foreground: 20 15% 45%;
+    
+    --accent: 45 90% 60%;
+    --accent-foreground: 20 25% 15%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 30 40% 98%;
+    
+    --border: 30 20% 82%;
+    --input: 30 20% 82%;
+    --ring: 25 85% 45%;
+    
+    --chart-1: 25 85% 45%;
+    --chart-2: 45 90% 60%;
+    --chart-3: 15 80% 50%;
+    --chart-4: 60 70% 55%;
+    --chart-5: 340 75% 60%;
+  }
+
+  .lavender {
+    /* Lavender Theme - Soft Purple/Blue */
+    --background: 260 30% 96%;
+    --foreground: 260 20% 15%;
+    
+    --card: 260 30% 98%;
+    --card-foreground: 260 20% 15%;
+    
+    --popover: 260 30% 98%;
+    --popover-foreground: 260 20% 15%;
+    
+    --primary: 250 75% 60%;
+    --primary-foreground: 260 30% 98%;
+    
+    --secondary: 260 20% 90%;
+    --secondary-foreground: 260 20% 15%;
+    
+    --muted: 260 20% 90%;
+    --muted-foreground: 260 15% 45%;
+    
+    --accent: 270 60% 75%;
+    --accent-foreground: 260 20% 15%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 260 30% 98%;
+    
+    --border: 260 15% 85%;
+    --input: 260 15% 85%;
+    --ring: 250 75% 60%;
+    
+    --chart-1: 250 75% 60%;
+    --chart-2: 270 60% 65%;
+    --chart-3: 230 70% 70%;
+    --chart-4: 200 60% 65%;
+    --chart-5: 300 65% 70%;
+  }
+
+  .arctic {
+    /* Arctic Theme - Cool Blues/White */
+    --background: 210 40% 98%;
+    --foreground: 210 40% 8%;
+    
+    --card: 210 40% 99%;
+    --card-foreground: 210 40% 8%;
+    
+    --popover: 210 40% 99%;
+    --popover-foreground: 210 40% 8%;
+    
+    --primary: 200 100% 40%;
+    --primary-foreground: 210 40% 99%;
+    
+    --secondary: 210 30% 92%;
+    --secondary-foreground: 210 40% 8%;
+    
+    --muted: 210 30% 92%;
+    --muted-foreground: 210 20% 45%;
+    
+    --accent: 190 80% 70%;
+    --accent-foreground: 210 40% 8%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 99%;
+    
+    --border: 210 25% 87%;
+    --input: 210 25% 87%;
+    --ring: 200 100% 40%;
+    
+    --chart-1: 200 100% 40%;
+    --chart-2: 190 80% 50%;
+    --chart-3: 180 70% 55%;
+    --chart-4: 220 90% 60%;
+    --chart-5: 160 75% 65%;
+  }
+
+  .volcano {
+    /* Volcano Theme - Deep Red/Orange */
+    --background: 15 25% 95%;
+    --foreground: 15 35% 10%;
+    
+    --card: 15 25% 97%;
+    --card-foreground: 15 35% 10%;
+    
+    --popover: 15 25% 97%;
+    --popover-foreground: 15 35% 10%;
+    
+    --primary: 0 85% 50%;
+    --primary-foreground: 15 25% 97%;
+    
+    --secondary: 15 20% 88%;
+    --secondary-foreground: 15 35% 10%;
+    
+    --muted: 15 20% 88%;
+    --muted-foreground: 15 15% 45%;
+    
+    --accent: 25 90% 55%;
+    --accent-foreground: 15 35% 10%;
+    
+    --destructive: 0 85% 50%;
+    --destructive-foreground: 15 25% 97%;
+    
+    --border: 15 15% 82%;
+    --input: 15 15% 82%;
+    --ring: 0 85% 50%;
+    
+    --chart-1: 0 85% 50%;
+    --chart-2: 25 90% 55%;
+    --chart-3: 45 85% 60%;
+    --chart-4: 10 80% 55%;
+    --chart-5: 340 85% 60%;
+  }
 }
 
 @layer base {
@@ -244,7 +466,15 @@ body {
   
   /* Smooth transitions for theme changes */
   * {
-    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Prevent transition on theme change script injection */
+  .theme-transition-disable * {
+    transition: none !important;
   }
 }
 

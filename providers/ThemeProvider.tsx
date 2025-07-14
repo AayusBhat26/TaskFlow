@@ -10,9 +10,26 @@ export const ThemeProvider = ({ children, ...props }: ThemeProviderProps) => {
       {...props}
       attribute="class"
       defaultTheme="light"
-      themes={["light", "dark", "ocean", "forest", "sunset", "midnight", "system"]}
+      themes={[
+        "light", 
+        "dark", 
+        "system",
+        "ocean", 
+        "forest", 
+        "sunset", 
+        "midnight",
+        "cherry",
+        "cyber",
+        "autumn",
+        "lavender",
+        "arctic",
+        "volcano"
+      ]}
       enableSystem
       disableTransitionOnChange={false}
+      storageKey="taskflow-theme"
+      enableColorScheme={false}
+      forcedTheme={undefined}
     >
       {children}
     </NextThemesProvider>

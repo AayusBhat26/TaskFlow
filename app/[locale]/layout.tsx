@@ -37,12 +37,7 @@ export default async function RootLayout({
           <AuthProvider>
             <SocketProvider>
               <QueryProvider>
-                <ThemeProvider
-                  attribute="class"
-                  defaultTheme="system"
-                  enableSystem
-                  disableTransitionOnChange
-                >
+                <ThemeProvider>
                   <Toaster />
                   <GlobalRouteLoading />
                   {children}
