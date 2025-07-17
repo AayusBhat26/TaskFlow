@@ -1,74 +1,52 @@
 "use client";
 
+import { createContext, useContext, useReducer, ReactNode, Reducer } from "react";
+import { Session } from "next-auth";
+import { UseCase } from "@prisma/client";
 import {
   Action,
   ActionType,
   OnboardingFormContext,
   OnboardingFormReducer,
 } from "@/types/onBoardingContext";
-import { UseCase } from "@prisma/client";
-import { Session } from "next-auth";
-import { createContext, useContext, useReducer } from "react";
 
+// Create context with a default placeholder
 export const OnboardingFormCtx = createContext<OnboardingFormContext | null>(
   null
 );
 
-function onBoardingFormReducer(state: OnboardingFormReducer, action: Action) {
+// Reducer function
+const onboardingFormReducer: Reducer<OnboardingFormReducer, Action> = (
+  state,
+  action
+) => {
   const { type, payload } = action;
-
   switch (type) {
-    case ActionType.CHANGE_SITE: {
-      return {
-        ...state,
-        currentStep: payload as 1 | 2 | 3,
-      };
-    }
-
+    case ActionType.CHANGE_SITE:
+      return { ...state, currentStep: payload as OnboardingFormReducer["currentStep"] };
     case ActionType.NAME:
-      return {
-        ...state,
-        name: payload as string,
-      };
-
+      return { ...state, name: payload as string };
     case ActionType.SURNAME:
-      return {
-        ...state,
-        surname: payload as string,
-      };
-
+      return { ...state, surname: payload as string };
     case ActionType.USECASE:
-      return {
-        ...state,
-        useCase: payload as UseCase,
-      };
+      return { ...state, useCase: payload as UseCase };
     case ActionType.PROFILEIMAGE:
-      return {
-        ...state,
-        profileImage: payload as string | null | undefined,
-      };
-    case ActionType.WORKSPACE_NAME: {
-      return {
-        ...state,
-        workspaceName: payload as string,
-      };
-    }
-    case ActionType.WORKSPACE_IMAGE: {
-      return {
-        ...state,
-        workspaceImage: payload as string | null | undefined,
-      };
-    }
+      return { ...state, profileImage: payload as string | null };
+    case ActionType.WORKSPACE_NAME:
+      return { ...state, workspaceName: payload as string };
+    case ActionType.WORKSPACE_IMAGE:
+      return { ...state, workspaceImage: payload as string | null };
     default:
       return state;
   }
-}
+};
 
-interface Props {
-  children: React.ReactNode;
+interface OnboardingFormProviderProps {
+  children: ReactNode;
   session: Session;
 }
 
+// Initial form state
 const initialFormState: OnboardingFormReducer = {
   currentStep: 1,
   name: null,
@@ -79,15 +57,23 @@ const initialFormState: OnboardingFormReducer = {
   workspaceImage: null,
 };
 
-export const OnboardingFormProvider = ({ children, session }: Props) => {
-  const [state, dispatch] = useReducer<
-    React.Reducer<OnboardingFormReducer, Action>
-  >(onBoardingFormReducer, {
+export const OnboardingFormProvider = ({
+  children,
+  session,
+}: OnboardingFormProviderProps) => {
+  // Merge session defaults into initial state
+  const sessionState: OnboardingFormReducer = {
     ...initialFormState,
-    name: session.user.name,
-    surname: session.user.surname,
-    profileImage: session.user.image,
-  });
+    name: session.user.name ?? null,
+    surname: session.user.surname ?? null,
+    profileImage: session.user.image ?? null,
+  };
+
+  // Use reducer without explicit type parameters (inferred)
+  const [state, dispatch] = useReducer(
+    onboardingFormReducer,
+    sessionState
+  );
 
   return (
     <OnboardingFormCtx.Provider value={{ ...state, dispatch }}>
@@ -96,9 +82,13 @@ export const OnboardingFormProvider = ({ children, session }: Props) => {
   );
 };
 
+// Custom hook for consuming context
 export const useOnboardingForm = () => {
-  const ctx = useContext(OnboardingFormCtx);
-  if (!ctx) throw new Error("invalid use");
-
-  return ctx;
+  const context = useContext(OnboardingFormCtx);
+  if (!context) {
+    throw new Error(
+      "useOnboardingForm must be used within an OnboardingFormProvider"
+    );
+  }
+  return context;
 };
