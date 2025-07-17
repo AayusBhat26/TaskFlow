@@ -1,7 +1,7 @@
 import { checkIfUserCompletedOnboarding } from "@/lib/checkIfUserCompletedOnboarding";
 import { db } from "@/lib/db";
 import { NotifyType } from "@prisma/client";
-import { redirect } from "next-intl/server";
+import { redirect } from "next/navigation";
 
 interface Params {
   params: {

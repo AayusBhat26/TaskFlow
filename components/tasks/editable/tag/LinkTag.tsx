@@ -1,7 +1,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Tag } from "lucide-react";
-import Link from "next-intl/link";
+import Link from "next/link";
 import { Tag as TagType, CustomColors } from "@prisma/client";
 import { useMemo } from "react";
 

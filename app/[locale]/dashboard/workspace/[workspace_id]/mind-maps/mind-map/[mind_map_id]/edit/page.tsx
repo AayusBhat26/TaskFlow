@@ -7,7 +7,7 @@ import { AutosaveIndicatorProvider } from "@/context/AutosaveIndicator";
 import { AutoSaveMindMapProvider } from "@/context/AutoSaveMindMap";
 import { getMindMap, getUserWorkspaceRole, getWorkspace } from "@/lib/api";
 import { checkIfUserCompletedOnboarding } from "@/lib/checkIfUserCompletedOnboarding";
-import { redirect } from "next-intl/server";
+import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 
 interface Params {

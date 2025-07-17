@@ -4,7 +4,6 @@ import { TaskContainer } from "@/components/tasks/editable/container/TaskContain
 import { AutosaveIndicatorProvider } from "@/context/AutosaveIndicator";
 import { getTask, getUserWorkspaceRole, getWorkspace } from "@/lib/api";
 import { checkIfUserCompletedOnboarding } from "@/lib/checkIfUserCompletedOnboarding";
-import { redirect } from "next-intl/server";
 import { AddTaskShortcut } from "@/components/addTaskShortCut/AddTaskShortcut";
 import { notFound } from "next/navigation";
 
