@@ -1,4 +1,7 @@
-import { AdditionalResourceTypes } from "@prisma/client";
+export enum AdditionalResourceTypes {
+  PDF = "PDF",
+  IMAGE = "IMAGE",
+}
 import { z } from "zod";
 
 export const newMessageSchema = z.object({

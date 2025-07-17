@@ -1,5 +1,4 @@
 import {
-  AdditionalResourceTypes,
   CustomColors,
   Message,
   MessageReaction,
@@ -13,6 +12,9 @@ import {
   UserPermission,
   Workspace,
 } from "@prisma/client";
+
+// Define AdditionalResourceTypes if not imported from elsewhere
+export type AdditionalResourceTypes = "image" | "video" | "document" | "audio";
 
 export interface SubscriptionUser {
   userRole: UserPermission;

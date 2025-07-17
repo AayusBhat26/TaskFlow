@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       where: {
         id: conversationId,
         workspace: {
-          subscriptions: {
+          subscribers: {
             some: {
               userId: session.user.id,
             },
