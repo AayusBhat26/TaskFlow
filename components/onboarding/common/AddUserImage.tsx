@@ -19,7 +19,7 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { User as UserType } from "@prisma/client";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { LoadingState } from "../../ui/loadingState";
 import { useToast } from "@/hooks/use-toast";

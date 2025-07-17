@@ -35,7 +35,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { signOut } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 

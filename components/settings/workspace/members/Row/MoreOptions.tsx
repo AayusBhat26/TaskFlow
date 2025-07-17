@@ -23,7 +23,7 @@ import { SubscriptionUser } from "@/types/extended";
 import { UserPermission as UserPermissionType } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";

@@ -21,7 +21,7 @@ import { User } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export const ChangePassword = () => {

@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useTruncateText } from "@/hooks/useTruncateText";
 import { WorkspaceRecentActivity } from "@/types/extended";
 import { useFormatter, useTranslations } from "next-intl";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { TagItem } from "./TagItem";
 import { AssignedToTaskUser } from "./AssignedToTaskUser";

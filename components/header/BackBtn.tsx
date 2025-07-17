@@ -1,6 +1,6 @@
 "use client";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { ChevronLeftIcon } from "lucide-react";
 

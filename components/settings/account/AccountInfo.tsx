@@ -39,7 +39,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { useChangeLocale } from "@/hooks/useChangeLocale";
 import { LoadingState } from "@/components/ui/loadingState";
 

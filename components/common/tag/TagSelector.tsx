@@ -10,7 +10,7 @@ import { Plus } from "lucide-react";
 import { CommandContainer } from "./CommandContainer";
 import { CustomColors, Tag } from "@prisma/client";
 import { LoadingState } from "@/components/ui/loadingState";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface Props {

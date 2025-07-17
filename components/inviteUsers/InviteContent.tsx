@@ -14,7 +14,7 @@ import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { LoadingState } from "../ui/loadingState";
 import {
   DropdownMenu,

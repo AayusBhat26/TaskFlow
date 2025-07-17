@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { UsersAssignedToTaskInfo } from "@/types/extended";
 import { useQuery } from "@tanstack/react-query";
 import { User2 } from "lucide-react";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { CommandContainer } from "./CommandContainer";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";

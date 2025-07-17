@@ -6,7 +6,7 @@ import {
   RefetchOptions,
   RefetchQueryFilters,
 } from "@tanstack/react-query";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,

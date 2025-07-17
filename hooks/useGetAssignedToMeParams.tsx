@@ -1,7 +1,6 @@
-"use client";
+// "use client";
 
-import { useRouter } from "next-intl/client";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
 export const useGetAssignedToMeParams = () => {

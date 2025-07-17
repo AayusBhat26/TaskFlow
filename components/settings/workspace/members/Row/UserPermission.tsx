@@ -7,7 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
 import { AxiosError } from "axios";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LoadingState } from "@/components/ui/loadingState";
 import {

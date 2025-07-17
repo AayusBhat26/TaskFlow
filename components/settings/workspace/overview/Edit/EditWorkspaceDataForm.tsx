@@ -24,7 +24,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { LoadingState } from "@/components/ui/loadingState";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";

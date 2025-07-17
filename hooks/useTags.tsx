@@ -1,4 +1,3 @@
-"use client";
 
 import { useAutosaveIndicator } from "@/context/AutosaveIndicator";
 import { CustomColors, Tag } from "@prisma/client";

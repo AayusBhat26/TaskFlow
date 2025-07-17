@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { NotifyType, UserPermission } from "@prisma/client";
 import { useTranslations } from "next-intl";

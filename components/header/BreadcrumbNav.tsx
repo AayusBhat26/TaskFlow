@@ -2,7 +2,8 @@
 
 import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { usePathname } from "next-intl/client";
+// import { usePathname } from "next/navigation";
+import {usePathname} from "next/navigation";
 import Link from "next/link";
 
 const availableRoutesWithTranslation = [

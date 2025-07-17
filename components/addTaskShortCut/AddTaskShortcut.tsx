@@ -17,7 +17,7 @@ import { useTranslations } from "next-intl";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useChangeCodeToEmoji } from "@/hooks/useChangeCodeToEmoji";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { DateRange } from "react-day-picker";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";

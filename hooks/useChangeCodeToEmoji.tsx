@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { changeCodeToEmoji } from "@/lib/changeCodeToEmoji";
 import { useMemo } from "react";

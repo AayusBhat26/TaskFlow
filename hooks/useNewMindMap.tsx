@@ -1,8 +1,8 @@
-"use client";
+// "use client";
 
 import { useTranslations } from "next-intl";
 import { useToast } from "./use-toast";
-import { useRouter } from "next-intl/client";
+import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { MindMap } from "@prisma/client";

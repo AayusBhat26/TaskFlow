@@ -10,6 +10,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { GlobalRouteLoading } from "@/components/common/GlobalRouteLoading";
 import { SocketProvider } from "@/context/SocketProvider";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const locales = ["en"];
 
@@ -28,13 +30,15 @@ export default async function RootLayout({
   const isValidLocale = locales.some((cur) => cur === locale);
   if (!isValidLocale) notFound();
 
+  const session = await getServerSession(authOptions);
   //@ts-ignore
   const messages = await getMessages(locale);
+
   return (
     <html lang={locale} suppressHydrationWarning>
-      <body className={` antialiased`}>
+      <body className={`antialiased`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <AuthProvider>
+          <AuthProvider session={session}>
             <SocketProvider>
               <QueryProvider>
                 <ThemeProvider>
