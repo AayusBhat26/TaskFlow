@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "lib": ["es2020"],
+    "outDir": "./dist",        // Output compiled JS to 'socket-server/dist'
+    "rootDir": "./",          // Root of this tsconfig is 'socket-server'
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",           // For resolving non-relative modules
+    "paths": {
+      "@/lib/*": ["../lib/*"], // Example: if you import from @/lib/db
+      "@/types/*": ["../types/*"] // Example: if you have a shared 'types' folder
+    }
+  },
+  "include": [
+    "server.ts",              // Include your server file
+    "../lib/*.ts",            // Include files from the main project's lib (e.g., db.ts)
+    "../prisma/client.ts",    // Include Prisma client if you have a specific client file
+    "../types/**/*.ts"        // Include all files from a shared 'types' directory
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
