@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { useRouteLoading } from "@/hooks/useRouteLoading";
+import {useState} from "react";
 
 interface Props {
   signInCard?: boolean;
@@ -22,8 +23,8 @@ export const AuthCard = ({ signInCard }: Props) => {
   const params = useParams();
   const locale = params.locale as string;
   const { isLoading: isNavigating, startLoading } = useRouteLoading();
-  const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
-  const [isClient, setIsClient] = React.useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isClient, setIsClient] = useState(false);
 
   const handleAuthNavigation = (href: string) => {
     startLoading();
