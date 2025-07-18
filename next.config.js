@@ -21,6 +21,7 @@ const nextConfig = {
   },
   experimental: {
     serverComponentsExternalPackages: ["next-auth"],
+    appDir: true,
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
