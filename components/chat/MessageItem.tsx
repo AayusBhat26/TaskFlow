@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { Reply, MoreHorizontal, Heart, ThumbsUp } from "lucide-react";
 import { motion } from "framer-motion";
@@ -21,6 +21,7 @@ interface MessageItemProps {
   message: ExtendedMessage;
   currentUserId: string;
   onReply: (message: ExtendedMessage) => void;
+  onReactionChange?: (messageId: string, emoji: string, action: 'add' | 'remove') => void;
   isLastMessage?: boolean;
 }
 
@@ -30,23 +31,62 @@ export const MessageItem: React.FC<MessageItemProps> = ({
   message,
   currentUserId,
   onReply,
+  onReactionChange,
   isLastMessage,
 }) => {
   const { addReaction, removeReaction } = useSocket();
   const [showActions, setShowActions] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const isOwnMessage = message.senderId === currentUserId;
 
   const handleReaction = (emoji: string) => {
+    console.log(`Handling reaction: ${emoji} for message ${message.id} by user ${currentUserId}`);
     const existingReaction = message.reactions.find(
       (r) => r.userId === currentUserId && r.emoji === emoji
     );
 
+    console.log('Existing reaction found:', existingReaction);
+    console.log('Current message reactions:', message.reactions);
+
     if (existingReaction) {
+      console.log(`Removing reaction: ${emoji}`);
+      // Optimistic update first
+      onReactionChange?.(message.id, emoji, 'remove');
+      // Then call API
       removeReaction(message.id, emoji);
     } else {
+      console.log(`Adding reaction: ${emoji}`);
+      // Optimistic update first
+      onReactionChange?.(message.id, emoji, 'add');
+      // Then call API
       addReaction(message.id, emoji);
     }
+    
+    // Close dropdown after reaction
+    setDropdownOpen(false);
   };
+
+  const handleMouseEnter = () => {
+    setShowActions(true);
+  };
+
+  const handleMouseLeave = () => {
+    // Only hide actions if dropdown is not open
+    if (!dropdownOpen) {
+      setShowActions(false);
+    }
+  };
+
+  // Effect to hide actions when dropdown closes
+  useEffect(() => {
+    if (!dropdownOpen) {
+      // Small delay to allow for smooth interaction
+      const timer = setTimeout(() => {
+        setShowActions(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [dropdownOpen]);
 
   const formatTime = (date: string | Date) => {
     return format(new Date(date), "HH:mm");
@@ -61,8 +101,8 @@ export const MessageItem: React.FC<MessageItemProps> = ({
         "group relative",
         isOwnMessage ? "flex justify-end" : "flex justify-start"
       )}
-      onMouseEnter={() => setShowActions(true)}
-      onMouseLeave={() => setShowActions(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div
         className={cn(
@@ -145,7 +185,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
                   <Reply className="h-3 w-3" />
                 </Button>
                 
-                <DropdownMenu>
+                <DropdownMenu onOpenChange={setDropdownOpen}>
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="secondary"
@@ -178,13 +218,18 @@ export const MessageItem: React.FC<MessageItemProps> = ({
             <div className="flex flex-wrap gap-1 mt-1">
               {Object.entries(
                 message.reactions.reduce((acc, reaction) => {
-                  acc[reaction.emoji] = (acc[reaction.emoji] || 0) + 1;
+                  if (!acc[reaction.emoji]) {
+                    acc[reaction.emoji] = {
+                      count: 0,
+                      users: []
+                    };
+                  }
+                  acc[reaction.emoji].count += 1;
+                  acc[reaction.emoji].users.push(reaction.userId);
                   return acc;
-                }, {} as Record<string, number>)
-              ).map(([emoji, count]) => {
-                const userReacted = message.reactions.some(
-                  (r) => r.emoji === emoji && r.userId === currentUserId
-                );
+                }, {} as Record<string, { count: number; users: string[] }>)
+              ).map(([emoji, data]) => {
+                const userReacted = data.users.includes(currentUserId);
                 
                 return (
                   <button
@@ -198,7 +243,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
                     )}
                   >
                     <span>{emoji}</span>
-                    <span>{count}</span>
+                    <span>{data.count}</span>
                   </button>
                 );
               })}

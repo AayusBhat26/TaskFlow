@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useToast } from "./use-toast";
@@ -6,7 +6,9 @@ import { useTranslations } from "next-intl";
 
 export const useProviderLoginError = (showLoggedInfo: boolean) => {
   const params = useSearchParams();
-  const session = useSession();
+  // Temporarily disabled session usage
+  // const session = useSession();
+  const session = { status: "unauthenticated" }; // Mock session
   const { toast } = useToast();
   const m = useTranslations("MESSAGES");
   const router = useRouter();

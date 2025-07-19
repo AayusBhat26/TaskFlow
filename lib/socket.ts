@@ -11,6 +11,7 @@ interface ServerToClientEvents {
     createdAt: string;
     messageType: "TEXT" | "SYSTEM";
     replyToId?: string;
+    replyTo?: any;
   }) => void;
   user_joined: (user: { id: string; name: string; image?: string }) => void;
   user_left: (userId: string) => void;
@@ -43,7 +44,7 @@ interface ClientToServerEvents {
 export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   process.env.NODE_ENV === "production" 
     ? process.env.NEXT_PUBLIC_SOCKET_URL || ""
-    : "http://localhost:3001",
+    : "http://localhost:3002",
   {
     autoConnect: false,
     transports: ["websocket", "polling"],

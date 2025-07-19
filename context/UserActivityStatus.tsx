@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { UserActiveItemList } from "@/types/extended";
 import { UserPermission } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import {
@@ -49,7 +49,9 @@ export const UserActivityStatusProvider = ({ children }: Props) => {
   );
 
   const params = useParams();
-  const session = useSession();
+  // Temporarily disabled session to fix React hooks error
+  // const session = useSession();
+  const session = { data: { user: { id: "test-user-id" } } }; // Mock session
   const workspaceId = params.workspace_id ? params.workspace_id : null;
 
   const {

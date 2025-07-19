@@ -42,18 +42,6 @@ export const MessageInput: React.FC<MessageInputProps> = ({
       }
       handleStopTyping();
 
-      // Add optimistic update
-      if (onMessageSent) {
-        onMessageSent({
-          id: `temp-${Date.now()}`,
-          content: messageContent,
-          messageType: "TEXT",
-          replyToId: replyTo?.id,
-          createdAt: new Date(),
-          isOptimistic: true,
-        });
-      }
-
       try {
         // Send message via API first
         const response = await fetch('/api/chat/message', {
@@ -68,8 +56,15 @@ export const MessageInput: React.FC<MessageInputProps> = ({
           const result = await response.json();
           console.log('Message sent successfully:', result);
           
-          // Now emit via socket for real-time updates to other users
-          // Include all the message data from the API response
+          // Add optimistic update for sender
+          if (onMessageSent) {
+            onMessageSent({
+              ...result,
+              isOptimistic: false, // Mark as real message
+            });
+          }
+          
+          // Send via socket for real-time updates to other users
           sendMessage({
             ...messageData,
             id: result.id,
@@ -77,6 +72,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
             senderName: result.sender?.name || result.sender?.username,
             senderImage: result.sender?.image,
             createdAt: result.createdAt,
+            replyTo: result.replyTo,
           });
         } else {
           console.error('Failed to send message:', await response.text());
@@ -139,6 +135,30 @@ export const MessageInput: React.FC<MessageInputProps> = ({
 
   return (
     <div className="p-4 space-y-3">
+      {/* Reply Preview */}
+      {replyTo && (
+        <div className="bg-gray-50 dark:bg-gray-800 border-l-4 border-blue-500 p-3 rounded">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                Replying to {replyTo.sender?.name || replyTo.sender?.username}
+              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 truncate">
+                {replyTo.content}
+              </p>
+            </div>
+            {onCancelReply && (
+              <button
+                onClick={onCancelReply}
+                className="ml-3 p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+      
       <div className="flex items-end space-x-2">
         <div className="flex-1">
           <Textarea

@@ -97,7 +97,7 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
           isOnline: true,
           lastSeen: new Date(),
         },
-        replyTo: null,
+        replyTo: messageData.replyTo || null,
         reactions: [],
         readBy: [],
       };
@@ -127,6 +127,75 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
       });
     };
 
+    const handleMessageReaction = (reactionData: any) => {
+      console.log('Message reaction received:', reactionData);
+      const { messageId, userId, emoji, action } = reactionData;
+      
+      setMessages(prev => {
+        console.log(`Processing ${action} reaction: ${emoji} by user ${userId} on message ${messageId}`);
+        
+        return prev.map(message => {
+          if (message.id === messageId) {
+            console.log(`Found message ${messageId}, current reactions:`, message.reactions);
+            const updatedReactions = [...message.reactions];
+            
+            if (action === "add") {
+              // Add reaction if it doesn't exist
+              const existingReactionIndex = updatedReactions.findIndex(
+                r => r.userId === userId && r.emoji === emoji
+              );
+              
+              if (existingReactionIndex === -1) {
+                const newReaction = {
+                  id: `${messageId}-${userId}-${emoji}`,
+                  messageId,
+                  userId,
+                  emoji,
+                  createdAt: new Date(),
+                  user: {
+                    id: userId,
+                    name: "",
+                    username: "",
+                    image: "",
+                    surname: null,
+                    email: null,
+                    emailVerified: null,
+                    hashedPassword: null,
+                    completedOnboarding: true,
+                    useCase: null,
+                    isOnline: true,
+                    lastSeen: new Date(),
+                  }
+                };
+                updatedReactions.push(newReaction);
+                console.log(`Added reaction:`, newReaction);
+              } else {
+                console.log(`Reaction already exists at index ${existingReactionIndex}`);
+              }
+            } else if (action === "remove") {
+              // Remove reaction
+              const reactionIndex = updatedReactions.findIndex(
+                r => r.userId === userId && r.emoji === emoji
+              );
+              if (reactionIndex !== -1) {
+                console.log(`Removing reaction at index ${reactionIndex}`);
+                updatedReactions.splice(reactionIndex, 1);
+              } else {
+                console.log(`Reaction to remove not found`);
+              }
+            }
+            
+            console.log(`Updated reactions for message ${messageId}:`, updatedReactions);
+            return {
+              ...message,
+              reactions: updatedReactions
+            };
+          }
+          return message;
+        });
+      });
+    };
+
     // Try both socket instances for reliability
     if (typeof window !== 'undefined') {
       // @ts-ignore
@@ -134,21 +203,11 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
       if (socketInstance) {
         setSocketConnected(socketInstance.connected);
         socketInstance.on("message_received", handleMessageReceived);
+        socketInstance.on("message_reaction", handleMessageReaction);
         socketInstance.on("connect", () => setSocketConnected(true));
         socketInstance.on("disconnect", () => setSocketConnected(false));
         console.log('Socket listener attached to window.socket, connected:', socketInstance.connected);
       }
-    }
-
-    // Also try the socket from context
-    try {
-      if (socket && typeof socket === 'object') {
-        // @ts-ignore
-        socket.on?.("message_received", handleMessageReceived);
-        console.log('Socket listener attached to context socket');
-      }
-    } catch (error) {
-      console.log('Context socket not available:', error);
     }
 
     return () => {
@@ -157,16 +216,8 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
         const socketInstance = window.socket;
         if (socketInstance) {
           socketInstance.off("message_received", handleMessageReceived);
+          socketInstance.off("message_reaction", handleMessageReaction);
         }
-      }
-      
-      try {
-        if (socket && typeof socket === 'object') {
-          // @ts-ignore
-          socket.off?.("message_received", handleMessageReceived);
-        }
-      } catch (error) {
-        console.log('Error removing context socket listener:', error);
       }
     };
   }, [conversationId]);
@@ -197,7 +248,7 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
       sender: {
         id: session.user.id,
         name: session.user.name || "",
-        image: session.user.image || "",
+        image:  "",
         username: session.user.name || "",
         surname: null,
         email: null,
@@ -208,13 +259,69 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
         isOnline: true,
         lastSeen: new Date(),
       },
-      replyTo: null,
+      replyTo: optimisticMessage.replyTo || null,
       reactions: [],
       readBy: [],
     };
 
     setMessages(prev => [...prev, newMessage]);
   }, [session?.user, conversationId]);
+
+  const handleReactionChange = useCallback((messageId: string, emoji: string, action: 'add' | 'remove') => {
+    if (!session?.user?.id) return;
+
+    setMessages(prev => prev.map(message => {
+      if (message.id === messageId) {
+        const updatedReactions = [...message.reactions];
+        
+        if (action === 'add') {
+          // Add reaction if it doesn't exist
+          const existingReactionIndex = updatedReactions.findIndex(
+            r => r.userId === session.user.id && r.emoji === emoji
+          );
+          
+          if (existingReactionIndex === -1) {
+            const newReaction = {
+              id: `${messageId}-${session.user.id}-${emoji}`,
+              messageId,
+              userId: session.user.id,
+              emoji,
+              createdAt: new Date(),
+              user: {
+                id: session.user.id,
+                name: session.user.name || "",
+                username: session.user.name || "",
+                image: "",
+                surname: null,
+                email: null,
+                emailVerified: null,
+                hashedPassword: null,
+                completedOnboarding: true,
+                useCase: null,
+                isOnline: true,
+                lastSeen: new Date(),
+              }
+            };
+            updatedReactions.push(newReaction);
+          }
+        } else if (action === 'remove') {
+          // Remove reaction
+          const reactionIndex = updatedReactions.findIndex(
+            r => r.userId === session.user.id && r.emoji === emoji
+          );
+          if (reactionIndex !== -1) {
+            updatedReactions.splice(reactionIndex, 1);
+          }
+        }
+        
+        return {
+          ...message,
+          reactions: updatedReactions
+        };
+      }
+      return message;
+    }));
+  }, [session?.user?.id]);
 
   if (!workspace.conversation) {
     return (
@@ -298,6 +405,7 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
               messages={messages}
               currentUserId={session?.user?.id || ""}
               onReply={handleReply}
+              onReactionChange={handleReactionChange}
             />
           )}
         </div>

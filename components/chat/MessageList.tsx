@@ -8,12 +8,14 @@ interface MessageListProps {
   messages: ExtendedMessage[];
   currentUserId: string;
   onReply: (message: ExtendedMessage) => void;
+  onReactionChange?: (messageId: string, emoji: string, action: 'add' | 'remove') => void;
 }
 
 export const MessageList: React.FC<MessageListProps> = ({
   messages,
   currentUserId,
   onReply,
+  onReactionChange,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,6 +48,7 @@ export const MessageList: React.FC<MessageListProps> = ({
               message={message}
               currentUserId={currentUserId}
               onReply={onReply}
+              onReactionChange={onReactionChange}
               isLastMessage={index === messages.length - 1}
             />
           ))}

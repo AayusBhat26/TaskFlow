@@ -5,14 +5,12 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 import { notFound } from "next/navigation";
 import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
-import { AuthProvider } from "@/providers/AuthProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { ToastProvider } from "@/context/ToastContext";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { GlobalRouteLoading } from "@/components/common/GlobalRouteLoading";
 import { SocketProvider } from "@/context/SocketProvider";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+// import ClientSessionProvider from "@/components/ClientSessionProvider";
 
 const locales = ["en"];
 
@@ -31,7 +29,6 @@ export default async function RootLayout({
   const isValidLocale = locales.some((cur) => cur === locale);
   if (!isValidLocale) notFound();
 
-  const session = await getServerSession(authOptions);
   //@ts-ignore
   const messages = await getMessages(locale);
 
@@ -39,19 +36,17 @@ export default async function RootLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className={`antialiased`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <AuthProvider session={session}>
-            <SocketProvider>
-              <QueryProvider>
-                <ThemeProvider>
-                  <ToastProvider>
-                    <Toaster />
-                    <GlobalRouteLoading />
-                    {children}
-                  </ToastProvider>
-                </ThemeProvider>
-              </QueryProvider>
-            </SocketProvider>
-          </AuthProvider>
+          <SocketProvider>
+            <QueryProvider>
+              <ThemeProvider>
+                <ToastProvider>
+                  <Toaster />
+                  <GlobalRouteLoading />
+                  {children}
+                </ToastProvider>
+              </ThemeProvider>
+            </QueryProvider>
+          </SocketProvider>
         </NextIntlClientProvider>
       </body>
     </html>

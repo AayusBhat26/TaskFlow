@@ -149,7 +149,7 @@ io.on("connection", (socket) => {
 
     socket.on("send_message", async (data) => {
       try {
-        const { conversationId, content, messageType = "TEXT", replyToId, id, senderId, senderName, senderImage, createdAt } = data;
+        const { conversationId, content, messageType = "TEXT", replyToId, id, senderId, senderName, senderImage, createdAt, replyTo } = data;
         
         console.log('Broadcasting message:', data);
         
@@ -164,6 +164,7 @@ io.on("connection", (socket) => {
           createdAt: createdAt || new Date().toISOString(),
           messageType,
           replyToId,
+          replyTo,
         });
 
         console.log(`Message broadcasted to conversation ${conversationId}`);
@@ -210,30 +211,22 @@ io.on("connection", (socket) => {
         const user = connectedUsers.get(socket.id);
         if (!user) return;
 
-        // Add reaction via API
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/chat/reaction`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ messageId, emoji }),
-        });
+        console.log(`Broadcasting add reaction ${emoji} to message ${messageId} by user ${user.name}`);
 
-        if (response.ok) {
-          // Broadcast reaction to all users
-          Object.keys(roomUsers).forEach(conversationId => {
-            if (roomUsers[conversationId].has(user.id)) {
-              io.to(conversationId).emit("message_reaction", {
-                messageId,
-                userId: user.id,
-                emoji,
-                action: "add",
-              });
-            }
-          });
-        }
+        // Broadcast reaction to all users in conversations where this user is present
+        Object.keys(roomUsers).forEach(conversationId => {
+          if (roomUsers[conversationId].has(user.id)) {
+            console.log(`Broadcasting add reaction to conversation ${conversationId}`);
+            io.to(conversationId).emit("message_reaction", {
+              messageId,
+              userId: user.id,
+              emoji,
+              action: "add",
+            });
+          }
+        });
       } catch (error) {
-        console.error("Error adding reaction:", error);
+        console.error("Error broadcasting add reaction:", error);
       }
     });
 
@@ -242,30 +235,22 @@ io.on("connection", (socket) => {
         const user = connectedUsers.get(socket.id);
         if (!user) return;
 
-        // Remove reaction via API
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/chat/reaction`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ messageId, emoji }),
-        });
+        console.log(`Broadcasting remove reaction ${emoji} from message ${messageId} by user ${user.name}`);
 
-        if (response.ok) {
-          // Broadcast reaction removal to all users
-          Object.keys(roomUsers).forEach(conversationId => {
-            if (roomUsers[conversationId].has(user.id)) {
-              io.to(conversationId).emit("message_reaction", {
-                messageId,
-                userId: user.id,
-                emoji,
-                action: "remove",
-              });
-            }
-          });
-        }
+        // Broadcast reaction removal to all users in conversations where this user is present
+        Object.keys(roomUsers).forEach(conversationId => {
+          if (roomUsers[conversationId].has(user.id)) {
+            console.log(`Broadcasting remove reaction to conversation ${conversationId}`);
+            io.to(conversationId).emit("message_reaction", {
+              messageId,
+              userId: user.id,
+              emoji,
+              action: "remove",
+            });
+          }
+        });
       } catch (error) {
-        console.error("Error removing reaction:", error);
+        console.error("Error broadcasting remove reaction:", error);
       }
     });
 

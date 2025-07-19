@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, ChevronDown, X, Users } from "lucide-react";
 import { useSocket } from "@/context/SocketProvider";
@@ -40,6 +40,11 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ workspace }) => {
 
   useEffect(() => {
     const handleMessageReceived = (messageData: any) => {
+      // Don't add message if it's from the current user (avoid echoing back sent messages)
+      if (messageData.senderId === session?.user?.id) {
+        return;
+      }
+
       const newMessage: ExtendedMessage = {
         id: messageData.id,
         content: messageData.content,
@@ -66,25 +71,84 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ workspace }) => {
           isOnline: true,
           lastSeen: new Date(),
         },
-        replyTo: null,
+        replyTo: messageData.replyTo || null,
         reactions: [],
         readBy: [],
       };
 
       setMessages(prev => [...prev, newMessage]);
       
-      if (!isOpen && messageData.senderId !== session?.user?.id) {
+      if (!isOpen) {
         setNewMessageCount(prev => prev + 1);
       }
+    };
+
+    const handleMessageReaction = (reactionData: any) => {
+      const { messageId, userId, emoji, action } = reactionData;
+      
+      setMessages(prev => prev.map(message => {
+        if (message.id === messageId) {
+          const updatedReactions = [...message.reactions];
+          
+          if (action === "add") {
+            // Add reaction if it doesn't exist
+            const existingReactionIndex = updatedReactions.findIndex(
+              r => r.userId === userId && r.emoji === emoji
+            );
+            
+            if (existingReactionIndex === -1) {
+              updatedReactions.push({
+                id: `${messageId}-${userId}-${emoji}`,
+                messageId,
+                userId,
+                emoji,
+                createdAt: new Date(),
+                user: {
+                  id: userId,
+                  name: "",
+                  username: "",
+                  image: "",
+                  surname: null,
+                  email: null,
+                  emailVerified: null,
+                  hashedPassword: null,
+                  completedOnboarding: true,
+                  useCase: null,
+                  isOnline: true,
+                  lastSeen: new Date(),
+                }
+              });
+            }
+          } else if (action === "remove") {
+            // Remove reaction
+            const reactionIndex = updatedReactions.findIndex(
+              r => r.userId === userId && r.emoji === emoji
+            );
+            if (reactionIndex !== -1) {
+              updatedReactions.splice(reactionIndex, 1);
+            }
+          }
+          
+          return {
+            ...message,
+            reactions: updatedReactions
+          };
+        }
+        return message;
+      }));
     };
 
     if (typeof window !== 'undefined') {
       // @ts-ignore
       window.socket?.on("message_received", handleMessageReceived);
+      // @ts-ignore
+      window.socket?.on("message_reaction", handleMessageReaction);
       
       return () => {
         // @ts-ignore
         window.socket?.off("message_received", handleMessageReceived);
+        // @ts-ignore
+        window.socket?.off("message_reaction", handleMessageReaction);
       };
     }
   }, [isOpen, session?.user?.id]);
@@ -103,6 +167,98 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ workspace }) => {
   const handleCancelReply = () => {
     setReplyTo(null);
   };
+
+  const handleMessageSent = (message: any) => {
+    // Add the sent message to local state immediately for better UX
+    const newMessage: ExtendedMessage = {
+      id: message.id,
+      content: message.content,
+      senderId: session?.user?.id || "test-user-id",
+      conversationId: message.conversationId || conversationId || workspace.id,
+      createdAt: new Date(message.createdAt),
+      messageType: message.messageType || "TEXT",
+      replyToId: message.replyToId,
+      updatedAt: null,
+      isDeleted: false,
+      deletedAt: null,
+      edited: false,
+      sender: {
+        id: session?.user?.id || "test-user-id",
+        name: session?.user?.name || "Test User",
+        image: "",
+        username: session?.user?.name || "Test User",
+        surname: null,
+        email: null,
+        emailVerified: null,
+        hashedPassword: null,
+        completedOnboarding: true,
+        useCase: null,
+        isOnline: true,
+        lastSeen: new Date(),
+      },
+      replyTo: message.replyTo || null,
+      reactions: [],
+      readBy: [],
+    };
+
+    setMessages(prev => [...prev, newMessage]);
+  };
+
+  const handleReactionChange = useCallback((messageId: string, emoji: string, action: 'add' | 'remove') => {
+    if (!session?.user?.id) return;
+
+    setMessages(prev => prev.map(message => {
+      if (message.id === messageId) {
+        const updatedReactions = [...message.reactions];
+        
+        if (action === 'add') {
+          // Add reaction if it doesn't exist
+          const existingReactionIndex = updatedReactions.findIndex(
+            r => r.userId === session.user.id && r.emoji === emoji
+          );
+          
+          if (existingReactionIndex === -1) {
+            const newReaction = {
+              id: `${messageId}-${session.user.id}-${emoji}`,
+              messageId,
+              userId: session.user.id,
+              emoji,
+              createdAt: new Date(),
+              user: {
+                id: session.user.id,
+                name: session.user.name || "",
+                username: session.user.name || "",
+                image: "",
+                surname: null,
+                email: null,
+                emailVerified: null,
+                hashedPassword: null,
+                completedOnboarding: true,
+                useCase: null,
+                isOnline: true,
+                lastSeen: new Date(),
+              }
+            };
+            updatedReactions.push(newReaction);
+          }
+        } else if (action === 'remove') {
+          // Remove reaction
+          const reactionIndex = updatedReactions.findIndex(
+            r => r.userId === session.user.id && r.emoji === emoji
+          );
+          if (reactionIndex !== -1) {
+            updatedReactions.splice(reactionIndex, 1);
+          }
+        }
+        
+        return {
+          ...message,
+          reactions: updatedReactions
+        };
+      }
+      return message;
+    }));
+  }, [session?.user?.id]);
 
   if (!workspace.conversation) {
     return null;
@@ -168,6 +324,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ workspace }) => {
                   messages={messages}
                   currentUserId={session?.user?.id || ""}
                   onReply={handleReply}
+                  onReactionChange={handleReactionChange}
                 />
                 <TypingIndicator
                   conversationId={workspace.conversation.id}
@@ -203,6 +360,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ workspace }) => {
                   conversationId={conversationId || workspace.id}
                   replyTo={replyTo}
                   onCancelReply={handleCancelReply}
+                  onMessageSent={handleMessageSent}
                 />
               </div>
             </motion.div>
