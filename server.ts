@@ -116,7 +116,7 @@ io.on("connection", (socket) => {
 
           // Send current online users to the new user
           const currentUsers = Array.from(roomUsers[conversationId].values())
-            .map(user => ({ id: user.id, name: user.name, image: user.image }));
+            .map((user, idx) => ({ id: user.id, name: user.name, image: user.image, _mapIndex: idx }));
           socket.emit("online_users", currentUsers);
         }
 

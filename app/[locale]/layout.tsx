@@ -7,6 +7,7 @@ import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { ToastProvider } from "@/context/ToastContext";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { GlobalRouteLoading } from "@/components/common/GlobalRouteLoading";
 import { SocketProvider } from "@/context/SocketProvider";
@@ -42,9 +43,11 @@ export default async function RootLayout({
             <SocketProvider>
               <QueryProvider>
                 <ThemeProvider>
-                  <Toaster />
-                  <GlobalRouteLoading />
-                  {children}
+                  <ToastProvider>
+                    <Toaster />
+                    <GlobalRouteLoading />
+                    {children}
+                  </ToastProvider>
                 </ThemeProvider>
               </QueryProvider>
             </SocketProvider>

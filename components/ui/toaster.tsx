@@ -1,18 +1,22 @@
 "use client"
 
+
 import { useToast } from "@/hooks/use-toast"
 import {
   Toast,
   ToastClose,
   ToastDescription,
-  ToastProvider,
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast"
 
 export function Toaster() {
   const { toasts } = useToast()
-
+  // Import ToastProvider from ui/toast.tsx, which is Radix's ToastPrimitives.Provider
+  // This ensures Radix context is present for ToastViewport and other primitives
+  // Do NOT use the custom context ToastProvider here
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { ToastProvider } = require("./toast")
   return (
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {
@@ -33,3 +37,4 @@ export function Toaster() {
     </ToastProvider>
   )
 }
+// End of Toaster component

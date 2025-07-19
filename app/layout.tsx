@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ToastProvider } from "@/context/ToastContext";
 import ClientSessionProvider from "@/components/ClientSessionProvider";
 export const metadata: Metadata = {
   title: "TaskFlow",
@@ -14,10 +15,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <ClientSessionProvider session ={null}>
+        <ToastProvider>
+          {/* <ClientSessionProvider session ={null}> */}
           {children}
-        </ClientSessionProvider>
-        {children}
+          {/* </ClientSessionProvider> */}
+        </ToastProvider>
       </body>
     </html>
   );

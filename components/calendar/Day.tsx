@@ -13,6 +13,7 @@ interface Props {
   day: Dayjs;
   monthIndex: number;
   calendarItems: CalendarItem[];
+  mapIndex?: { weekIdx: number; dayIdx: number };
 }
 
 export const Day = ({ day, monthIndex, calendarItems }: Props) => {

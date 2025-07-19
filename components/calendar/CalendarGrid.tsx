@@ -6,8 +6,13 @@ import { Day } from "./Day";
 import { CalendarItem } from "@/types/extended";
 import { useTranslations } from "next-intl";
 
+interface CalendarCell {
+  date: dayjs.Dayjs;
+  mapIndex: { weekIdx: number; dayIdx: number };
+}
+
 interface Props {
-  currMonth: dayjs.Dayjs[][];
+  currMonth: CalendarCell[][];
   monthIndex: number;
   calendarItems: CalendarItem[];
 }
@@ -32,10 +37,12 @@ export const CalendarGrid = ({
         <div className="w-full h-full grid grid-cols-7 grid-rows-5">
           {currMonth.map((row, i) => (
             <Fragment key={i}>
-              {row.map((day, idx) => (
+              {row.map((cell, idx) => (
                 <Day
+                  key={idx}
                   monthIndex={monthIndex}
-                  day={day}
+                  day={cell.date}
+                  mapIndex={cell.mapIndex}
                   calendarItems={calendarItems}
                 />
               ))}

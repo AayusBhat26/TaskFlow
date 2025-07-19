@@ -54,7 +54,7 @@ export const getUserInitials = (user: UserDisplayInfo): string => {
   
   return displayName
     .split(' ')
-    .map(n => n[0])
+    .map((n, idx) => n[0])
     .join('')
     .toUpperCase()
     .slice(0, 2); // Limit to 2 characters

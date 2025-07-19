@@ -53,10 +53,14 @@ export const getMonth = (month = dayjs().month()) => {
 
   let currentMonthCount = 1 - firstDayOfMonth;
 
-  const daysMatrix = new Array(5).fill([]).map(() => {
-    return new Array(7).fill(null).map(() => {
+  const daysMatrix = new Array(5).fill([]).map((_, weekIdx) => {
+    return new Array(7).fill(null).map((_, dayIdx) => {
       currentMonthCount++;
-      return dayjs(new Date(year, month, currentMonthCount));
+      const date = dayjs(new Date(year, month, currentMonthCount));
+      return {
+        date,
+        mapIndex: { weekIdx, dayIdx }
+      };
     });
   });
 
@@ -70,7 +74,11 @@ export const getMonth = (month = dayjs().month()) => {
 
     for (let i = 7 - firstWeek.length; i > 0; i--) {
       const day = lastDayOfPreviousMonth - i + 1;
-      firstWeek.unshift(dayjs(new Date(previousYear, previousMonth, day)));
+      // Always return an object with date and mapIndex
+      firstWeek.unshift({
+        date: dayjs(new Date(previousYear, previousMonth, day)),
+        mapIndex: { weekIdx: 0, dayIdx: i - 1 }
+      });
     }
   }
 
