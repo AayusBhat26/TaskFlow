@@ -25,6 +25,7 @@ export const NotificationItem = ({
     newUserRole,
     taskId,
     mindMapId,
+    messageId,
     notifyType,
     id,
   },
@@ -44,7 +45,8 @@ export const NotificationItem = ({
     newUserRole,
     workspace,
     taskId,
-    mindMapId
+    mindMapId,
+    messageId
   );
 
   const { mutate: updateToClickStatus } = useMutation({

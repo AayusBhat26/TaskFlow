@@ -11,7 +11,8 @@ export const useCreateNotifyItemDay = (
     name: string;
   } | null,
   taskId: string | null,
-  mindMapId: string | null
+  mindMapId: string | null,
+  messageId?: string | null
 ) => {
   const t = useTranslations("NOTIFICATIONS.NOTIFY_ITEM");
 
@@ -56,6 +57,10 @@ export const useCreateNotifyItemDay = (
       textContent = t("NEW_ASSIGNMENT_MIND_MAP_TEXT", {
         name: workspace?.name,
       });
+      break;
+    case "CHAT_MENTION":
+      link = `/dashboard/workspace/${workspace?.id}/chat${messageId ? `#message-${messageId}` : ""}`;
+      textContent = t("CHAT_MENTION_TEXT", { name: workspace?.name });
       break;
     default:
       break;

@@ -6,7 +6,11 @@ import { useSocket } from "@/context/SocketProvider";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FileUpload } from "./FileUpload";
+import { RichTextToolbar } from "./RichTextToolbar";
+import { MarkdownRenderer } from "./MarkdownRenderer";
+import { UserMention } from "./UserMention";
 import { MessageType } from "@prisma/client";
+import { cn } from "@/lib/utils";
 
 interface AttachedFile {
   id: string;
@@ -20,6 +24,7 @@ interface AttachedFile {
 
 interface MessageInputProps {
   conversationId: string;
+  workspaceId?: string;
   replyTo?: any | null;
   onCancelReply?: () => void;
   onMessageSent?: (message: any) => void;
@@ -27,6 +32,7 @@ interface MessageInputProps {
 
 export const MessageInput: React.FC<MessageInputProps> = ({
   conversationId,
+  workspaceId,
   replyTo,
   onCancelReply,
   onMessageSent,
@@ -35,6 +41,11 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   const [message, setMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [showMentions, setShowMentions] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState("");
+  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
+  const [cursorPosition, setCursorPosition] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -139,8 +150,41 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
+    const newValue = e.target.value;
+    const newCursorPos = e.target.selectionStart;
+    
+    setMessage(newValue);
+    setCursorPosition(newCursorPos);
     handleStartTyping();
+    
+    // Detect mentions
+    detectMentions(newValue, newCursorPos);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Handle keyboard shortcuts for formatting
+    if (e.ctrlKey || e.metaKey) {
+      switch (e.key) {
+        case 'b':
+          e.preventDefault();
+          applyFormat('**');
+          break;
+        case 'i':
+          e.preventDefault();
+          applyFormat('*');
+          break;
+        case 'e':
+          e.preventDefault();
+          applyFormat('`');
+          break;
+      }
+    }
+    
+    // Close mentions on Escape
+    if (e.key === 'Escape' && showMentions) {
+      e.preventDefault();
+      setShowMentions(false);
+    }
   };
 
   const handleFilesAttached = (files: AttachedFile[]) => {
@@ -188,6 +232,101 @@ export const MessageInput: React.FC<MessageInputProps> = ({
       }
     };
   }, [conversationId, isTyping, stopTyping]);
+
+  // Rich text formatting functions
+  const applyFormat = (format: string) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = message.substring(start, end);
+    
+    let formattedText = "";
+    
+    switch (format) {
+      case "**":
+        formattedText = selectedText ? `**${selectedText}**` : "**text**";
+        break;
+      case "*":
+        formattedText = selectedText ? `*${selectedText}*` : "*text*";
+        break;
+      case "`":
+        formattedText = selectedText ? `\`${selectedText}\`` : "`code`";
+        break;
+      case "@":
+        const rect = textarea.getBoundingClientRect();
+        setMentionPosition({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + window.scrollX
+        });
+        setShowMentions(true);
+        setMentionQuery("");
+        formattedText = "@";
+        break;
+      default:
+        formattedText = selectedText;
+    }
+
+    const newMessage = message.substring(0, start) + formattedText + message.substring(end);
+    setMessage(newMessage);
+    
+    // Set cursor position
+    setTimeout(() => {
+      if (format === "@") {
+        textarea.setSelectionRange(start + 1, start + 1);
+      } else if (selectedText) {
+        textarea.setSelectionRange(start + formattedText.length, start + formattedText.length);
+      } else {
+        const cursorPos = start + formattedText.length - (format === "**" ? 2 : format === "`" ? 1 : 0);
+        textarea.setSelectionRange(cursorPos, cursorPos);
+      }
+      textarea.focus();
+    }, 0);
+  };
+
+  const handleMentionSelect = (user: any) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const mentionText = `@${user.username} `;
+    const beforeMention = message.substring(0, cursorPosition - mentionQuery.length - 1);
+    const afterMention = message.substring(cursorPosition);
+    
+    const newMessage = beforeMention + mentionText + afterMention;
+    setMessage(newMessage);
+    setShowMentions(false);
+    setMentionQuery("");
+    
+    setTimeout(() => {
+      const newCursorPos = beforeMention.length + mentionText.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+      textarea.focus();
+    }, 0);
+  };
+
+  const detectMentions = (text: string, cursorPos: number) => {
+    const beforeCursor = text.substring(0, cursorPos);
+    const mentionMatch = beforeCursor.match(/@(\w*)$/);
+    
+    if (mentionMatch) {
+      setMentionQuery(mentionMatch[1]);
+      if (!showMentions) {
+        const textarea = textareaRef.current;
+        if (textarea) {
+          const rect = textarea.getBoundingClientRect();
+          setMentionPosition({
+            top: rect.bottom + window.scrollY,
+            left: rect.left + window.scrollX
+          });
+          setShowMentions(true);
+        }
+      }
+    } else {
+      setShowMentions(false);
+      setMentionQuery("");
+    }
+  };
 
   return (
     <div className="p-4 space-y-3">
@@ -243,16 +382,40 @@ export const MessageInput: React.FC<MessageInputProps> = ({
       )}
       
       <div className="flex items-end space-x-2">
-        <div className="flex-1">
-          <Textarea
-            ref={textareaRef}
-            value={message}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            placeholder="Type a message..."
-            className="min-h-[40px] max-h-[120px] resize-none border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400"
-            rows={1}
+        <div className="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden focus-within:border-blue-500 dark:focus-within:border-blue-400">
+          {/* Rich Text Toolbar */}
+          <RichTextToolbar
+            onFormatApply={applyFormat}
+            onPreviewToggle={() => setIsPreviewMode(!isPreviewMode)}
+            isPreviewMode={isPreviewMode}
           />
+          
+          {/* Input Area */}
+          <div className="relative">
+            {isPreviewMode ? (
+              <div className="min-h-[40px] max-h-[120px] overflow-y-auto p-3 bg-gray-50 dark:bg-gray-800">
+                {message.trim() ? (
+                  <MarkdownRenderer 
+                    content={message} 
+                    className="text-sm leading-relaxed"
+                  />
+                ) : (
+                  <span className="text-gray-500 text-sm">Preview your message...</span>
+                )}
+              </div>
+            ) : (
+              <Textarea
+                ref={textareaRef}
+                value={message}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                onKeyPress={handleKeyPress}
+                placeholder="Type a message... Use **bold**, *italic*, `code`, or @mention"
+                className="min-h-[40px] max-h-[120px] resize-none border-none focus:ring-0 focus:outline-none"
+                rows={1}
+              />
+            )}
+          </div>
         </div>
         
         <div className="flex space-x-1">
@@ -283,6 +446,18 @@ export const MessageInput: React.FC<MessageInputProps> = ({
           </Button>
         </div>
       </div>
+
+      {/* User Mention Dropdown */}
+      {workspaceId && (
+        <UserMention
+          isOpen={showMentions}
+          onClose={() => setShowMentions(false)}
+          onSelectUser={handleMentionSelect}
+          position={mentionPosition}
+          searchQuery={mentionQuery}
+          workspaceId={workspaceId}
+        />
+      )}
     </div>
   );
 };

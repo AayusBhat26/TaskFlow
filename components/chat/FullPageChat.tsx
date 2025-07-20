@@ -10,6 +10,7 @@ import { MessageList } from "@/components/chat/MessageList";
 import { MessageInput } from "@/components/chat/MessageInput";
 import { TypingIndicator } from "@/components/chat/TypingIndicator";
 import { OnlineUsers } from "@/components/chat/OnlineUsers";
+import { ChatSearch } from "@/components/chat/ChatSearch";
 import { cn } from "@/lib/utils";
 
 interface FullPageChatProps {
@@ -223,6 +224,39 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
     };
   }, [conversationId]);
 
+  // Handle scrolling to specific message from URL anchor
+  useEffect(() => {
+    if (messages.length > 0 && typeof window !== 'undefined') {
+      const hash = window.location.hash;
+      if (hash.startsWith('#message-')) {
+        const messageId = hash.replace('#message-', '');
+        
+        // Small delay to ensure the DOM is fully rendered
+        setTimeout(() => {
+          const messageElement = document.getElementById(`message-${messageId}`);
+          if (messageElement) {
+            messageElement.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center'
+            });
+            
+            // Add a temporary highlight effect
+            messageElement.style.background = 'rgba(59, 130, 246, 0.1)';
+            messageElement.style.border = '2px solid rgba(59, 130, 246, 0.3)';
+            messageElement.style.borderRadius = '8px';
+            
+            // Remove highlight after 3 seconds
+            setTimeout(() => {
+              messageElement.style.background = '';
+              messageElement.style.border = '';
+              messageElement.style.borderRadius = '';
+            }, 3000);
+          }
+        }, 500);
+      }
+    }
+  }, [messages]);
+
   const handleReply = useCallback((message: any) => {
     setReplyTo(message);
   }, []);
@@ -358,6 +392,15 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
         </div>
         
         <div className="flex items-center space-x-4">
+          {conversationId && (
+            <ChatSearch 
+              conversationId={conversationId}
+              onMessageSelect={(messageId) => {
+                // TODO: Scroll to message
+                console.log('Navigate to message:', messageId);
+              }}
+            />
+          )}
           <OnlineUsers />
           <div className="flex items-center space-x-1 text-sm text-gray-500 dark:text-gray-400">
             <Users className="h-4 w-4" />
@@ -444,6 +487,7 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
         <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
           <MessageInput
             conversationId={conversationId || workspace.id}
+            workspaceId={workspace.id}
             replyTo={replyTo}
             onCancelReply={handleCancelReply}
             onMessageSent={handleMessageSent}

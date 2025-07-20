@@ -2,27 +2,41 @@
 
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { Reply, MoreHorizontal, Heart, ThumbsUp } from "lucide-react";
+import { Reply, MoreHorizontal, Heart, ThumbsUp, Edit, Trash2, Check, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { ExtendedMessage } from "@/types/chat";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useSocket } from "@/context/SocketProvider";
 import { cn } from "@/lib/utils";
 import { getUserDisplayName, getUserInitials } from "@/lib/userUtils";
 import { FileAttachment } from "./FileAttachment";
+import { MarkdownRenderer } from "./MarkdownRenderer";
 
 interface MessageItemProps {
   message: ExtendedMessage;
   currentUserId: string;
   onReply: (message: ExtendedMessage) => void;
   onReactionChange?: (messageId: string, emoji: string, action: 'add' | 'remove') => void;
+  onMessageUpdate?: (messageId: string, content: string) => void;
+  onMessageDelete?: (messageId: string) => void;
   isLastMessage?: boolean;
 }
 
@@ -33,11 +47,18 @@ export const MessageItem: React.FC<MessageItemProps> = ({
   currentUserId,
   onReply,
   onReactionChange,
+  onMessageUpdate,
+  onMessageDelete,
   isLastMessage,
 }) => {
   const { addReaction, removeReaction } = useSocket();
   const [showActions, setShowActions] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(message.content);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const isOwnMessage = message.senderId === currentUserId;
 
   const handleReaction = (emoji: string) => {
@@ -65,6 +86,78 @@ export const MessageItem: React.FC<MessageItemProps> = ({
     
     // Close dropdown after reaction
     setDropdownOpen(false);
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    setEditContent(message.content);
+    setDropdownOpen(false);
+  };
+
+  const handleSaveEdit = async () => {
+    if (editContent.trim() === message.content.trim()) {
+      setIsEditing(false);
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const response = await fetch(`/api/chat/message/${message.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: editContent.trim(),
+        }),
+      });
+
+      if (response.ok) {
+        const updatedMessage = await response.json();
+        onMessageUpdate?.(message.id, editContent.trim());
+        setIsEditing(false);
+      } else {
+        console.error('Failed to update message');
+      }
+    } catch (error) {
+      console.error('Error updating message:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditContent(message.content);
+    setIsEditing(false);
+  };
+
+  const handleDeleteMessage = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/chat/message/${message.id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        onMessageDelete?.(message.id);
+      } else {
+        console.error('Failed to delete message');
+      }
+    } catch (error) {
+      console.error('Error deleting message:', error);
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSaveEdit();
+    } else if (e.key === 'Escape') {
+      handleCancelEdit();
+    }
   };
 
   const handleMouseEnter = () => {
@@ -95,6 +188,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
 
   return (
     <motion.div
+      id={`message-${message.id}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -154,10 +248,58 @@ export const MessageItem: React.FC<MessageItemProps> = ({
               message.replyTo && "mt-1"
             )}
           >
-            {message.content && (
-              <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
-                {message.content}
-              </p>
+            {isEditing ? (
+              <div className="space-y-2">
+                <Textarea
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                  onKeyDown={handleKeyPress}
+                  className={cn(
+                    "resize-none border-none focus:ring-2 focus:ring-blue-500 text-sm",
+                    isOwnMessage 
+                      ? "bg-white/10 text-white placeholder-white/70" 
+                      : "bg-white dark:bg-gray-600"
+                  )}
+                  rows={3}
+                  disabled={isSaving}
+                />
+                <div className="flex items-center justify-between">
+                  <div className="text-xs opacity-70">
+                    Press Enter to save • ESC to cancel
+                  </div>
+                  <div className="flex space-x-1">
+                    <Button
+                      size="sm"
+                      variant={isOwnMessage ? "secondary" : "default"}
+                      onClick={handleSaveEdit}
+                      disabled={isSaving || !editContent.trim()}
+                      className="h-6 px-2 text-xs"
+                    >
+                      {isSaving ? "..." : <Check className="h-3 w-3" />}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={handleCancelEdit}
+                      disabled={isSaving}
+                      className="h-6 px-2 text-xs"
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <>
+                {message.content && (
+                  <div className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+                    <MarkdownRenderer content={message.content} />
+                    {message.edited && (
+                      <span className="text-xs opacity-70 ml-2">(edited)</span>
+                    )}
+                  </div>
+                )}
+              </>
             )}
 
             {/* File Attachments */}
@@ -190,13 +332,13 @@ export const MessageItem: React.FC<MessageItemProps> = ({
             )}
 
             {/* Action buttons */}
-            {showActions && (
+            {showActions && !isEditing && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className={cn(
                   "absolute top-0 flex space-x-1",
-                  isOwnMessage ? "-left-20" : "-right-20"
+                  isOwnMessage ? "-left-28" : "-right-28"
                 )}
               >
                 <Button
@@ -232,6 +374,34 @@ export const MessageItem: React.FC<MessageItemProps> = ({
                     </div>
                   </DropdownMenuContent>
                 </DropdownMenu>
+
+                {/* More options dropdown for own messages */}
+                {isOwnMessage && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        className="h-7 w-7 p-0 bg-white dark:bg-gray-800 shadow-md"
+                      >
+                        <MoreHorizontal className="h-3 w-3" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={handleEdit}>
+                        <Edit className="h-3 w-3 mr-2" />
+                        Edit Message
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => setShowDeleteDialog(true)}
+                        className="text-red-600 dark:text-red-400"
+                      >
+                        <Trash2 className="h-3 w-3 mr-2" />
+                        Delete Message
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </motion.div>
             )}
           </div>
@@ -274,6 +444,28 @@ export const MessageItem: React.FC<MessageItemProps> = ({
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Message</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this message? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteMessage}
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </motion.div>
   );
 };

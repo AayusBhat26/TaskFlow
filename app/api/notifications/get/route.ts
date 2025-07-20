@@ -37,6 +37,6 @@ export const GET = async (request: Request) => {
 
     return NextResponse.json(userNotifications, { status: 200 });
   } catch (_) {
-    return NextResponse.json("ERRORS.DB_ERROR", { status: 405 });
+    return NextResponse.json("ERRORS.DB_ERROR", { status: 500 });
   }
 };

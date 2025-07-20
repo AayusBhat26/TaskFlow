@@ -112,6 +112,7 @@ enum NotifyType {
   NEW_ROLE
   NEW_ASSIGNMENT_TASK
   NEW_ASSIGNMENT_MIND_MAP
+  CHAT_MENTION
 }
 
 model Notification {
@@ -129,6 +130,7 @@ model Notification {
   newUserRole UserPermission?
   taskId String?
   mindMapId String?
+  messageId String?
 
 
 }
