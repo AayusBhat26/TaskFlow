@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Users, Send, Smile } from "lucide-react";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useSocket } from "@/context/SocketProvider";
 import { getWorkspaces, getConversation } from "@/lib/api";
 import { Workspace } from "@prisma/client";
@@ -22,9 +22,7 @@ interface WorkspaceChatProps {
 }
 
 const WorkspaceChat: React.FC<WorkspaceChatProps> = ({ workspaceId, onClose }) => {
-  // Temporarily disabled session to fix React hooks error
-  // const { data: session } = useSession();
-  const session = { user: { id: "test-user-id", name: "Test User" } }; // Mock session
+  const { data: session } = useSession();
   const socket = useSocket();
   const [messages, setMessages] = useState<ExtendedMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -118,6 +116,7 @@ const WorkspaceChat: React.FC<WorkspaceChatProps> = ({ workspaceId, onClose }) =
         replyTo: null,
         reactions: [],
         readBy: [],
+        attachments: [], // Add this line to satisfy the ExtendedMessage type
       };
 
       setMessages(prev => [...prev, newMsg]);

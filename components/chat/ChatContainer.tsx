@@ -74,6 +74,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ workspace }) => {
         replyTo: messageData.replyTo || null,
         reactions: [],
         readBy: [],
+        attachments: messageData.attachments || [],
       };
 
       setMessages(prev => [...prev, newMessage]);
@@ -199,6 +200,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({ workspace }) => {
       replyTo: message.replyTo || null,
       reactions: [],
       readBy: [],
+      attachments: message.attachments || [],
     };
 
     setMessages(prev => [...prev, newMessage]);

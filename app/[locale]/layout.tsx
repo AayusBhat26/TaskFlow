@@ -10,7 +10,6 @@ import { ToastProvider } from "@/context/ToastContext";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { GlobalRouteLoading } from "@/components/common/GlobalRouteLoading";
 import { SocketProvider } from "@/context/SocketProvider";
-// import ClientSessionProvider from "@/components/ClientSessionProvider";
 
 const locales = ["en"];
 

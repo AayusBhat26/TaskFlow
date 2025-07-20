@@ -80,6 +80,18 @@ export async function GET(
                 },
               },
             },
+            attachments: {
+              include: {
+                uploadedBy: {
+                  select: {
+                    id: true,
+                    name: true,
+                    username: true,
+                    image: true,
+                  },
+                },
+              },
+            },
             _count: {
               select: {
                 reactions: true,
@@ -138,6 +150,18 @@ export async function GET(
               readBy: {
                 include: {
                   user: {
+                    select: {
+                      id: true,
+                      name: true,
+                      username: true,
+                      image: true,
+                    },
+                  },
+                },
+              },
+              attachments: {
+                include: {
+                  uploadedBy: {
                     select: {
                       id: true,
                       name: true,

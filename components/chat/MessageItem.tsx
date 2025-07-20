@@ -16,6 +16,7 @@ import {
 import { useSocket } from "@/context/SocketProvider";
 import { cn } from "@/lib/utils";
 import { getUserDisplayName, getUserInitials } from "@/lib/userUtils";
+import { FileAttachment } from "./FileAttachment";
 
 interface MessageItemProps {
   message: ExtendedMessage;
@@ -153,9 +154,31 @@ export const MessageItem: React.FC<MessageItemProps> = ({
               message.replyTo && "mt-1"
             )}
           >
-            <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
-              {message.content}
-            </p>
+            {message.content && (
+              <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+                {message.content}
+              </p>
+            )}
+
+            {/* File Attachments */}
+            {message.attachments && message.attachments.length > 0 && (
+              <div className={cn("space-y-2", message.content && "mt-3")}>
+                {message.attachments.map((attachment) => (
+                  <FileAttachment
+                    key={attachment.id}
+                    id={attachment.id}
+                    filename={attachment.filename}
+                    originalName={attachment.originalName}
+                    mimeType={attachment.mimeType}
+                    size={attachment.size}
+                    url={attachment.url}
+                    createdAt={attachment.createdAt.toString()}
+                    canDelete={false} // For now, disable deletion in messages
+                    className="max-w-xs"
+                  />
+                ))}
+              </div>
+            )}
 
             {/* Message time for own messages */}
             {isOwnMessage && (

@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { socket, connectSocket, disconnectSocket } from "@/lib/socket";
 import { ChatState } from "@/types/chat";
 import { useToast } from "@/hooks/use-toast";
+import { MessageType } from "@prisma/client";
 
 interface SocketContextType extends ChatState {
   joinConversation: (conversationId: string) => void;
@@ -12,7 +13,7 @@ interface SocketContextType extends ChatState {
   sendMessage: (data: {
     conversationId: string;
     content: string;
-    messageType?: "TEXT" | "SYSTEM";
+    messageType?: MessageType;
     replyToId?: string;
     id?: string;
     senderId?: string;
@@ -20,6 +21,7 @@ interface SocketContextType extends ChatState {
     senderImage?: string;
     createdAt?: string;
     replyTo?: any;
+    attachments?: any[];
   }) => void;
   startTyping: (conversationId: string) => void;
   stopTyping: (conversationId: string) => void;
@@ -234,7 +236,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const sendMessage = useCallback((data: {
     conversationId: string;
     content: string;
-    messageType?: "TEXT" | "SYSTEM";
+    messageType?: MessageType;
     replyToId?: string;
     id?: string;
     senderId?: string;
@@ -242,8 +244,10 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     senderImage?: string;
     createdAt?: string;
     replyTo?: any;
+    attachments?: any[];
   }) => {
-    socket.emit("send_message", data);
+    // Type assertion to bypass strict socket type checking while the socket server supports all message types
+    socket.emit("send_message", data as any);
   }, []);
 
   const startTyping = useCallback((conversationId: string) => {

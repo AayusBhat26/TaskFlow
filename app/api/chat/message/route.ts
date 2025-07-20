@@ -121,10 +121,23 @@ export async function POST(request: NextRequest) {
             },
           },
         },
+        attachments: {
+          include: {
+            uploadedBy: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+                username: true,
+              },
+            },
+          },
+        },
         _count: {
           select: {
             reactions: true,
             readBy: true,
+            attachments: true,
           },
         },
       },

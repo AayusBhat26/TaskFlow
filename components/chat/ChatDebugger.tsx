@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSocket } from "@/context/SocketProvider";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export const ChatDebugger = () => {
-  // Temporarily disabled session to fix React hooks error
-  // const { data: session } = useSession();
-  const session = { user: { id: "test-user-id", name: "Test User" } }; // Mock session
+  const { data: session } = useSession();
   const socket = useSocket();
   const [socketConnected, setSocketConnected] = useState(false);
   const [testMessage, setTestMessage] = useState("");

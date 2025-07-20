@@ -58,6 +58,11 @@ const WorkspaceChatPage = async ({ params: { workspace_id } }: Params) => {
             include: {
               user: true
             }
+          },
+          attachments: {
+            include: {
+              uploadedBy: true
+            }
           }
         }
       },
@@ -69,6 +74,11 @@ const WorkspaceChatPage = async ({ params: { workspace_id } }: Params) => {
       readBy: {
         include: {
           user: true
+        }
+      },
+      attachments: {
+        include: {
+          uploadedBy: true
         }
       }
     },

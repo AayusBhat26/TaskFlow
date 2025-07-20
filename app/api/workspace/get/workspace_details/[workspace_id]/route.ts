@@ -14,6 +14,7 @@ export const GET = async (
   const url = new URL(request.url);
 
   const userId = url.searchParams.get("userId");
+  const includeChat = url.searchParams.get("includeChat") === "true";
 
   if (!userId) return NextResponse.json("ERRORS.NO_USER_API", { status: 404 });
 
@@ -27,6 +28,64 @@ export const GET = async (
           },
         },
       },
+      include: includeChat ? {
+        conversation: {
+          include: {
+            messages: {
+              where: {
+                isDeleted: false
+              },
+              include: {
+                sender: true,
+                replyTo: {
+                  include: {
+                    sender: true,
+                    reactions: {
+                      include: {
+                        user: true
+                      }
+                    },
+                    readBy: {
+                      include: {
+                        user: true
+                      }
+                    },
+                    attachments: {
+                      include: {
+                        uploadedBy: true
+                      }
+                    }
+                  }
+                },
+                reactions: {
+                  include: {
+                    user: true
+                  }
+                },
+                readBy: {
+                  include: {
+                    user: true
+                  }
+                },
+                attachments: {
+                  include: {
+                    uploadedBy: true
+                  }
+                }
+              },
+              orderBy: {
+                createdAt: "asc"
+              },
+              take: 50
+            }
+          }
+        },
+        subscribers: {
+          include: {
+            user: true
+          }
+        }
+      } : {}
     });
 
     if (!workspace)
@@ -34,6 +93,7 @@ export const GET = async (
 
     return NextResponse.json(workspace, { status: 200 });
   } catch (err) {
+    console.error("Error fetching workspace details:", err);
     return NextResponse.json("ERRORS.DB_ERROR", { status: 405 });
   }
 };

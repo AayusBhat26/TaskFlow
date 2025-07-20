@@ -85,6 +85,18 @@ export async function GET(request: NextRequest) {
             },
           },
         },
+        attachments: {
+          include: {
+            uploadedBy: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+                username: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         createdAt: 'asc',

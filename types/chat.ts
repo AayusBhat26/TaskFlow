@@ -1,13 +1,15 @@
-import { Message, MessageReaction, MessageRead, User, Workspace } from "@prisma/client";
+import { Message, MessageReaction, MessageRead, User, Workspace, FileAttachment } from "@prisma/client";
 
 export interface ExtendedMessage extends Message {
   sender: User;
   replyTo?: ExtendedMessage | null;
   reactions: (MessageReaction & { user: User })[];
   readBy: (MessageRead & { user: User })[];
+  attachments: (FileAttachment & { uploadedBy: User })[];
   _count?: {
     reactions: number;
     readBy: number;
+    attachments: number;
   };
 }
 

@@ -100,6 +100,7 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
         replyTo: messageData.replyTo || null,
         reactions: [],
         readBy: [],
+        attachments: messageData.attachments || [],
       };
 
       setMessages(prev => {
@@ -262,6 +263,7 @@ export const FullPageChat: React.FC<FullPageChatProps> = ({ workspace }) => {
       replyTo: optimisticMessage.replyTo || null,
       reactions: [],
       readBy: [],
+      attachments: optimisticMessage.attachments || [],
     };
 
     setMessages(prev => [...prev, newMessage]);

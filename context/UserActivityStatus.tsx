@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { UserActiveItemList } from "@/types/extended";
 import { UserPermission } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import {

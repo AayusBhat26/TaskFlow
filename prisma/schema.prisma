@@ -37,6 +37,7 @@ model User {
   messages Message[]
   messageReads MessageRead[]
   messageReactions MessageReaction[]
+  fileAttachments FileAttachment[]
   isOnline Boolean @default(false)
   lastSeen DateTime?
 }
@@ -157,6 +158,7 @@ model Message {
   replies Message[] @relation("MessageReply")
   readBy MessageRead[]
   reactions MessageReaction[]
+  attachments FileAttachment[]
   isDeleted Boolean @default(false)
   deletedAt DateTime?
 }
@@ -182,6 +184,21 @@ model MessageReaction {
   createdAt DateTime @default(now())
 
   @@unique([messageId, userId, emoji])
+}
+
+model FileAttachment {
+  id String @id @default(cuid())
+  filename String
+  originalName String
+  mimeType String
+  size Int
+  url String
+  key String // UploadThing file key for deletion
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId String
+  uploadedBy User @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  uploadedById String
+  createdAt DateTime @default(now())
 }
 
 enum MessageType {

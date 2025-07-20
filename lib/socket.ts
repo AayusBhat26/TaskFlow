@@ -1,4 +1,5 @@
 import { io, Socket } from "socket.io-client";
+import { MessageType } from "@prisma/client";
 
 interface ServerToClientEvents {
   message_received: (message: {
@@ -9,9 +10,10 @@ interface ServerToClientEvents {
     senderImage?: string;
     conversationId: string;
     createdAt: string;
-    messageType: "TEXT" | "SYSTEM";
+    messageType: MessageType;
     replyToId?: string;
     replyTo?: any;
+    attachments?: any[];
   }) => void;
   user_joined: (user: { id: string; name: string; image?: string }) => void;
   user_left: (userId: string) => void;
@@ -32,8 +34,15 @@ interface ClientToServerEvents {
   send_message: (data: {
     conversationId: string;
     content: string;
-    messageType?: "TEXT" | "SYSTEM";
+    messageType?: MessageType;
     replyToId?: string;
+    id?: string;
+    senderId?: string;
+    senderName?: string;
+    senderImage?: string;
+    createdAt?: string;
+    replyTo?: any;
+    attachments?: any[];
   }) => void;
   typing: (data: { conversationId: string }) => void;
   stop_typing: (data: { conversationId: string }) => void;

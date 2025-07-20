@@ -21,73 +21,68 @@ const Chat = async ({ params: { workspace_id, chat_id } }: Params) => {
 
   if (!workspace) return notFound();
 
-  // Get or create conversation
-  let conversation = await db.conversation.findFirst({
-    where: {
-      id: chat_id,
-      workspaceId: workspace_id
-    }
-  });
-
-  // If conversation doesn't exist, create it
+  // Get or create conversation if it doesn't exist
+  let conversation = workspace.conversation;
+  
   if (!conversation) {
     conversation = await db.conversation.create({
       data: {
         id: chat_id,
         workspaceId: workspace_id
-      }
-    });
-  }
-
-  // Get initial messages
-  const initialMessages = await db.message.findMany({
-    where: {
-      conversationId: chat_id,
-      isDeleted: false
-    },
-    include: {
-      sender: true, // Get complete User object
-      replyTo: {
-        include: {
-          sender: true, // Get complete User object
-          reactions: {
-            include: {
-              user: true
+      },
+      include: {
+        messages: {
+          where: {
+            isDeleted: false
+          },
+          include: {
+            sender: true,
+            replyTo: {
+              include: {
+                sender: true,
+                reactions: {
+                  include: {
+                    user: true
+                  }
+                },
+                readBy: {
+                  include: {
+                    user: true
+                  }
+                },
+                attachments: {
+                  include: {
+                    uploadedBy: true
+                  }
+                }
+              }
+            },
+            reactions: {
+              include: {
+                user: true
+              }
+            },
+            readBy: {
+              include: {
+                user: true
+              }
+            },
+            attachments: {
+              include: {
+                uploadedBy: true
+              }
             }
           },
-          readBy: {
-            include: {
-              user: true
-            }
+          orderBy: {
+            createdAt: "asc"
           }
         }
-      },
-      reactions: {
-        include: {
-          user: true // Get complete User object
-        }
-      },
-      readBy: {
-        include: {
-          user: true // Get complete User object
-        }
       }
-    },
-    orderBy: {
-      createdAt: "asc"
-    },
-    take: 50
-  });
-
-  // Create workspace object with conversation data for ChatContainer
-  const workspaceWithConversation = {
-    ...workspace,
-    conversation: {
-      id: conversation.id,
-      messages: initialMessages, // Use raw messages without date conversion
-    },
-    subscribers: [], // TODO: Populate this with actual subscribers if needed
-  };
+    });
+    
+    // Update workspace with the new conversation
+    workspace.conversation = conversation;
+  }
 
   return (
     <>
@@ -110,7 +105,7 @@ const Chat = async ({ params: { workspace_id, chat_id } }: Params) => {
         ]}
       />
       <main className="h-full w-full p-4">
-        <ChatContainer workspace={workspaceWithConversation} />
+        <ChatContainer workspace={workspace} />
       </main>
     </>
   );
