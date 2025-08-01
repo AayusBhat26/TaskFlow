@@ -203,8 +203,7 @@
       "DEFAULT_NAME": "Untitled",
       "ACTIONS": "Actions",
       "ADD_TASK": "Add task",
-      "ADD_MIND_MAP": "Add mind map",
-      "WORKSPACE_CHAT": "Team chat"
+      "ADD_MIND_MAP": "Add mind map"
     }
   },
   "COMMON": {
@@ -717,8 +716,7 @@
       "NEW_MIND_MAP_TEXT": "has added a new mind map in the workspace {name}",
       "NEW_ROLE_TEXT": "You have been granted {role} level permissions in the workspace {name}",
       "NEW_ASSIGMENT_TASK_TEXT": "You have been assigned a task in the workspace {name}",
-      "NEW_ASSIGMENT_MIND_MAP_TEXT": "You have been assigned to a mind map in the workspace {name}",
-      "CHAT_MENTION_TEXT": "mentioned you in {name} chat"
+      "NEW_ASSIGMENT_MIND_MAP_TEXT": "You have been assigned to a mind map in the workspace {name}"
     }
   },
   "HOME_PAGE": {
@@ -747,47 +745,6 @@
       "PRIVATE_CHAT": "Private Chat",
       "NEW_TASK": "New Task",
       "NEW_MIND_MAP": "New Mind Map"
-    }
-  },
-  "CHAT": {
-    "NO_MESSAGES": {
-      "FIRST": "We couldn't find any messages in this chat.",
-      "SECOND": "Send the first message!"
-    },
-    "HEADER": { 
-      "TITLE": "{workspaceName} chat",
-      "WORKSPACE_CHAT": "{workspaceName} chat",
-      "PRIVATE_CHAT": "Private chat",
-      "GROUP_CHAT": "Group chat",
-      "PERSONAL_NOTES": "Personal notes"
-    },
-    "DELETE_MESSAGE": {
-      "TITLE": "Delete Message",
-      "DESC": "This operation is irreversible and will permanently delete the message.",
-      "BTN_DELETE": "Delete",
-      "BTN_CANCEL": "Cancel"
-    },
-    "EDIT": {
-      "BADGE": "(edited)",
-      "TEXT": {
-        "FIRST": "Press",
-        "SECOND": ", to cancel • Press",
-        "THIRD": ", to save"
-      }
-    },
-    "OPTIONS": {
-      "EDIT": "Edit Message",
-      "DELETE": "Delete Message"
-    },
-    "LOAD_MORE": "Load More",
-    "NOTIFICATIONS": "{notifications} new messages",
-    "NEW_MESSAGE": {
-      "PLACEHOLDER": "New message",
-      "DELETE_ATACHMENT": "Delete attachment",
-      "ATACHMENT_DEAFULT_ERROR": "Failed to add attachments.",
-      "ATACHMENT_TO_MANY_ERROR": "Failed to add attachments. The maximum number of files you can send at once is 5 images and 5 PDFs.",
-      "ATACHMENT_TO_BIG_ERROR": "Failed to add attachments. One of the files is too large.",
-      "ATACHMENT_WRONG_FILE_ERROR": "Failed to add attachments. One of the files has an unsupported format."
     }
   },
   "CLIENT_ERROR": {

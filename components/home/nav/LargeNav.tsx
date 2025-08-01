@@ -112,7 +112,6 @@ export const LargeNav = () => {
                         'Mind Maps': '🧠',
                         'Tasks': '✅', 
                         'Calendar': '📅',
-                        'Chat': '💬',
                         'Pomodoro': '⏰'
                       };
                       
@@ -120,7 +119,6 @@ export const LargeNav = () => {
                         'Mind Maps': 'Visual brainstorming',
                         'Tasks': 'Project management',
                         'Calendar': 'Schedule planning', 
-                        'Chat': 'Team collaboration',
                         'Pomodoro': 'Focus sessions'
                       };
                       

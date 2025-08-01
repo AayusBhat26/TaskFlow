@@ -1,0 +1,4 @@
+# moving into a new database.
+npx prisma migrate reset
+npx prisma generate
+npx prisma db push 

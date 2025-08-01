@@ -1,10 +1,10 @@
 import {
   ExtendedMindMap,
   ExtendedTask,
+  ExtendedWorkspace,
   HomeRecentActivity,
   SettingsWorkspace,
 } from "@/types/extended";
-import { ExtendedWorkspace } from "@/types/chat";
 import {
   MindMap,
   PomodoroSettings,
@@ -183,86 +183,4 @@ export const getWorkspaceWithChat = async (workspace_id: string, userId: string)
   }
 
   return res.json() as Promise<ExtendedWorkspace>;
-};
-
-export const getConversation = async (workspaceId: string, userId?: string) => {
-  const url = new URL(`${domain}/api/chat/${workspaceId}`);
-  if (userId) {
-    url.searchParams.set('userId', userId);
-  }
-  
-  const res = await fetch(url.toString(), {
-    method: "GET",
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    // Return null instead of throwing error to handle gracefully
-    console.warn(`Failed to fetch conversation for workspace ${workspaceId}: ${res.status}`);
-    return null;
-  }
-
-  return res.json();
-};
-
-export const sendMessage = async (data: {
-  conversationId: string;
-  content: string;
-  messageType?: "TEXT" | "SYSTEM";
-  replyToId?: string;
-}) => {
-  const res = await fetch(
-    `${domain}/api/chat/message`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to send message");
-  }
-
-  return res.json();
-};
-
-export const addMessageReaction = async (messageId: string, emoji: string) => {
-  const res = await fetch(
-    `${domain}/api/chat/reaction`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ messageId, emoji }),
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to add reaction");
-  }
-
-  return res.json();
-};
-
-export const removeMessageReaction = async (messageId: string, emoji: string) => {
-  const res = await fetch(
-    `${domain}/api/chat/reaction`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ messageId, emoji }),
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to remove reaction");
-  }
-
-  return res.json();
 };

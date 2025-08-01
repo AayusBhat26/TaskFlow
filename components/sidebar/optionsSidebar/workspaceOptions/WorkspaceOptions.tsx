@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarRange, Files, Map, MessageCircle, PencilRuler, Workflow } from "lucide-react";
+import { CalendarRange, Files, Map, PencilRuler, Workflow } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { NewTask } from "./actions/NewTask";
 import { useQuery } from "@tanstack/react-query";
@@ -60,21 +60,6 @@ export const WorkspaceOptions = ({ workspaceId }: Props) => {
             </WorkspaceOption>
           </div>
         )}
-        
-        {/* Team Chat Navigation */}
-        <Link 
-          href={`/dashboard/workspace/${workspaceId}/chat`}
-          className={cn(
-            "flex items-center gap-2 w-full justify-start h-8 px-2 text-xs font-normal rounded-md transition-colors",
-            "hover:bg-accent hover:text-accent-foreground",
-            pathname?.includes(`/dashboard/workspace/${workspaceId}/chat`) 
-              ? "bg-accent text-accent-foreground" 
-              : "text-foreground"
-          )}
-        >
-          <MessageCircle size={16} />
-          {t("WORKSPACE_CHAT")}
-        </Link>
       </div>
       <div>
         <p className="text-xs sm:text-sm uppercase text-muted-foreground">

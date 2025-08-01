@@ -9,12 +9,10 @@ import { ShortcutContainer } from "@/components/workspaceMainPage/shortcuts/Shor
 import {
   getUserWorkspaceRole,
   getWorkspace,
-  getConversation,
 } from "@/lib/api";
 import { checkIfUserCompletedOnboarding } from "@/lib/checkIfUserCompletedOnboarding";
 import { FilterByUsersAndTagsInWorkspaceProvider } from "@/context/FilterByUsersAndTagsInWorkspace";
 import { RecentActivityContainer } from "@/components/workspaceMainPage/recentActivity/RecentActivityContainer";
-import Chat from "@/components/chat";
 import { notFound } from "next/navigation";
 
 interface Params {
@@ -34,21 +32,6 @@ const Workspace = async ({ params: { workspace_id } }: Params) => {
   ]);
 
   if (!workspace || !userRole) notFound();
-
-  // Try to get conversation, but don't fail if it doesn't exist
-  let conversation = null;
-  try {
-    conversation = await getConversation(workspace_id, session.user.id);
-  } catch (error) {
-    console.warn("Could not fetch conversation, will create on first message");
-  }
-
-  // Create extended workspace object for chat
-  const extendedWorkspace = {
-    ...workspace,
-    conversation,
-    subscribers: [], // This would be populated from the actual subscribers
-  };
 
   return (
     <FilterByUsersAndTagsInWorkspaceProvider>
@@ -79,9 +62,6 @@ const Workspace = async ({ params: { workspace_id } }: Params) => {
           workspaceId={workspace.id}
         />
       </main>
-      
-      {/* Chat Component */}
-      <Chat workspace={extendedWorkspace} />
     </FilterByUsersAndTagsInWorkspaceProvider>
   );
 };

@@ -52,10 +52,6 @@ export const navLinks = [
     title: "Integrated Calendar",
   },
   {
-    href: "Chat",
-    title: "Chat & notifications",
-  },
-  {
     href: "Pomodoro",
     title: "Pomodoro",
   },
@@ -149,45 +145,6 @@ export const homePageTasksImgs: HomePageImage[] = [
   },
   {
     src: "/images/taskContentAddImageFromDeviceBlack.png",
-    alt: "Task Content Add Image from device page - dark theme",
-  },
-];
-
-export const homePageChatImgs: HomePageImage[] = [
-  {
-    src: "/images/groupChat.png",
-    alt: "Group page - dark theme",
-  },
-  {
-    src: "/images/groupChatBlack.png",
-    alt: "Task Content editor options page - dark theme",
-  },
-  {
-    src: "/images/groupChatWhite.png",
-    alt: "Task Content editor options page - dark theme",
-  },
-  {
-    src: "/images/groupChatAndNotificationsBlack.png",
-    alt: "Task Content Add Image by link page - dark theme",
-  },
-  {
-    src: "/images/groupChatEditMessageBlack.png",
-    alt: "Task Content Add Image from device page - dark theme",
-  },
-  {
-    src: "/images/groupChatFileUploadBlack.png",
-    alt: "Task Content Add Image by link page - dark theme",
-  },
-  {
-    src: "/images/groupChatFileViewBlack.png",
-    alt: "Task Content Add Image from device page - dark theme",
-  },
-  {
-    src: "/images/groupChatNewMessageBlack.png",
-    alt: "Task Content Add Image by link page - dark theme",
-  },
-  {
-    src: "/images/groupChatNewMessageWhite.png",
     alt: "Task Content Add Image from device page - dark theme",
   },
 ];

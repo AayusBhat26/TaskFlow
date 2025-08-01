@@ -1,7 +1,6 @@
 import {
   homePageAssignmentFilterAndStarredImgs,
   homePageCalendarImgs,
-  homePageChatImgs,
   homePageMindMapsImgs,
   homePagePomodoroImgs,
   homePageRolesAndSettingsImgs,
@@ -58,14 +57,6 @@ export const HomePage = () => {
         <ModernTextSection
           title="The Future of Team Collaboration"
           desc="Effortlessly share projects and invite others to join with easy shareable links. TaskFlow enables instant project review and real-time chatting with team members from anywhere."
-        />
-
-        <ModernSection
-          id="Chat"
-          title="Real-time Chat & Alerts"
-          desc="Engage in real-time discussions, share files, and keep everyone informed with instant notifications so you're always in sync with your team."
-          images={homePageChatImgs}
-          reverse
         />
 
         <ModernSection

@@ -49,9 +49,7 @@ export const UserActivityStatusProvider = ({ children }: Props) => {
   );
 
   const params = useParams();
-  // Temporarily disabled session to fix React hooks error
-  // const session = useSession();
-  const session = { data: { user: { id: "test-user-id" } } }; // Mock session
+  const session = useSession();
   const workspaceId = params.workspace_id ? params.workspace_id : null;
 
   const {
@@ -82,6 +80,18 @@ export const UserActivityStatusProvider = ({ children }: Props) => {
     if (!session.data) return;
 
     const supabaseClient = supabase();
+    
+    // If Supabase is not configured, skip real-time features
+    if (!supabaseClient) {
+      console.warn("Supabase not configured - user activity tracking disabled");
+      // Set all users as inactive when Supabase is not available
+      if (users) {
+        setAllActiveUsers([]);
+        setAllInactiveUsers(users);
+      }
+      return;
+    }
+
     const channel = supabaseClient.channel(`activity-status`);
     channel
       .on("presence", { event: "sync" }, () => {

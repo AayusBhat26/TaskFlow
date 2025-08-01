@@ -9,7 +9,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { ToastProvider } from "@/context/ToastContext";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { GlobalRouteLoading } from "@/components/common/GlobalRouteLoading";
-import { SocketProvider } from "@/context/SocketProvider";
 
 const locales = ["en"];
 
@@ -35,17 +34,15 @@ export default async function RootLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className={`antialiased`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <SocketProvider>
-            <QueryProvider>
-              <ThemeProvider>
-                <ToastProvider>
-                  <Toaster />
-                  <GlobalRouteLoading />
-                  {children}
-                </ToastProvider>
-              </ThemeProvider>
-            </QueryProvider>
-          </SocketProvider>
+          <QueryProvider>
+            <ThemeProvider>
+              <ToastProvider>
+                <Toaster />
+                <GlobalRouteLoading />
+                {children}
+              </ToastProvider>
+            </ThemeProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

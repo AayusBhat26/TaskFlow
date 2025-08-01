@@ -29,7 +29,7 @@ const testimonials = [
     role: "Project Coordinator",
     company: "Aayush Bhat",
     avatar: "/api/placeholder/64/64",
-    content: "Love how everything is connected - tasks, calendar, chat, all in one place. No more switching between multiple apps!",
+    content: "Love how everything is connected - tasks, calendar, all in one place. No more switching between multiple apps!",
     rating: 5,
     featured: false
   },

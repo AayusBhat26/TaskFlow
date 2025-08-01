@@ -48,13 +48,6 @@ const features = [
     gradient: "from-orange-500/20 to-red-500/20"
   },
   {
-    icon: MessageSquare,
-    title: "Real-time Chat",
-    description: "Communicate instantly with your team. Share files, get notifications, and keep everyone in sync.",
-    badge: "Communication",
-    gradient: "from-violet-500/20 to-purple-500/20"
-  },
-  {
     icon: Calendar,
     title: "Unified Calendar",
     description: "See all your tasks and deadlines in one beautiful calendar view. Never miss an important deadline again.",

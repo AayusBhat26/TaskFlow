@@ -58,10 +58,6 @@ export const useCreateNotifyItemDay = (
         name: workspace?.name,
       });
       break;
-    case "CHAT_MENTION":
-      link = `/dashboard/workspace/${workspace?.id}/chat${messageId ? `#message-${messageId}` : ""}`;
-      textContent = t("CHAT_MENTION_TEXT", { name: workspace?.name });
-      break;
     default:
       break;
   }
