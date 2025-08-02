@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { ExtendedTask } from "@/types/extended";
 import { UserPermission } from "@prisma/client";
@@ -13,6 +11,7 @@ import { LinkTag } from "../editable/tag/LinkTag";
 import { UserHoverInfo } from "@/components/common/UserHoverInfoCard";
 import { Separator } from "@/components/ui/separator";
 import { AssignedToTaskSelector } from "../assignToTask/AssignedToTaskSelector";
+import { TaskCompleteButton } from "../TaskCompleteButton";
 
 interface Props {
   task: ExtendedTask;
@@ -57,6 +56,13 @@ export const ReadOnlyContent = ({ task, isSavedByUser, userRole }: Props) => {
               </div>
             </div>
             <div className="w-full gap-1 flex flex-wrap flex-row">
+              {userRole && userRole !== "READ_ONLY" && (
+                <TaskCompleteButton
+                  taskId={task.id}
+                  workspaceId={task.workspaceId}
+                  isCompleted={task.isCompleted}
+                />
+              )}
               <AssignedToTaskSelector
                 taskId={task.id}
                 workspaceId={task.workspaceId}

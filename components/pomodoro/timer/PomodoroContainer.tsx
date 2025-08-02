@@ -14,9 +14,13 @@ import { Howl } from "howler";
 import { Button } from "@/components/ui/button";
 import { SkipForward } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 interface Props {
   pomodoroSettings: PomodoroSettings;
+  workspaceId?: string; // Optional workspace context
 }
 
 export const PomodoContainer = ({
@@ -29,6 +33,7 @@ export const PomodoContainer = ({
     soundEffect,
     soundEffectVolume,
   },
+  workspaceId,
 }: Props) => {
   const [timer, setTimer] = useState({ minutes: workDuration, seconds: 0 });
   const [isTimerRunning, setIsTimmerRunning] = useState(false);
@@ -36,6 +41,35 @@ export const PomodoContainer = ({
 
   const [isBreakTime, setIsBreakTime] = useState(false);
   const [currentRounds, setCurrentRounds] = useState(1);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Call the points API when a work session is completed
+  const awardPomodoroPoints = useCallback(async (duration: number) => {
+    try {
+      const response = await axios.post('/api/pomodoro/complete', {
+        duration,
+        workspaceId,
+      });
+
+      if (response.data.success) {
+        // Invalidate points query to update points display immediately
+        queryClient.invalidateQueries({ queryKey: ['userPoints'] });
+        
+        toast({
+          title: "🎉 Pomodoro Completed!",
+          description: response.data.message,
+        });
+      }
+    } catch (error) {
+      console.error('Error awarding pomodoro points:', error);
+      toast({
+        title: "Points Error",
+        description: "Failed to award points for this session.",
+        variant: "destructive",
+      });
+    }
+  }, [workspaceId, toast, queryClient]);
 
   const handleTimer = useCallback(() => {
     setIsTimmerRunning(false);
@@ -46,6 +80,9 @@ export const PomodoContainer = ({
       setCompletedIntervals((prev) => prev + 1);
       completedIntervals === 0 && setCurrentRounds((prev) => prev + 1);
     } else {
+      // Work session completed - award points!
+      awardPomodoroPoints(workDuration);
+      
       setIsBreakTime(true);
       if (completedIntervals === longBreakInterval) {
         setTimer({ minutes: longBreakDuration, seconds: 0 });
@@ -73,6 +110,7 @@ export const PomodoContainer = ({
     workDuration,
     soundEffect,
     soundEffectVolume,
+    awardPomodoroPoints,
   ]);
 
   const t = useTranslations("POMODORO.TIMER");

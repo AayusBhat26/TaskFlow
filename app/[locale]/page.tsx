@@ -1,18 +1,13 @@
-"use client";
-
-import { HomePage } from "@/components/home/HomePage";
-import { ThemeSwitcher } from "@/components/switchers/ThemeSwitcher";
-import { Button } from "@/components/ui/button";
-import { signOut, useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { getAuthSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { HomePage } from "@/components/home/HomePage";
 
-const Home = () => {
-  const session = useSession();
+export default async function Home() {
+  const session = await getAuthSession();
 
-  if (session) redirect("/dashboard");
+  if (session) {
+    redirect("/dashboard");
+  }
 
   return <HomePage />;
-};
-
-export default Home;
+}

@@ -1,5 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
-import { CalendarDays, Clock, Home, Star, User } from "lucide-react";
+import { CalendarDays, Clock, Home, Star, User, MessageSquare } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import dayjs from "dayjs";
 import { array } from "zod";
@@ -38,6 +38,11 @@ export const topSidebarLinks = [
     href: "/dashboard/starred",
     Icon: Star,
     hoverTextKey: "STARRED_HOVER",
+  },
+  {
+    href: "/dashboard/chat",
+    Icon: MessageSquare,
+    hoverTextKey: "CHAT_HOVER",
   },
   {
     href: "/dashboard/assigned-to-me",

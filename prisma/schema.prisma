@@ -21,6 +21,7 @@ model User {
   useCase                  UseCase?
   isOnline                 Boolean             @default(false)
   lastSeen                 DateTime?
+  points                   Int                 @default(0)
   accounts                 Account?
   fileAttachments          FileAttachment[]
   createdMindMaps          MindMap[]           @relation("MindMapCreatedByUser")
@@ -37,6 +38,10 @@ model User {
   assignedToTask           assignedToTask[]
   savedMindMaps            savedMindMaps[]
   savedTask                savedTask[]
+  
+  // Points and Pomodoro relations
+  pomodoroSessions         PomodoroSession[]
+  pointTransactions        PointTransaction[]
 }
 
 model savedMindMaps {
@@ -129,6 +134,9 @@ model Workspace {
   tags         Tag[]
   tasks        Task[]
   Creator      User?          @relation("CreatedBy", fields: [creatorId], references: [id], onDelete: Cascade)
+  
+  // Points system relations
+  pomodoroSessions PomodoroSession[]
 }
 
 model Task {
@@ -142,6 +150,8 @@ model Task {
   emoji          String           @default("1f9e0")
   content        Json?
   dateId         String?
+  isCompleted    Boolean          @default(false)
+  completedAt    DateTime?
   creator        User             @relation("TaskCreatedByUser", fields: [creatorId], references: [id], onDelete: Cascade)
   taskDate       TaskDate?        @relation(fields: [dateId], references: [id], onDelete: Cascade)
   updatedBy      User?            @relation("TaskUpdatedByUser", fields: [updatedUserId], references: [id], onDelete: Cascade)
@@ -282,4 +292,43 @@ enum CustomColors {
   EMERALD
   INDIGO
   FUCHSIA
+}
+
+// Pomodoro Session Tracking for Points
+model PomodoroSession {
+  id          String   @id @default(cuid())
+  userId      String
+  duration    Int      // Duration in minutes
+  workspaceId String?  // Optional: track which workspace context
+  completedAt DateTime @default(now())
+  pointsEarned Int     // Points earned for this session
+  
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([completedAt])
+}
+
+// Point Transaction History
+model PointTransaction {
+  id          String            @id @default(cuid())
+  userId      String
+  points      Int               // Can be positive (earned) or negative (spent)
+  type        PointType
+  description String
+  relatedId   String?          // Related task/session ID for reference
+  createdAt   DateTime          @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([createdAt])
+  @@index([type])
+}
+
+enum PointType {
+  POMODORO_COMPLETED
+  TASK_COMPLETED
+  MANUAL_ADJUSTMENT
 }

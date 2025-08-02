@@ -79,54 +79,14 @@ export const UserActivityStatusProvider = ({ children }: Props) => {
   useEffect(() => {
     if (!session.data) return;
 
-    const supabaseClient = supabase();
+    console.log("📊 UserActivityStatus: Supabase disabled - using simple tracking");
     
-    // If Supabase is not configured, skip real-time features
-    if (!supabaseClient) {
-      console.warn("Supabase not configured - user activity tracking disabled");
-      // Set all users as inactive when Supabase is not available
-      if (users) {
-        setAllActiveUsers([]);
-        setAllInactiveUsers(users);
-      }
-      return;
+    // Simple tracking without Supabase - mark all users as active
+    if (users) {
+      setAllActiveUsers(users);
+      setAllInactiveUsers([]);
     }
-
-    const channel = supabaseClient.channel(`activity-status`);
-    channel
-      .on("presence", { event: "sync" }, () => {
-        const userIds: string[] = [];
-
-        const activeUsers: UserActiveItemList[] = [];
-        const inactiveUsers: UserActiveItemList[] = [];
-
-        for (const id in channel.presenceState()) {
-          //@ts-ignore
-          userIds.push(channel.presenceState()[id][0].userId);
-        }
-
-        const uniqueIds = new Set(userIds);
-
-        users &&
-          users.forEach((user) => {
-            if (uniqueIds.has(user.id)) {
-              activeUsers.push(user);
-            } else {
-              inactiveUsers.push(user);
-            }
-          });
-
-        setAllActiveUsers(activeUsers);
-        setAllInactiveUsers(inactiveUsers);
-      })
-      .subscribe(async (status) => {
-        if (status === "SUBSCRIBED") {
-          await channel.track({
-            online_at: new Date().toISOString(),
-            userId: session.data.user.id,
-          });
-        }
-      });
+    
   }, [session.data, users]);
 
   const getActiveUsersRoleType = useCallback(

@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 import { SavingStatus } from "./SavingStatus";
 import { BackBtn } from "./BackBtn";
 import { NotificationContainer } from "../notifications/NotificationContainer";
+import { TasksModal } from "../tasks/TasksModal";
+import { PointsDisplay } from "../points/PointsDisplay";
 
 interface Props {
   addManualRoutes?: {
@@ -61,8 +63,10 @@ export const DashboardHeader = async ({
         )}
       </div>
       <div className="flex items-center gap-1 sm:gap-2">
+        <PointsDisplay />
         <div className="flex flex-wrap items-center gap-0.5 sm:gap-1">
           {children}
+          <TasksModal />
           <NotificationContainer userId={session.user.id} />
         </div>
 
