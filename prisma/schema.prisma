@@ -42,6 +42,9 @@ model User {
   // Points and Pomodoro relations
   pomodoroSessions         PomodoroSession[]
   pointTransactions        PointTransaction[]
+  
+  // Chat relations
+  chatMessages             ChatMessage[]
 }
 
 model savedMindMaps {
@@ -137,6 +140,9 @@ model Workspace {
   
   // Points system relations
   pomodoroSessions PomodoroSession[]
+  
+  // Chat relations
+  chatMessages     ChatMessage[]
 }
 
 model Task {
@@ -331,4 +337,21 @@ enum PointType {
   POMODORO_COMPLETED
   TASK_COMPLETED
   MANUAL_ADJUSTMENT
+}
+
+// Chat System for Workspaces
+model ChatMessage {
+  id          String    @id @default(cuid())
+  content     String
+  authorId    String
+  workspaceId String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  
+  @@index([workspaceId])
+  @@index([authorId])
+  @@index([createdAt])
 }

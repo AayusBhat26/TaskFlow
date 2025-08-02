@@ -1,0 +1,21 @@
+{
+  "name": "chat-socket-server",
+  "version": "1.0.0",
+  "description": "Real-time chat socket server for workspace communication",
+  "main": "server.ts",
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "tsx watch server.ts",
+    "build": "tsc server.ts --outDir dist"
+  },
+  "dependencies": {
+    "@prisma/client": "file:../node_modules/@prisma/client",
+    "dotenv": "^17.2.1",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "tsx": "^4.20.3",
+    "typescript": "^5.3.3"
+  }
+}
