@@ -91,16 +91,16 @@ export function ChatInput({ workspaceId, currentUser }: ChatInputProps) {
 
   return (
     <div className="border-t border-gray-200 bg-white">
-      <div className="px-6 py-4">
+      <div className="px-4 py-4">
         <div className="flex items-end space-x-3">
-          {/* Additional actions */}
-          <div className="flex space-x-1">
+          {/* Additional actions - hidden on mobile */}
+          <div className="hidden sm:flex space-x-2">
             <Button 
               variant="ghost" 
               size="sm"
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 h-10 w-10 p-0 rounded-lg hover:bg-gray-100 transition-colors"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-5 h-5" />
             </Button>
           </div>
 
@@ -111,10 +111,10 @@ export function ChatInput({ workspaceId, currentUser }: ChatInputProps) {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={`Message workspace...`}
+              placeholder={`Message ${workspaceId ? 'workspace' : 'chat'}...`}
               className={cn(
-                "min-h-[44px] max-h-[120px] resize-none border-gray-300 focus:border-blue-500 focus:ring-blue-500",
-                "pr-24" // Space for buttons
+                "min-h-[44px] max-h-[120px] resize-none border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-lg bg-white text-gray-900 placeholder-gray-500",
+                "pr-20 py-3 pl-3 text-sm" // Space for buttons
               )}
               disabled={isSending}
             />
@@ -124,16 +124,16 @@ export function ChatInput({ workspaceId, currentUser }: ChatInputProps) {
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="text-gray-400 hover:text-gray-600 p-1 h-6 w-6"
+                className="text-gray-400 hover:text-gray-600 p-1 h-8 w-8 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <Paperclip className="w-3 h-3" />
+                <Paperclip className="w-4 h-4" />
               </Button>
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="text-gray-400 hover:text-gray-600 p-1 h-6 w-6"
+                className="text-gray-400 hover:text-gray-600 p-1 h-8 w-8 rounded-md hover:bg-gray-100 transition-colors"
               >
-                <Smile className="w-3 h-3" />
+                <Smile className="w-4 h-4" />
               </Button>
             </div>
           </div>
@@ -144,7 +144,7 @@ export function ChatInput({ workspaceId, currentUser }: ChatInputProps) {
             disabled={!canSend}
             size="sm"
             className={cn(
-              "px-4 py-2",
+              "px-4 py-3 h-11 rounded-lg font-medium transition-colors",
               canSend 
                 ? "bg-blue-600 hover:bg-blue-700 text-white" 
                 : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -160,8 +160,16 @@ export function ChatInput({ workspaceId, currentUser }: ChatInputProps) {
 
         {/* Character count or other info */}
         {message.length > 0 && (
-          <div className="mt-2 text-xs text-gray-500 text-right">
-            {message.length} characters
+          <div className="mt-2 flex items-center justify-between text-xs">
+            <div className="text-gray-500 hidden sm:block">
+              <span>Press Enter to send, Shift+Enter for new line</span>
+            </div>
+            <span className={cn(
+              "font-medium ml-auto",
+              message.length > 1800 ? "text-red-500" : "text-gray-500"
+            )}>
+              {message.length}/2000
+            </span>
           </div>
         )}
       </div>

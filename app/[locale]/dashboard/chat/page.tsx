@@ -60,7 +60,7 @@ export default async function ChatPage() {
 
   if (workspaces.length === 0) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex-1 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">No Workspaces Found</h1>
           <p className="text-gray-600 mb-4">You need to be part of a workspace to use chat.</p>
@@ -77,21 +77,33 @@ export default async function ChatPage() {
 
   const currentUser = {
     id: session.user.id,
-    name: session.user.name || '',
+    name: session.user.name || session.user.username || 'Unknown User',
     email: session.user.email || '',
     image: session.user.image,
-    username: session.user.username || '',
+    username: session.user.username || session.user.name || 'unknown',
   };
 
+  const transformedWorkspaces = workspaces.map((workspace: any) => ({
+    ...workspace,
+    subscribers: workspace.subscribers.map((sub: any) => ({
+      user: {
+        id: sub.user.id,
+        name: sub.user.name || sub.user.username || 'Unknown',
+        username: sub.user.username || sub.user.name || 'unknown',
+        image: sub.user.image,
+      },
+    })),
+  }));
+
   return (
-    <div className="h-screen bg-gray-50">
+    <div className="flex-1 flex flex-col min-h-0 -m-4 md:-m-6 lg:-mx-10 lg:-my-6">
       <Suspense fallback={
-        <div className="flex h-screen items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
         </div>
       }>
         <WorkspaceChat 
-          workspaces={workspaces} 
+          workspaces={transformedWorkspaces} 
           currentUser={currentUser}
         />
       </Suspense>
