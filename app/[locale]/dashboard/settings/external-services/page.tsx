@@ -14,6 +14,7 @@ const ExternalServicesPage = async () => {
   const user = await db.user.findUnique({
     where: { id: session.user.id },
     select: {
+      leetcodeUsername: true,
       codeforcesUsername: true,
       redditUsername: true,
       githubUsername: true,
@@ -48,6 +49,7 @@ const ExternalServicesPage = async () => {
         {/* External Services Settings */}
         <ExternalServicesSettings 
           initialData={{
+            leetcodeUsername: user?.leetcodeUsername,
             codeforcesUsername: user?.codeforcesUsername,
             redditUsername: user?.redditUsername,
             githubUsername: user?.githubUsername,

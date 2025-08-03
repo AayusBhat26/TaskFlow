@@ -16,6 +16,7 @@ export const onboardingSchema = z.object({
   workspaceImage: z.string().optional().nullable(),
   
   // External service usernames
+  leetcodeUsername: z.string().optional().nullable(),
   codeforcesUsername: z.string().optional().nullable(),
   redditUsername: z.string().optional().nullable(),
   githubUsername: z.string().optional().nullable(),

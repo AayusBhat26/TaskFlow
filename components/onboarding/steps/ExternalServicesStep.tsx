@@ -26,6 +26,7 @@ interface Props {
 
 export const ExternalServicesStep = ({ currentStep }: Props) => {
   const { 
+    leetcodeUsername,
     codeforcesUsername, 
     redditUsername, 
     githubUsername,
@@ -38,6 +39,7 @@ export const ExternalServicesStep = ({ currentStep }: Props) => {
   const form = useForm<ExternalServicesSchema>({
     resolver: zodResolver(externalServicesSchema),
     defaultValues: {
+      leetcodeUsername: leetcodeUsername || "",
       codeforcesUsername: codeforcesUsername || "",
       redditUsername: redditUsername || "",
       githubUsername: githubUsername || "",
@@ -47,13 +49,14 @@ export const ExternalServicesStep = ({ currentStep }: Props) => {
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "emailIds" as const
+    name: "emailIds"
   });
 
   const t = useTranslations("ONBOARDING_FORM");
 
   const onSubmit = (data: ExternalServicesSchema) => {
     // Store the data in context
+    dispatch({ type: ActionType.LEETCODE_USERNAME, payload: data.leetcodeUsername || null });
     dispatch({ type: ActionType.CODEFORCES_USERNAME, payload: data.codeforcesUsername || null });
     dispatch({ type: ActionType.REDDIT_USERNAME, payload: data.redditUsername || null });
     dispatch({ type: ActionType.GITHUB_USERNAME, payload: data.githubUsername || null });
@@ -105,6 +108,28 @@ export const ExternalServicesStep = ({ currentStep }: Props) => {
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="leetcodeUsername"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-muted-foreground flex items-center gap-2">
+                        <div className="w-4 h-4 bg-yellow-500 rounded"></div>
+                        {t("EXTERNAL_SERVICES_STEP.INPUTS.LEETCODE")}
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          className="bg-muted"
+                          placeholder={t("EXTERNAL_SERVICES_STEP.PLACEHOLDERS.LEETCODE")}
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
                 <FormField
                   control={form.control}
                   name="codeforcesUsername"

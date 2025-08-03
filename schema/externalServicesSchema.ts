@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const externalServicesSchema = z.object({
+  leetcodeUsername: z.string().optional(),
   codeforcesUsername: z.string().optional(),
   redditUsername: z.string().optional(),
   githubUsername: z.string().optional(),

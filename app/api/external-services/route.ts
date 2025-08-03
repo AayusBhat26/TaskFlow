@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
     const user = await db.user.findUnique({
       where: { id: session.user.id },
       select: {
+        leetcodeUsername: true,
         codeforcesUsername: true,
         redditUsername: true,
         githubUsername: true,
@@ -27,6 +28,7 @@ export async function GET(request: NextRequest) {
 
     // Check if user has any external services configured
     const hasExternalServices = 
+      user.leetcodeUsername ||
       user.codeforcesUsername ||
       user.redditUsername ||
       user.githubUsername ||
@@ -49,6 +51,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch data from all configured services
     const externalData = await aggregator.fetchAllUserData({
+      leetcodeUsername: user.leetcodeUsername,
       codeforcesUsername: user.codeforcesUsername,
       redditUsername: user.redditUsername,
       githubUsername: user.githubUsername,

@@ -54,11 +54,6 @@ export const topSidebarLinks = [
     Icon: User,
     hoverTextKey: "ASSIGNED_TO_ME_HOVER",
   },
-  {
-    href: "/dashboard/solved-questions",
-    Icon: Code,
-    hoverTextKey: "SOLVED_QUESTIONS_HOVER",
-  },
 ];
 
 export const getMonth = (month = dayjs().month()) => {

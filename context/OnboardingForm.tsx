@@ -36,6 +36,8 @@ const onboardingFormReducer: Reducer<OnboardingFormReducer, Action> = (
       return { ...state, workspaceName: payload as string };
     case ActionType.WORKSPACE_IMAGE:
       return { ...state, workspaceImage: payload as string | null };
+    case ActionType.LEETCODE_USERNAME:
+      return { ...state, leetcodeUsername: payload as string | null };
     case ActionType.CODEFORCES_USERNAME:
       return { ...state, codeforcesUsername: payload as string | null };
     case ActionType.REDDIT_USERNAME:
@@ -63,6 +65,7 @@ const initialFormState: OnboardingFormReducer = {
   useCase: null,
   workspaceName: "",
   workspaceImage: null,
+  leetcodeUsername: null,
   codeforcesUsername: null,
   redditUsername: null,
   githubUsername: null,

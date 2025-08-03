@@ -1,9 +1,14 @@
+import { LeetCodeService, LeetCodeStats } from './leetcode';
 import { CodeforcesService, CodeforcesStats } from './codeforces';
 import { GitHubService, GitHubStats } from './github';
 import { RedditService, RedditStats } from './reddit';
 import { EmailService, EmailStats } from './email';
 
+// Export all stats interfaces
+export type { LeetCodeStats, CodeforcesStats, GitHubStats, RedditStats, EmailStats };
+
 export interface ExternalServicesData {
+  leetcode?: LeetCodeStats;
   codeforces?: CodeforcesStats;
   github?: GitHubStats;
   reddit?: RedditStats;
@@ -13,6 +18,7 @@ export interface ExternalServicesData {
 }
 
 export interface UserExternalServices {
+  leetcodeUsername?: string | null;
   codeforcesUsername?: string | null;
   redditUsername?: string | null;
   githubUsername?: string | null;
@@ -26,12 +32,14 @@ export interface ExternalServiceConfig {
 }
 
 export class ExternalServicesAggregator {
+  private leetcodeService: LeetCodeService;
   private codeforcesService: CodeforcesService;
   private githubService: GitHubService;
   private redditService: RedditService;
   private emailService: EmailService;
 
   constructor(private config: ExternalServiceConfig = { updateInterval: 60 }) {
+    this.leetcodeService = new LeetCodeService();
     this.codeforcesService = new CodeforcesService();
     this.githubService = new GitHubService(config.githubToken);
     this.redditService = new RedditService();
@@ -41,6 +49,15 @@ export class ExternalServicesAggregator {
   async fetchAllUserData(userServices: UserExternalServices): Promise<ExternalServicesData> {
     const results: Partial<ExternalServicesData> = {};
     const fetchPromises: Promise<void>[] = [];
+
+    // Fetch LeetCode data
+    if (userServices.leetcodeUsername) {
+      fetchPromises.push(
+        this.leetcodeService.getUserStats(userServices.leetcodeUsername)
+          .then(data => { results.leetcode = data || undefined; })
+          .catch(error => console.error('LeetCode fetch error:', error))
+      );
+    }
 
     // Fetch Codeforces data
     if (userServices.codeforcesUsername) {
@@ -91,6 +108,10 @@ export class ExternalServicesAggregator {
     } as ExternalServicesData;
   }
 
+  async fetchLeetCodeData(username: string): Promise<LeetCodeStats | null> {
+    return this.leetcodeService.getUserStats(username);
+  }
+
   async fetchCodeforcesData(username: string): Promise<CodeforcesStats | null> {
     return this.codeforcesService.getUserStats(username);
   }
@@ -110,6 +131,20 @@ export class ExternalServicesAggregator {
   // Utility methods for quick insights
   generateUserInsights(data: ExternalServicesData): string[] {
     const insights: string[] = [];
+
+    // LeetCode insights
+    if (data.leetcode) {
+      insights.push(`You've solved ${data.leetcode.totalSolved} problems on LeetCode! Keep up the great work!`);
+      if (data.leetcode.contestRating > 0) {
+        insights.push(`Your LeetCode contest rating is ${data.leetcode.contestRating}. Great competitive programming skills!`);
+      }
+      if (data.leetcode.globalRanking && data.leetcode.globalRanking <= 100000) {
+        insights.push(`You're in the top ${Math.ceil(data.leetcode.globalRanking / 1000)}k globally on LeetCode!`);
+      }
+      if (data.leetcode.contestsAttended > 0) {
+        insights.push(`You've participated in ${data.leetcode.contestsAttended} LeetCode contests. Contest participation builds strong problem-solving skills!`);
+      }
+    }
 
     if (data.codeforces) {
       const { user, solvedProblems, contestsParticipated } = data.codeforces;
@@ -212,6 +247,3 @@ export class ExternalServicesAggregator {
     return minutesDiff >= this.config.updateInterval;
   }
 }
-
-// Export types for use in other parts of the application
-export type { CodeforcesStats, GitHubStats, RedditStats, EmailStats };

@@ -24,6 +24,7 @@ model User {
   points                   Int                 @default(0)
   
   // External service usernames
+  leetcodeUsername         String?
   codeforcesUsername       String?
   redditUsername           String?
   githubUsername           String?

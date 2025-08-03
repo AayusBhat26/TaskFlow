@@ -161,21 +161,34 @@ const LeetCodeOverview = ({ data }: { data: LeetCodeStats }) => (
   <Card>
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
-        <div className="w-4 h-4 bg-orange-500 rounded"></div>
+        <div className="w-4 h-4 bg-yellow-500 rounded"></div>
         LeetCode
       </CardTitle>
     </CardHeader>
     <CardContent>
-      <div className="space-y-2">
-        <div className="flex justify-between">
-          <span className="text-sm">Problems Solved</span>
-          <Badge variant="secondary">{data.totalSolved}</Badge>
+      <div className="space-y-3">
+        <div className="flex justify-between items-center">
+          <span className="text-sm">Contest Rating</span>
+          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+            {data.contestRating || 'Unrated'}
+          </Badge>
         </div>
-        <div className="flex justify-between">
-          <span className="text-sm">Ranking</span>
-          <Badge variant="outline">{data.ranking.toLocaleString()}</Badge>
+        <div className="flex justify-between items-center">
+          <span className="text-sm">Problems Solved</span>
+          <Badge variant="default">{data.totalSolved}</Badge>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-sm">Global Ranking</span>
+          <Badge variant="outline">#{data.globalRanking?.toLocaleString() || 'N/A'}</Badge>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-sm">Contests Attended</span>
+          <Badge variant="secondary">{data.contestsAttended}</Badge>
         </div>
         <Progress value={(data.totalSolved / data.totalQuestions) * 100} className="h-2" />
+        <p className="text-xs text-muted-foreground text-center">
+          {Math.round((data.totalSolved / data.totalQuestions) * 100)}% of all problems solved
+        </p>
       </div>
     </CardContent>
   </Card>
@@ -291,43 +304,103 @@ const EmailOverview = ({ data }: { data: EmailStats }) => (
 
 // Detailed Components (placeholders for now)
 const LeetCodeDetails = ({ data }: { data: LeetCodeStats }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <Card>
       <CardHeader>
-        <CardTitle>Problem Breakdown</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Trophy className="w-5 h-5 text-yellow-500" />
+          Contest Performance
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
+              {data.contestRating || 'Unrated'}
+            </div>
+            <p className="text-sm text-muted-foreground">Contest Rating</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <span>Contests Attended</span>
+            <Badge variant="secondary">{data.contestsAttended}</Badge>
+          </div>
+          <div className="flex justify-between items-center">
+            <span>Global Ranking</span>
+            <Badge variant="outline">#{data.globalRanking?.toLocaleString() || 'N/A'}</Badge>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Target className="w-5 h-5 text-green-500" />
+          Problem Breakdown
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <span>Easy</span>
-            <Badge className="bg-green-100 text-green-800">{data.easySolved}</Badge>
+            <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+              {data.easySolved}
+            </Badge>
           </div>
           <div className="flex justify-between items-center">
             <span>Medium</span>
-            <Badge className="bg-yellow-100 text-yellow-800">{data.mediumSolved}</Badge>
+            <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+              {data.mediumSolved}
+            </Badge>
           </div>
           <div className="flex justify-between items-center">
             <span>Hard</span>
-            <Badge className="bg-red-100 text-red-800">{data.hardSolved}</Badge>
+            <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+              {data.hardSolved}
+            </Badge>
+          </div>
+          <div className="pt-2 border-t">
+            <div className="flex justify-between items-center font-medium">
+              <span>Total Solved</span>
+              <Badge variant="default">{data.totalSolved}</Badge>
+            </div>
           </div>
         </div>
       </CardContent>
     </Card>
-    
+
     <Card>
       <CardHeader>
-        <CardTitle>Contest Stats</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Activity className="w-5 h-5 text-blue-500" />
+          Progress Stats
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span>Rating</span>
-            <Badge variant="secondary">{data.contestRating}</Badge>
+          <div className="text-center">
+            <div className="text-2xl font-bold">
+              {Math.round((data.totalSolved / data.totalQuestions) * 100)}%
+            </div>
+            <p className="text-sm text-muted-foreground">Problems Completed</p>
           </div>
-          <div className="flex justify-between items-center">
-            <span>Contests</span>
-            <Badge variant="outline">{data.contestAttended}</Badge>
+          <Progress value={(data.totalSolved / data.totalQuestions) * 100} className="h-3" />
+          <div className="flex justify-between text-sm text-muted-foreground">
+            <span>{data.totalSolved} solved</span>
+            <span>{data.totalQuestions} total</span>
           </div>
+          {data.recentSubmissions && data.recentSubmissions.length > 0 && (
+            <div className="pt-2 border-t">
+              <p className="text-sm font-medium mb-2">Recent Activity</p>
+              <div className="space-y-1">
+                {data.recentSubmissions.slice(0, 3).map((submission: any, index: number) => (
+                  <div key={index} className="text-xs text-muted-foreground">
+                    • {submission.title} ({submission.statusDisplay})
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

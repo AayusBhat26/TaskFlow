@@ -23,6 +23,7 @@ import { Github, Code, MessageCircle, Mail, Plus, X, Save, RefreshCw } from "luc
 
 interface Props {
   initialData: {
+    leetcodeUsername?: string | null;
     codeforcesUsername?: string | null;
     redditUsername?: string | null;
     githubUsername?: string | null;
@@ -36,6 +37,7 @@ export const ExternalServicesSettings = ({ initialData }: Props) => {
   const form = useForm<ExternalServicesSchema>({
     resolver: zodResolver(externalServicesSchema),
     defaultValues: {
+      leetcodeUsername: initialData.leetcodeUsername || "",
       codeforcesUsername: initialData.codeforcesUsername || "",
       redditUsername: initialData.redditUsername || "",
       githubUsername: initialData.githubUsername || "",
@@ -102,6 +104,30 @@ export const ExternalServicesSettings = ({ initialData }: Props) => {
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="leetcodeUsername"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-yellow-500 rounded"></div>
+                        LeetCode Username
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g. alice_coder"
+                          value={field.value || ""}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Your LeetCode username for contest rating and problem statistics
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
                 <FormField
                   control={form.control}
                   name="codeforcesUsername"

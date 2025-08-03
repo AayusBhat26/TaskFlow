@@ -6,6 +6,7 @@ export enum ActionType {
   USECASE = "USECASE",
   WORKSPACE_NAME = "WORKSPACE_NAME",
   WORKSPACE_IMAGE = "WORKSPACE_IMAGE",
+  LEETCODE_USERNAME = "LEETCODE_USERNAME",
   CODEFORCES_USERNAME = "CODEFORCES_USERNAME",
   REDDIT_USERNAME = "REDDIT_USERNAME",
   GITHUB_USERNAME = "GITHUB_USERNAME",
@@ -25,6 +26,7 @@ export interface OnboardingFormReducer {
   useCase: UseCase | null;
   workspaceName: string | null;
   workspaceImage?: string | null;
+  leetcodeUsername?: string | null;
   codeforcesUsername?: string | null;
   redditUsername?: string | null;
   githubUsername?: string | null;
