@@ -15,7 +15,7 @@ export const ShortcutSidebar = ({
   createdWorkspaces,
 }: Props) => {
   return (
-    <div className="border-r h-full flex flex-col justify-between items-center p-4 sm:py-6">
+    <div className="border-r h-full flex flex-col justify-between items-center p-4 sm:py-6 w-16 sm:w-20">
       <ScrollArea className="max-h-[35rem]">
         <div className="w-full space-y-3 p-1">
           <Top />

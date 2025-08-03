@@ -36,6 +36,14 @@ const onboardingFormReducer: Reducer<OnboardingFormReducer, Action> = (
       return { ...state, workspaceName: payload as string };
     case ActionType.WORKSPACE_IMAGE:
       return { ...state, workspaceImage: payload as string | null };
+    case ActionType.CODEFORCES_USERNAME:
+      return { ...state, codeforcesUsername: payload as string | null };
+    case ActionType.REDDIT_USERNAME:
+      return { ...state, redditUsername: payload as string | null };
+    case ActionType.GITHUB_USERNAME:
+      return { ...state, githubUsername: payload as string | null };
+    case ActionType.EMAIL_IDS:
+      return { ...state, emailIds: payload as string[] };
     default:
       return state;
   }
@@ -55,6 +63,10 @@ const initialFormState: OnboardingFormReducer = {
   useCase: null,
   workspaceName: "",
   workspaceImage: null,
+  codeforcesUsername: null,
+  redditUsername: null,
+  githubUsername: null,
+  emailIds: [],
 };
 
 export const OnboardingFormProvider = ({

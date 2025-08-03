@@ -91,6 +91,34 @@
       },
       "IMAGE": "Only .jpeg, .jpg, .png, .webp, .gif types are supported"
     },
+    "EXTERNAL_SERVICES_STEP": {
+      "TITLE": "Connect Your Accounts",
+      "DESC": "Link your external accounts to get personalized insights and track your progress across platforms.",
+      "OPTIONAL_NOTE": "All fields are optional - you can skip this step and add them later.",
+      "CODING_PLATFORMS": "Coding Platforms",
+      "SOCIAL_PLATFORMS": "Social Platforms", 
+      "EMAIL_TRACKING": "Email Tracking",
+      "EMAIL_DESC": "Add email addresses you'd like to monitor for new messages",
+      "INPUTS": {
+        "LEETCODE": "LeetCode Username",
+        "CODEFORCES": "Codeforces Username", 
+        "GITHUB": "GitHub Username",
+        "REDDIT": "Reddit Username",
+        "EMAIL": "Email Address"
+      },
+      "PLACEHOLDERS": {
+        "LEETCODE": "e.g. john_doe",
+        "CODEFORCES": "e.g. tourist",
+        "GITHUB": "e.g. octocat", 
+        "REDDIT": "e.g. username (without u/)",
+        "EMAIL": "email@example.com"
+      },
+      "BUTTONS": {
+        "ADD_EMAIL": "Add Email Address",
+        "SKIP": "Skip for Now",
+        "CONTINUE": "Continue"
+      }
+    },
     "FINISH": {
       "TITLE": "That's it!",
       "DESC_FIRST": "You can already start using",
@@ -174,10 +202,12 @@
       "HOME_HOVER": "Home",
       "LOG_OUT_HOVER": "Log out",
       "SETTINGS_HOVER": "Settings",
+      "NOTES_HOVER": "Notes",
       "POMODORO_HOVER": "Pomodoro",
       "STARRED_HOVER": "Starred",
       "CHAT_HOVER": "Chat",
       "ASSIGNED_TO_ME_HOVER": "Assigned to me",
+      "SOLVED_QUESTIONS_HOVER": "Solved Questions",
       "CALENDAR_HOVER": "Calendar",
       "NEW_WORKSPACE_HOVER": "New Workspace",
       "NEW_WORKSPACE_DIALOG_TITLE": "Create new workspace",
@@ -186,6 +216,7 @@
     "SETTINGS": {
       "GENERAL": "General",
       "ACCOUNT": "Account",
+      "EXTERNAL_SERVICES": "External Services",
       "SECURITY": "Security",
       "THEME": "Theme",
       "WORKSPACE": "Workspace"

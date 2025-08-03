@@ -58,12 +58,12 @@ export function SocketProvider({ children }: SocketProviderProps) {
       setIsConnected(false);
     });
 
-    socketInstance.on('connect_error', (error) => {
+    socketInstance.on('connect_error', (error: Error) => {
       console.error('🔗 Socket: Connection error:', error);
       setIsConnected(false);
     });
 
-    socketInstance.on('error', (error) => {
+    socketInstance.on('error', (error: Error) => {
       console.error('🔗 Socket: Error:', error);
     });
 

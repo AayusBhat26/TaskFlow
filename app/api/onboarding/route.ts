@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     return NextResponse.json("ERRORS.WRONG_DATA", { status: 401 });
   }
 
-  const { useCase, workspaceName, name, surname, workspaceImage } = result.data;
+  const { useCase, workspaceName, name, surname, workspaceImage, leetcodeUsername, codeforcesUsername, redditUsername, githubUsername, emailIds } = result.data;
 
   try {
     const user = await db.user.findUnique({
@@ -50,6 +50,11 @@ export async function POST(request: Request) {
         name,
         surname,
         useCase: useCase as UseCaseType,
+        leetcodeUsername,
+        codeforcesUsername,
+        redditUsername,
+        githubUsername,
+        emailIds: emailIds || [],
       },
     });
 
@@ -77,12 +82,6 @@ export async function POST(request: Request) {
     await db.pomodoroSettings.create({
       data: {
         userId: user.id,
-      },
-    });
-
-    const conversation = await db.conversation.create({
-      data: {
-        workspaceId: workspace.id,
       },
     });
 

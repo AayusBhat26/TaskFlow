@@ -2,7 +2,7 @@
 
 import ActiveLink from "@/components/ui/active-link";
 import { Workspace } from "@prisma/client";
-import { LockKeyhole, SunMoon, User2 } from "lucide-react";
+import { LockKeyhole, SunMoon, User2, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { SettingsWorkspace } from "./SettingsWorkspace";
 
@@ -11,6 +11,11 @@ const settingsFields = [
     href: "/dashboard/settings",
     icon: <User2 size={20} />,
     title: "SETTINGS.ACCOUNT",
+  },
+  {
+    href: "/dashboard/external-services",
+    icon: <RefreshCw size={20} />,
+    title: "SETTINGS.EXTERNAL_SERVICES",
   },
   {
     href: "/dashboard/settings/security",

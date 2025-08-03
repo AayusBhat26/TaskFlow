@@ -22,6 +22,12 @@ model User {
   isOnline                 Boolean             @default(false)
   lastSeen                 DateTime?
   points                   Int                 @default(0)
+  
+  // External service usernames
+  codeforcesUsername       String?
+  redditUsername           String?
+  githubUsername           String?
+  emailIds                 String[]            @default([])  // To track email IDs
   accounts                 Account?
   fileAttachments          FileAttachment[]
   createdMindMaps          MindMap[]           @relation("MindMapCreatedByUser")
@@ -45,6 +51,13 @@ model User {
   
   // Chat relations
   chatMessages             ChatMessage[]
+  
+  // Notes relations
+  notes                    Note[]
+  noteBlocks              NoteBlock[]
+  
+  // External data uploads
+  submissionData           UserSubmissionData[]
 }
 
 model savedMindMaps {
@@ -143,6 +156,9 @@ model Workspace {
   
   // Chat relations
   chatMessages     ChatMessage[]
+  
+  // Notes relations
+  notes            Note[]
 }
 
 model Task {
@@ -354,4 +370,95 @@ model ChatMessage {
   @@index([workspaceId])
   @@index([authorId])
   @@index([createdAt])
+}
+
+// Notes System - Notion-like
+model Note {
+  id          String      @id @default(cuid())
+  title       String?     @default("Untitled")
+  icon        String?     // Emoji icon
+  coverImage  String?     // Cover image URL
+  isPublic    Boolean     @default(false)
+  isArchived  Boolean     @default(false)
+  isFavorite  Boolean     @default(false)
+  workspaceId String?     // Optional: link to workspace
+  parentId    String?     // For nested pages
+  position    Int         @default(0) // For ordering
+  authorId    String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  author      User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  workspace   Workspace?  @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  parent      Note?       @relation("NoteHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Note[]      @relation("NoteHierarchy")
+  blocks      NoteBlock[]
+  
+  @@index([authorId])
+  @@index([workspaceId])
+  @@index([parentId])
+  @@index([position])
+  @@index([createdAt])
+}
+
+model NoteBlock {
+  id          String       @id @default(cuid())
+  noteId      String
+  type        BlockType
+  content     Json?        // Flexible content based on type
+  position    Int          @default(0) // Order within the note
+  parentId    String?      // For nested blocks (like lists)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  createdById String
+  
+  note        Note         @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  createdBy   User         @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  parent      NoteBlock?   @relation("BlockHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children    NoteBlock[]  @relation("BlockHierarchy")
+  
+  @@index([noteId])
+  @@index([position])
+  @@index([parentId])
+  @@index([type])
+}
+
+enum BlockType {
+  TEXT
+  HEADING_1
+  HEADING_2
+  HEADING_3
+  BULLET_LIST
+  NUMBERED_LIST
+  TODO
+  QUOTE
+  CODE
+  DIVIDER
+  IMAGE
+  VIDEO
+  FILE
+  EMBED
+  TABLE
+  CALLOUT
+  TOGGLE
+  COLUMN
+  COLUMN_LIST
+}
+
+model UserSubmissionData {
+  id                String    @id @default(cuid())
+  userId            String
+  platform          String    // 'leetcode', 'codeforces', etc.
+  submissionData    String    // JSON string of processed submissions
+  uploadedFileName  String
+  uploadedAt        DateTime  @default(now())
+  totalSubmissions  Int       @default(0)
+  isActive          Boolean   @default(true)
+  
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, platform])
+  @@index([userId])
+  @@index([platform])
+  @@index([uploadedAt])
 }

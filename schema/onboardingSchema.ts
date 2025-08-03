@@ -14,6 +14,12 @@ export const onboardingSchema = z.object({
     .min(4)
     .refine((username) => /^[a-zA-Z0-9]+$/.test(username)),
   workspaceImage: z.string().optional().nullable(),
+  
+  // External service usernames
+  codeforcesUsername: z.string().optional().nullable(),
+  redditUsername: z.string().optional().nullable(),
+  githubUsername: z.string().optional().nullable(),
+  emailIds: z.array(z.string().email()).optional().default([]),
 });
 
 export type OnboardingSchema = z.infer<typeof onboardingSchema>;

@@ -13,8 +13,18 @@ import { useState } from "react";
 
 export const Finish = () => {
   const t = useTranslations("ONBOARDING_FORM");
-  const { workspaceName, workspaceImage, surname, useCase, name } =
-    useOnboardingForm();
+  const { 
+    workspaceName, 
+    workspaceImage, 
+    surname, 
+    useCase, 
+    name,
+    leetcodeUsername,
+    codeforcesUsername,
+    redditUsername,
+    githubUsername,
+    emailIds
+  } = useOnboardingForm();
   const { toast } = useToast();
   const m = useTranslations("MESSAGES");
   const { update } = useSession();
@@ -29,6 +39,11 @@ export const Finish = () => {
         useCase,
         workspaceImage,
         workspaceName,
+        leetcodeUsername,
+        codeforcesUsername,
+        redditUsername,
+        githubUsername,
+        emailIds,
       });
       return data;
     },

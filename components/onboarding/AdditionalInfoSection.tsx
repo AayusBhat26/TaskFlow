@@ -4,6 +4,7 @@ import { useOnboardingForm } from "@/context/OnboardingForm";
 import { FirstStep } from "../onboarding/steps/FirstStep";
 import { SecondStep } from "../onboarding/steps/SecondStep";
 import { ThirdStep } from "../onboarding/steps/ThirdStep";
+import { ExternalServicesStep } from "../onboarding/steps/ExternalServicesStep";
 import { FormStepsInfo } from "./FormStepsInfo";
 import { AppTitle } from "../ui/app-title";
 import { Finish } from "./steps/Finish";
@@ -23,7 +24,8 @@ export const AdditionalInfoSection = ({ profileImage }: Props) => {
         {currentStep === 1 && <FirstStep profileImage={profileImage} />}
         {currentStep === 2 && <SecondStep />}
         {currentStep === 3 && <ThirdStep />}
-        {currentStep === 4 && <Finish />}
+        {currentStep === 4 && <ExternalServicesStep currentStep={currentStep} />}
+        {currentStep === 5 && <Finish />}
       </div>
       <FormStepsInfo />
     </section>
