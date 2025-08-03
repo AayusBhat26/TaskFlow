@@ -163,6 +163,7 @@
       "LOG_OUT_HOVER": "Log out",
       "SETTINGS_HOVER": "Settings",
       "CHAT_HOVER": "Chat",
+      "DSA_HOVER": "DSA అభ్యాసం",
       "NEW_WORKSPACE_HOVER": "New Workspace",
       "NEW_WORKSPACE_DIALOG_TITLE": "Create new workspace",
       "NEW_WORKSPACE_DIALOG_DESC": "some text"

@@ -6,6 +6,11 @@ export const POINT_VALUES = {
     60: 45,      // 60 minutes: 45 points
   },
   TASK_COMPLETION: 5,
+  DSA_QUESTION: {
+    EASY: 30,
+    MEDIUM: 50,
+    HARD: 80,
+  },
 } as const;
 
 /**
@@ -35,6 +40,15 @@ export function calculateTaskCompletionPoints(): number {
 }
 
 /**
+ * Calculate points for a completed DSA question
+ * @param difficulty - Difficulty level of the question (EASY, MEDIUM, HARD)
+ * @returns Points earned for the question completion
+ */
+export function calculateDSAQuestionPoints(difficulty: 'EASY' | 'MEDIUM' | 'HARD'): number {
+  return POINT_VALUES.DSA_QUESTION[difficulty];
+}
+
+/**
  * Award points to a user and create a transaction record
  * @param userId - User ID to award points to
  * @param points - Number of points to award
@@ -45,7 +59,7 @@ export function calculateTaskCompletionPoints(): number {
 export async function awardPoints(
   userId: string,
   points: number,
-  type: 'POMODORO_COMPLETED' | 'TASK_COMPLETED' | 'MANUAL_ADJUSTMENT',
+  type: 'POMODORO_COMPLETED' | 'TASK_COMPLETED' | 'DSA_QUESTION_COMPLETED' | 'MANUAL_ADJUSTMENT',
   description: string,
   relatedId?: string
 ) {
@@ -162,6 +176,37 @@ export async function recordTaskCompletion(
     return result;
   } catch (error) {
     console.error('❌ Error recording task completion:', error);
+    throw error;
+  }
+}
+
+/**
+ * Record a completed DSA question and award points
+ * @param userId - User ID
+ * @param questionId - Question ID
+ * @param questionTitle - Question title for description
+ * @param difficulty - Question difficulty level
+ */
+export async function recordDSAQuestionCompletion(
+  userId: string,
+  questionId: string,
+  questionTitle: string,
+  difficulty: 'EASY' | 'MEDIUM' | 'HARD'
+) {
+  const pointsEarned = calculateDSAQuestionPoints(difficulty);
+  
+  try {
+    const result = await awardPoints(
+      userId,
+      pointsEarned,
+      'DSA_QUESTION_COMPLETED',
+      `Completed ${difficulty.toLowerCase()} DSA question: ${questionTitle}`,
+      questionId
+    );
+
+    return result;
+  } catch (error) {
+    console.error('❌ Error recording DSA question completion:', error);
     throw error;
   }
 }

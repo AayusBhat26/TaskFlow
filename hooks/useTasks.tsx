@@ -130,10 +130,20 @@ export function useTasks(): UseTasksReturn {
 
   const completeTask = useCallback(async (taskId: string) => {
     try {
-      setState(prev => ({ ...prev, loading: true, error: null }));
+      let taskToUpdate: Task | undefined;
+      
+      setState(prev => {
+        taskToUpdate = prev.tasks.find(t => t.id === taskId);
+        return { 
+          ...prev, 
+          loading: true, 
+          error: null 
+        };
+      });
 
-      // Find the task in current state to get workspace ID
-      const taskToUpdate = state.tasks.find(t => t.id === taskId);
+      if (!taskToUpdate) {
+        throw new Error('Task not found');
+      }
 
       // Use our new points-enabled task completion endpoint
       const response = await fetch(`/api/task/complete`, {
@@ -143,7 +153,7 @@ export function useTasks(): UseTasksReturn {
         },
         body: JSON.stringify({
           taskId: taskId,
-          workspaceId: taskToUpdate?.workspaceId || '' // Provide workspace context if available
+          workspaceId: taskToUpdate.workspaceId
         }),
       });
 
@@ -154,14 +164,19 @@ export function useTasks(): UseTasksReturn {
       }
 
       if (data.success) {
-        // Update local state immediately
+        // Update local state immediately with the completed task
         setState(prev => ({
           ...prev,
           loading: false,
           error: null,
           tasks: prev.tasks.map(task =>
             task.id === taskId
-              ? { ...task, isCompleted: true }
+              ? { 
+                  ...task, 
+                  isCompleted: true,
+                  completedAt: new Date().toISOString(),
+                  pointsEarned: data.pointsEarned || 5
+                }
               : task
           )
         }));
@@ -169,15 +184,18 @@ export function useTasks(): UseTasksReturn {
         // Invalidate points query to update points display immediately
         queryClient.invalidateQueries({ queryKey: ['userPoints'] });
         
+        // Play task completion sound
+        import('@/lib/soundEffects').then(({ playTaskCompletionSound }) => {
+          playTaskCompletionSound();
+        });
+        
         toast({
           title: "🎉 Task Completed!",
           description: data.message || `Task completed! You earned ${data.pointsEarned || 5} points!`,
         });
 
-        // Refresh tasks to ensure consistency
-        setTimeout(() => {
-          fetchTasks();
-        }, 100);
+        // Don't call fetchTasks() here - the optimistic update is sufficient
+        // and prevents flickering between states
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to complete task';
@@ -193,7 +211,7 @@ export function useTasks(): UseTasksReturn {
         variant: "destructive",
       });
     }
-  }, [toast, fetchTasks, state.tasks, queryClient]);
+  }, [toast, queryClient]); // Removed fetchTasks and state.tasks dependencies
 
   const createTask = useCallback(async (taskData: {
     title: string;

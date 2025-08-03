@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "PointType" ADD VALUE 'DSA_QUESTION_COMPLETED';

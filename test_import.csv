@@ -1,0 +1,3 @@
+title,description,topic,difficulty,leetcodeUrl,platform,tags,companies,frequency,timeComplexity,spaceComplexity,approach
+"Test Question 1","A simple test question","Array","EASY","https://leetcode.com/problems/test1","LeetCode","Array,Sorting","Google,Amazon",7,"O(n)","O(1)","Simple array traversal"
+"Test Question 2","Another test question","String","MEDIUM","https://leetcode.com/problems/test2","LeetCode","String,Hash Table","Microsoft,Facebook",5,"O(n)","O(n)","Use hash map to count characters"

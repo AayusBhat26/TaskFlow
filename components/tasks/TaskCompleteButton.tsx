@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { CheckCircle, LoaderCircle } from "lucide-react";
 import { useCompleteTask } from "@/hooks/useCompleteTask";
+import { playTaskCompletionSound } from "@/lib/soundEffects";
 
 interface TaskCompleteButtonProps {
   taskId: string;
@@ -27,6 +28,9 @@ export const TaskCompleteButton = ({
 
   const handleComplete = () => {
     if (isCompleted || disabled) return;
+    
+    // Play sound before making the API call for immediate feedback
+    playTaskCompletionSound();
     
     completeTaskMutation.mutate({
       taskId,

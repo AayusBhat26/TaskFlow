@@ -3,6 +3,7 @@ import { DashboardHeader } from "@/components/header/DashboardHeader";
 import { HomeRecentActivityContainer } from "@/components/homeRecentActivity/HomeRecentActivityContainer";
 import { ExternalServicesPrompt } from "@/components/dashboard/ExternalServicesPrompt";
 import ExternalServicesDashboardWidget from "../../../components/dashboard/ExternalServicesDashboardWidget";
+import { DSAProgressDashboard } from "@/components/dashboard/DSAProgressDashboard";
 import { getInitialHomeRecentActivity } from "@/lib/api";
 import { checkIfUserCompletedOnboarding } from "@/lib/checkIfUserCompletedOnboarding";
 import { db } from "@/lib/db";
@@ -48,6 +49,11 @@ const Dashboard = async () => {
           ) : (
             <ExternalServicesDashboardWidget />
           )}
+        </div>
+        
+        {/* DSA Progress Section */}
+        <div className="px-4 py-2">
+          <DSAProgressDashboard />
         </div>
         
         <HomeRecentActivityContainer

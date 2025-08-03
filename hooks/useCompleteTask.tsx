@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { playTaskCompletionSound } from "@/lib/soundEffects";
 import axios from "axios";
 
 interface CompleteTaskData {
@@ -27,6 +28,9 @@ export const useCompleteTask = () => {
       return response.data;
     },
     onSuccess: (data) => {
+      // Play task completion sound
+      playTaskCompletionSound();
+      
       // Show success message with points earned
       toast({
         title: "🎉 Task Completed!",

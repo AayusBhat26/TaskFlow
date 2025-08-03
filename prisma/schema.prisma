@@ -50,6 +50,10 @@ model User {
   pomodoroSessions         PomodoroSession[]
   pointTransactions        PointTransaction[]
   
+  // DSA Practice relations
+  dsaProgress              DSAProgress[]
+  importedDSAQuestions     DSAQuestion[]   @relation("ImportedDSAQuestions")
+  
   // Chat relations
   chatMessages             ChatMessage[]
   
@@ -353,6 +357,7 @@ model PointTransaction {
 enum PointType {
   POMODORO_COMPLETED
   TASK_COMPLETED
+  DSA_QUESTION_COMPLETED
   MANUAL_ADJUSTMENT
 }
 
@@ -462,4 +467,86 @@ model UserSubmissionData {
   @@index([userId])
   @@index([platform])
   @@index([uploadedAt])
+}
+
+// DSA Practice Models
+model DSAQuestion {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  topic       String   // Array, Linked List, Trees, etc.
+  difficulty  Difficulty @default(MEDIUM)
+  leetcodeUrl String?
+  platform    String   @default("LeetCode") // LeetCode, GFG, etc.
+  tags        String[] @default([])
+  hints       String[] @default([])
+  companies   String[] @default([]) // Companies that ask this question
+  frequency   Int      @default(1) // How frequently asked (1-10)
+  
+  // Question metadata
+  timeComplexity   String?
+  spaceComplexity  String?
+  approach         String? // Brief approach description
+  
+  // Import tracking
+  isImported       Boolean  @default(false) // Track if question was imported by user
+  importedBy       String?  // User who imported this question
+  importedAt       DateTime? // When it was imported
+  importBatchId    String?  // Batch ID for grouping imports
+  importBatchName  String?  // Custom name for the import batch
+  originalFileName String?  // Original file name if imported
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  progress    DSAProgress[]
+  importer    User?    @relation("ImportedDSAQuestions", fields: [importedBy], references: [id], onDelete: SetNull)
+  
+  @@index([topic])
+  @@index([difficulty])
+  @@index([platform])
+  @@index([frequency])
+  @@index([isImported])
+  @@index([importedBy])
+  @@index([importBatchId])
+}
+
+model DSAProgress {
+  id           String      @id @default(cuid())
+  userId       String
+  questionId   String
+  status       DSAStatus   @default(TODO)
+  attempts     Int         @default(0)
+  timeSpent    Int         @default(0) // in minutes
+  notes        String?
+  approach     String?     // User's approach/solution
+  rating       Int?        // User's difficulty rating (1-5)
+  
+  completedAt  DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  // Relations
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question     DSAQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, questionId])
+  @@index([userId])
+  @@index([questionId])
+  @@index([status])
+}
+
+enum DSAStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  REVIEW
+  SKIPPED
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
 }

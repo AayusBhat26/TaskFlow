@@ -25,6 +25,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { playTaskCompletionSound } from '@/lib/soundEffects';
 import { useTasks } from '@/hooks/useTasks';
 
 interface Task {
@@ -69,37 +70,42 @@ export function TasksModal({ workspaceId, trigger }: TasksModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCompleted, setFilterCompleted] = useState<'all' | 'completed' | 'pending'>('all');
   const [isOpen, setIsOpen] = useState(false);
+  const [completingTaskId, setCompletingTaskId] = useState<string | null>(null);
   const { tasks, loading, error, fetchTasks, completeTask, refreshTasks } = useTasks();
 
-  // Fetch tasks when modal opens
+  // Fetch tasks when modal opens (only once)
   useEffect(() => {
     if (isOpen) {
-      // Always fetch tasks when modal opens to ensure fresh data
+      // Fetch all tasks once when modal opens, then filter client-side
       fetchTasks({
         workspaceId,
-        search: searchQuery || undefined,
-        filter: filterCompleted
+        filter: 'all' // Always fetch all tasks
       });
     }
-  }, [isOpen]);
+  }, [isOpen, workspaceId, fetchTasks]);
 
-  // Handle search and filter changes with debouncing
-  useEffect(() => {
-    if (!isOpen) return;
+  // Client-side filtering for better performance and no race conditions
+  const filteredTasks = tasks.filter(task => {
+    // Search filter
+    const matchesSearch = !searchQuery || 
+      task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      task.content?.text?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      task.creator.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      task.tags?.some(tag => tag.name.toLowerCase().includes(searchQuery.toLowerCase()));
     
-    const timeoutId = setTimeout(() => {
-      fetchTasks({
-        workspaceId,
-        search: searchQuery || undefined,
-        filter: filterCompleted
-      });
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [searchQuery, filterCompleted]);
+    // Completion filter
+    const matchesCompletion = 
+      filterCompleted === 'all' || 
+      (filterCompleted === 'completed' && task.isCompleted) ||
+      (filterCompleted === 'pending' && !task.isCompleted);
+    
+    return matchesSearch && matchesCompletion;
+  });
 
   const completedCount = tasks.filter(task => task.isCompleted).length;
   const totalCount = tasks.length;
+  const filteredCompletedCount = filteredTasks.filter(task => task.isCompleted).length;
+  const filteredTotalCount = filteredTasks.length;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -189,7 +195,7 @@ export function TasksModal({ workspaceId, trigger }: TasksModalProps) {
           {/* Tasks List */}
           <ScrollArea className="h-[400px] pr-4">
             <div className="space-y-3">
-              {loading && tasks.length === 0 ? (
+              {loading && filteredTasks.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <RefreshCw className="w-8 h-8 mx-auto mb-2 animate-spin" />
                   <p>Loading tasks...</p>
@@ -208,14 +214,14 @@ export function TasksModal({ workspaceId, trigger }: TasksModalProps) {
                     Try Again
                   </Button>
                 </div>
-              ) : tasks.length === 0 ? (
+              ) : filteredTasks.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <AlertCircle className="w-8 h-8 mx-auto mb-2" />
                   <p>No tasks found</p>
                   <p className="text-sm">Try adjusting your search or filter criteria</p>
                 </div>
               ) : (
-                tasks.map((task) => {
+                filteredTasks.map((task) => {
                   const isCompleted = task.isCompleted;
                   
                   return (
@@ -230,11 +236,23 @@ export function TasksModal({ workspaceId, trigger }: TasksModalProps) {
                             variant="ghost"
                             size="sm"
                             className="p-0 h-auto hover:bg-transparent"
-                            onClick={() => completeTask(task.id)}
-                            disabled={loading}
+                            onClick={async () => {
+                              if (isCompleted || completingTaskId === task.id) return;
+                              setCompletingTaskId(task.id);
+                              try {
+                                // Play sound before completing task
+                                playTaskCompletionSound();
+                                await completeTask(task.id);
+                              } finally {
+                                setCompletingTaskId(null);
+                              }
+                            }}
+                            disabled={loading || completingTaskId === task.id || isCompleted}
                           >
                             {isCompleted ? (
                               <CheckCircle2 className="w-5 h-5 text-green-600" />
+                            ) : completingTaskId === task.id ? (
+                              <RefreshCw className="w-5 h-5 text-muted-foreground animate-spin" />
                             ) : (
                               <Circle className="w-5 h-5 text-muted-foreground hover:text-green-600" />
                             )}
@@ -343,7 +361,7 @@ export function TasksModal({ workspaceId, trigger }: TasksModalProps) {
           {/* Footer */}
           <div className="flex items-center justify-center pt-4 border-t">
             <div className="text-sm text-muted-foreground">
-              Showing {tasks.length} task(s)
+              Showing {filteredTasks.length} task(s)
             </div>
           </div>
         </div>
