@@ -15,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased">
+    <html lang="en" suppressHydrationWarning>
+      <body className="antialiased bg-background text-foreground transition-colors duration-300">
         <ClientSessionProvider>
           <SocketProvider>
             <ToastProvider>

@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { ExtendedTask } from "@/types/extended";
 import { UserPermission } from "@prisma/client";

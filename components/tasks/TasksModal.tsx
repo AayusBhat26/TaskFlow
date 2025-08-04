@@ -240,9 +240,7 @@ export function TasksModal({ workspaceId, trigger }: TasksModalProps) {
                               if (isCompleted || completingTaskId === task.id) return;
                               setCompletingTaskId(task.id);
                               try {
-                                // Play sound before completing task
-                                playTaskCompletionSound();
-                                await completeTask(task.id);
+                                await completeTask(task.id, workspaceId || task.workspaceId);
                               } finally {
                                 setCompletingTaskId(null);
                               }

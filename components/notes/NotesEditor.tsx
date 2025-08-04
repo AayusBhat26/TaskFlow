@@ -609,7 +609,7 @@ export function NotesEditor({ note, currentUser, onNoteUpdate }: NotesEditorProp
                 className={cn(
                   commonProps.className, 
                   "min-h-[24px] py-1 leading-relaxed",
-                  currentContent?.checked && "line-through text-gray-500"
+                  currentContent?.checked && "line-through text-muted-foreground"
                 )}
                 rows={1}
                 style={{ resize: 'none' }}
@@ -626,7 +626,7 @@ export function NotesEditor({ note, currentUser, onNoteUpdate }: NotesEditorProp
               <textarea
                 {...commonProps}
                 placeholder="Quote"
-                className={cn(commonProps.className, "italic text-gray-600 min-h-[24px] py-1 leading-relaxed")}
+                className={cn(commonProps.className, "italic text-muted-foreground min-h-[24px] py-1 leading-relaxed")}
                 rows={1}
                 style={{ resize: 'none' }}
                 ref={(textarea) => {
@@ -638,11 +638,11 @@ export function NotesEditor({ note, currentUser, onNoteUpdate }: NotesEditorProp
 
         case 'CODE':
           return (
-            <div className="bg-gray-50 rounded-md p-3 font-mono border border-gray-200">
+            <div className="bg-muted rounded-md p-3 font-mono border border-border">
               <textarea
                 {...commonProps}
                 placeholder="Code"
-                className={cn(commonProps.className, "font-mono text-sm min-h-[60px] bg-gray-50 text-gray-800")}
+                className={cn(commonProps.className, "font-mono text-sm min-h-[60px] bg-muted text-foreground")}
                 rows={3}
                 style={{ resize: 'none' }}
                 ref={(textarea) => {
@@ -726,11 +726,11 @@ export function NotesEditor({ note, currentUser, onNoteUpdate }: NotesEditorProp
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-white h-full">
+    <div className="flex-1 flex flex-col bg-background h-full">
       {/* Toolbar */}
-      <div className="border-b border-gray-100 px-6 py-3 flex items-center justify-between flex-shrink-0 bg-white">
+      <div className="border-b border-border px-6 py-3 flex items-center justify-between flex-shrink-0 bg-background">
         <div className="flex items-center space-x-4">
-          <div className="flex items-center text-sm text-gray-500">
+          <div className="flex items-center text-sm text-muted-foreground">
             <span>Last edited {formatDate(note.updatedAt)}</span>
           </div>
         </div>
@@ -741,20 +741,20 @@ export function NotesEditor({ note, currentUser, onNoteUpdate }: NotesEditorProp
             size="sm"
             onClick={() => onNoteUpdate(note.id, { isFavorite: !note.isFavorite })}
             className={cn(
-              "text-gray-500 hover:text-yellow-500",
+              "text-muted-foreground hover:text-yellow-500",
               note.isFavorite && "text-yellow-500"
             )}
           >
             <Star className={cn("w-4 h-4", note.isFavorite && "fill-current")} />
           </Button>
           
-          <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
             <Share className="w-4 h-4" />
           </Button>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
                 <MoreVertical className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -777,7 +777,7 @@ export function NotesEditor({ note, currentUser, onNoteUpdate }: NotesEditorProp
       </div>
 
       {/* Editor Content - Full height with proper scrolling */}
-      <div className="flex-1 min-h-0 overflow-hidden bg-white">
+      <div className="flex-1 min-h-0 overflow-hidden bg-background">
         <div 
           className="h-full overflow-y-auto"
           style={{ 
@@ -837,7 +837,7 @@ export function NotesEditor({ note, currentUser, onNoteUpdate }: NotesEditorProp
                   ) : (
                     <h1
                       onClick={() => setIsEditingTitle(true)}
-                      className="text-4xl font-bold text-gray-900 dark:text-white cursor-text hover:bg-gray-50 dark:hover:bg-gray-800 rounded px-2 py-1 -ml-2 break-words"
+                      className="text-4xl font-bold text-foreground cursor-text hover:bg-muted/50 rounded px-2 py-1 -ml-2 break-words"
                     >
                       {title}
                     </h1>
@@ -861,7 +861,7 @@ export function NotesEditor({ note, currentUser, onNoteUpdate }: NotesEditorProp
               {/* Empty state for new notes */}
               {blocks.length === 0 && (
                 <div 
-                  className="text-gray-500 py-4 cursor-text min-h-[200px] flex items-center justify-center"
+                  className="text-muted-foreground py-4 cursor-text min-h-[200px] flex items-center justify-center"
                   onClick={() => addNewBlock('TEXT', '')}
                 >
                   <div className="text-center">
@@ -886,7 +886,7 @@ export function NotesEditor({ note, currentUser, onNoteUpdate }: NotesEditorProp
             }}
           />
           <div 
-            className="fixed z-50 w-80 bg-white border border-gray-200 rounded-lg shadow-lg p-2 max-h-64 overflow-y-auto"
+            className="fixed z-50 w-80 bg-card border border-border rounded-lg shadow-lg p-2 max-h-64 overflow-y-auto"
             style={{
               left: Math.min(slashCommandPosition.x, window.innerWidth - 320),
               top: Math.min(slashCommandPosition.y, window.innerHeight - 300),
@@ -904,10 +904,10 @@ export function NotesEditor({ note, currentUser, onNoteUpdate }: NotesEditorProp
                       : "hover:bg-gray-50"
                   )}
                 >
-                  <command.icon className="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                  <command.icon className="w-5 h-5 text-muted-foreground mr-3 mt-0.5 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <div className="font-medium text-sm text-gray-900">{command.label}</div>
-                    <div className="text-xs text-gray-500 mt-1">{command.description}</div>
+                    <div className="font-medium text-sm text-foreground">{command.label}</div>
+                    <div className="text-xs text-muted-foreground mt-1">{command.description}</div>
                   </div>
                 </button>
               ))}

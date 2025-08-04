@@ -81,7 +81,7 @@ export const ExternalServicesPrompt = () => {
   }
 
   return (
-    <Card className="w-full border-primary/20 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20">
+    <Card className="w-full border-primary/20 bg-gradient-to-r from-card to-card">
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
@@ -137,44 +137,44 @@ export const ExternalServicesPrompt = () => {
           {/* Services Preview */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             <div className={`flex items-center gap-2 p-2 rounded-lg border ${
-              externalServices?.leetcodeUsername ? "bg-orange-50 border-orange-200 dark:bg-orange-950/20" : "bg-muted/50"
+              externalServices?.leetcodeUsername ? "bg-primary/10 border-primary/20" : "bg-muted/50"
             }`}>
-              <div className="w-3 h-3 bg-orange-500 rounded"></div>
+              <div className="w-3 h-3 bg-primary rounded"></div>
               <span className="text-xs font-medium">LeetCode</span>
-              {externalServices?.leetcodeUsername && <CheckCircle className="w-3 h-3 text-green-600 ml-auto" />}
+              {externalServices?.leetcodeUsername && <CheckCircle className="w-3 h-3 text-accent-foreground ml-auto" />}
             </div>
             
             <div className={`flex items-center gap-2 p-2 rounded-lg border ${
-              externalServices?.codeforcesUsername ? "bg-blue-50 border-blue-200 dark:bg-blue-950/20" : "bg-muted/50"
+              externalServices?.codeforcesUsername ? "bg-accent/20 border-accent/30" : "bg-muted/50"
             }`}>
-              <div className="w-3 h-3 bg-blue-500 rounded"></div>
+              <div className="w-3 h-3 bg-accent rounded"></div>
               <span className="text-xs font-medium">Codeforces</span>
-              {externalServices?.codeforcesUsername && <CheckCircle className="w-3 h-3 text-green-600 ml-auto" />}
+              {externalServices?.codeforcesUsername && <CheckCircle className="w-3 h-3 text-accent-foreground ml-auto" />}
             </div>
             
             <div className={`flex items-center gap-2 p-2 rounded-lg border ${
-              externalServices?.githubUsername ? "bg-gray-50 border-gray-200 dark:bg-gray-950/20" : "bg-muted/50"
+              externalServices?.githubUsername ? "bg-secondary/50 border-secondary" : "bg-muted/50"
             }`}>
               <Github className="w-3 h-3" />
               <span className="text-xs font-medium">GitHub</span>
-              {externalServices?.githubUsername && <CheckCircle className="w-3 h-3 text-green-600 ml-auto" />}
+              {externalServices?.githubUsername && <CheckCircle className="w-3 h-3 text-accent-foreground ml-auto" />}
             </div>
             
             <div className={`flex items-center gap-2 p-2 rounded-lg border ${
-              externalServices?.redditUsername ? "bg-orange-50 border-orange-200 dark:bg-orange-950/20" : "bg-muted/50"
+              externalServices?.redditUsername ? "bg-destructive/10 border-destructive/20" : "bg-muted/50"
             }`}>
-              <div className="w-3 h-3 bg-orange-600 rounded-full"></div>
+              <div className="w-3 h-3 bg-destructive rounded-full"></div>
               <span className="text-xs font-medium">Reddit</span>
-              {externalServices?.redditUsername && <CheckCircle className="w-3 h-3 text-green-600 ml-auto" />}
+              {externalServices?.redditUsername && <CheckCircle className="w-3 h-3 text-accent-foreground ml-auto" />}
             </div>
             
             <div className={`flex items-center gap-2 p-2 rounded-lg border ${
-              externalServices?.emailIds && externalServices.emailIds.length > 0 ? "bg-blue-50 border-blue-200 dark:bg-blue-950/20" : "bg-muted/50"
+              externalServices?.emailIds && externalServices.emailIds.length > 0 ? "bg-secondary/50 border-secondary" : "bg-muted/50"
             }`}>
               <Mail className="w-3 h-3" />
               <span className="text-xs font-medium">Email</span>
               {externalServices?.emailIds && externalServices.emailIds.length > 0 && (
-                <CheckCircle className="w-3 h-3 text-green-600 ml-auto" />
+                <CheckCircle className="w-3 h-3 text-accent-foreground ml-auto" />
               )}
             </div>
           </div>

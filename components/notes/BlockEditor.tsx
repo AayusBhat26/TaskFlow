@@ -114,7 +114,7 @@ export function BlockEditor({ block, onUpdate, onDelete, onNewBlock, isLast }: B
       case 'BULLET_LIST':
         return (
           <div className="flex items-start space-x-2">
-            <span className="text-gray-500 mt-1">•</span>
+            <span className="text-muted-foreground mt-1">•</span>
             <Textarea
               ref={inputRef as React.RefObject<HTMLTextAreaElement>}
               value={content}
@@ -132,7 +132,7 @@ export function BlockEditor({ block, onUpdate, onDelete, onNewBlock, isLast }: B
       case 'NUMBERED_LIST':
         return (
           <div className="flex items-start space-x-2">
-            <span className="text-gray-500 mt-1">1.</span>
+            <span className="text-muted-foreground mt-1">1.</span>
             <Textarea
               ref={inputRef as React.RefObject<HTMLTextAreaElement>}
               value={content}
@@ -169,7 +169,7 @@ export function BlockEditor({ block, onUpdate, onDelete, onNewBlock, isLast }: B
               placeholder="To-do"
               className={cn(
                 "border-none shadow-none p-0 resize-none bg-transparent placeholder-gray-400 min-h-[24px]",
-                content?.checked && "line-through text-gray-500"
+                content?.checked && "line-through text-muted-foreground"
               )}
               rows={1}
             />

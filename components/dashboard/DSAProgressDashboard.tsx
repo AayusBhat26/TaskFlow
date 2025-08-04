@@ -71,21 +71,21 @@ export function DSAProgressDashboard() {
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'EASY': return 'text-green-600 bg-green-50 border-green-200';
-      case 'MEDIUM': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'HARD': return 'text-red-600 bg-red-50 border-red-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+      case 'EASY': return 'text-accent-foreground bg-muted border-border';
+      case 'MEDIUM': return 'text-secondary-foreground bg-secondary border-border';
+      case 'HARD': return 'text-destructive-foreground bg-destructive border-border';
+      default: return 'text-muted-foreground bg-muted border-border';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'COMPLETED': return 'text-green-600 bg-green-50 border-green-200';
-      case 'IN_PROGRESS': return 'text-blue-600 bg-blue-50 border-blue-200';
-      case 'TODO': return 'text-gray-600 bg-gray-50 border-gray-200';
-      case 'REVIEW': return 'text-orange-600 bg-orange-50 border-orange-200';
-      case 'SKIPPED': return 'text-gray-500 bg-gray-100 border-gray-300';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+      case 'COMPLETED': return 'text-primary-foreground bg-primary border-border';
+      case 'IN_PROGRESS': return 'text-accent-foreground bg-accent border-border';
+      case 'TODO': return 'text-muted-foreground bg-muted border-border';
+      case 'REVIEW': return 'text-secondary-foreground bg-secondary border-border';
+      case 'SKIPPED': return 'text-muted-foreground bg-muted border-border';
+      default: return 'text-muted-foreground bg-muted border-border';
     }
   };
 
@@ -95,11 +95,11 @@ export function DSAProgressDashboard() {
         {[...Array(6)].map((_, i) => (
           <Card key={i} className="animate-pulse">
             <CardHeader className="pb-2">
-              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+              <div className="h-4 bg-muted rounded w-3/4"></div>
             </CardHeader>
             <CardContent>
-              <div className="h-8 bg-gray-200 rounded w-1/2 mb-2"></div>
-              <div className="h-2 bg-gray-200 rounded w-full"></div>
+              <div className="h-8 bg-muted rounded w-1/2 mb-2"></div>
+              <div className="h-2 bg-muted rounded w-full"></div>
             </CardContent>
           </Card>
         ))}
@@ -112,7 +112,7 @@ export function DSAProgressDashboard() {
       <div className="p-4">
         <Card>
           <CardContent className="flex items-center justify-center h-32">
-            <p className="text-gray-500">Failed to load DSA progress</p>
+            <p className="text-muted-foreground">Failed to load DSA progress</p>
           </CardContent>
         </Card>
       </div>
@@ -128,10 +128,10 @@ export function DSAProgressDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <h2 className="text-2xl font-bold text-foreground">
             DSA Practice Progress
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-muted-foreground">
             Track your progress on curated Data Structures & Algorithms questions
           </p>
         </div>
@@ -285,7 +285,7 @@ export function DSAProgressDashboard() {
               {stats.recentActivity.slice(0, 5).map((activity) => (
                 <div 
                   key={activity.id}
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                  className="flex items-center justify-between p-3 bg-muted rounded-lg"
                 >
                   <div className="flex-1">
                     <p className="font-medium text-sm">
@@ -306,8 +306,8 @@ export function DSAProgressDashboard() {
                 </div>
               ))}
             </div>
-            <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg">
-              <p className="text-sm text-blue-700 dark:text-blue-300">
+            <div className="mt-4 p-3 bg-accent rounded-lg">
+              <p className="text-sm text-accent-foreground">
                 <strong>Note:</strong> Progress shown is for curated questions only. 
                 Your imported questions are tracked separately in the DSA practice section.
               </p>

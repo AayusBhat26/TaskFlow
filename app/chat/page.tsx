@@ -70,7 +70,7 @@ export default async function ChatPage() {
   };
 
   return (
-    <main className="h-screen bg-gray-100">
+    <main className="h-screen bg-background">
       <WorkspaceChat 
         workspaces={workspaces}
         currentUser={currentUser}

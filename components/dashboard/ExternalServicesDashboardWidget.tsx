@@ -20,7 +20,7 @@ import Link from 'next/link';
 
 // Simple loading skeleton component
 const Skeleton = ({ className }: { className?: string }) => (
-  <div className={`animate-pulse bg-gray-200 dark:bg-gray-700 rounded ${className}`} />
+  <div className={`animate-pulse bg-muted rounded ${className}`} />
 );
 
 export const ExternalServicesDashboardWidget = () => {
@@ -108,7 +108,7 @@ export const ExternalServicesDashboardWidget = () => {
                   <h4 className="font-medium text-sm mb-2">Action Items</h4>
                   <ul className="space-y-1">
                     {dailyDigest.actionItems.slice(0, 3).map((item: string, index: number) => (
-                      <li key={index} className="text-sm text-orange-600 dark:text-orange-400">
+                      <li key={index} className="text-sm text-destructive">
                         • {item}
                       </li>
                     ))}
@@ -126,7 +126,7 @@ export const ExternalServicesDashboardWidget = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm flex items-center gap-2">
-                <div className="w-3 h-3 bg-orange-500 rounded"></div>
+                <div className="w-3 h-3 bg-primary rounded"></div>
                 LeetCode
               </CardTitle>
             </CardHeader>
@@ -134,7 +134,7 @@ export const ExternalServicesDashboardWidget = () => {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Solved</span>
-                  <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                  <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
                     {data.leetcode.totalSolved}
                   </Badge>
                 </div>
@@ -149,8 +149,8 @@ export const ExternalServicesDashboardWidget = () => {
                     Latest: {data.leetcode.recentSubmissions[0].title}
                   </div>
                 )}
-                <div className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <div className="flex items-center gap-1 text-xs text-accent-foreground">
+                  <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
                   Real-time data
                 </div>
               </div>
@@ -162,7 +162,7 @@ export const ExternalServicesDashboardWidget = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm flex items-center gap-2">
-                <div className="w-3 h-3 bg-blue-500 rounded"></div>
+                <div className="w-3 h-3 bg-accent rounded"></div>
                 Codeforces
               </CardTitle>
             </CardHeader>

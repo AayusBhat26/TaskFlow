@@ -197,8 +197,9 @@ export async function GET(
     }
 
     const content = task.content as any || {};
-    const isCompleted = Boolean(content.isCompleted);
-    const completedAt = content.completedAt;
+    // Use the database isCompleted field, not content
+    const isCompleted = Boolean(task.isCompleted);
+    const completedAt = task.completedAt || content.completedAt;
     const completedBy = content.completedBy;
 
     return NextResponse.json({

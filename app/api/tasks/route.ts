@@ -120,8 +120,9 @@ export async function GET(req: NextRequest) {
     // Process tasks and add completion status
     const processedTasks = tasks.map(task => {
       const content = task.content as any || {};
-      const isCompleted = Boolean(content.isCompleted);
-      const completedAt = content.completedAt;
+      // Use the actual isCompleted field from the database, not from content
+      const isCompleted = Boolean(task.isCompleted);
+      const completedAt = task.completedAt || content.completedAt;
       const completedBy = content.completedBy;
 
       return {

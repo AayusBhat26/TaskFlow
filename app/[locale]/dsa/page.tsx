@@ -80,11 +80,11 @@ const difficultyColors = {
 };
 
 const statusColors = {
-  TODO: 'text-gray-500',
+  TODO: 'text-muted-foreground',
   IN_PROGRESS: 'text-blue-500',
   COMPLETED: 'text-green-500',
   REVIEW: 'text-orange-500',
-  SKIPPED: 'text-gray-400'
+  SKIPPED: 'text-muted-foreground/60'
 };
 
 export default function DSAPracticePage() {
@@ -197,7 +197,7 @@ export default function DSAPracticePage() {
       case 'IN_PROGRESS':
         return <Clock className="w-5 h-5 text-blue-500" />;
       default:
-        return <Circle className="w-5 h-5 text-gray-400" />;
+        return <Circle className="w-5 h-5 text-muted-foreground" />;
     }
   };
 
@@ -581,14 +581,6 @@ export default function DSAPracticePage() {
                     <Progress value={topic.percentage} />
                     <div className="flex justify-between text-sm">
                       <span>{topic.percentage}% complete</span>
-                      <Button
-                        variant="link"
-                        size="sm"
-                        className="p-0 h-auto"
-                        onClick={() => setSelectedTopic(topic.topic)}
-                      >
-                        View Questions
-                      </Button>
                     </div>
                   </div>
                 </CardContent>

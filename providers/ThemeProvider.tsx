@@ -28,10 +28,27 @@ export const ThemeProvider = ({ children, ...props }: ThemeProviderProps) => {
       enableSystem
       disableTransitionOnChange={false}
       storageKey="taskflow-theme"
-      enableColorScheme={false}
+      enableColorScheme={true}
       forcedTheme={undefined}
+      value={{
+        light: "light",
+        dark: "dark",
+        system: "system",
+        ocean: "ocean",
+        forest: "forest",
+        sunset: "sunset",
+        midnight: "midnight",  
+        cherry: "cherry",
+        cyber: "cyber",
+        autumn: "autumn",
+        lavender: "lavender",
+        arctic: "arctic",
+        volcano: "volcano"
+      }}
     >
-      {children}
+      <div vaul-drawer-wrapper="" className="min-h-screen bg-background text-foreground">
+        {children}
+      </div>
     </NextThemesProvider>
   );
 };

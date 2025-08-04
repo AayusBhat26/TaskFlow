@@ -147,7 +147,7 @@ export function NotesApp({ notes, workspaces, currentUser }: NotesAppProps) {
   };
 
   return (
-    <div className="flex h-full bg-white dark:bg-gray-900 overflow-hidden">
+    <div className="flex h-full bg-background overflow-hidden">
       <NotesSidebar
         notes={allNotes}
         workspaces={workspaces}

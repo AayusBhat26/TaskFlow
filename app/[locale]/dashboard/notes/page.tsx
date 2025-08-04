@@ -95,22 +95,22 @@ function NotesLoading() {
   return (
     <div className="flex h-full">
       {/* Sidebar skeleton */}
-      <div className="w-80 border-r border-gray-200 bg-gray-50 p-4">
+      <div className="w-80 border-r border-border bg-muted/50 p-4">
         <div className="space-y-3">
-          <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
-          <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
-          <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
-          <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
+          <div className="h-8 bg-muted rounded animate-pulse"></div>
+          <div className="h-6 bg-muted rounded animate-pulse"></div>
+          <div className="h-6 bg-muted rounded animate-pulse"></div>
+          <div className="h-6 bg-muted rounded animate-pulse"></div>
         </div>
       </div>
       
       {/* Main content skeleton */}
       <div className="flex-1 p-8">
         <div className="space-y-4">
-          <div className="h-12 bg-gray-200 rounded animate-pulse"></div>
-          <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
-          <div className="h-6 bg-gray-200 rounded animate-pulse w-3/4"></div>
-          <div className="h-6 bg-gray-200 rounded animate-pulse w-1/2"></div>
+          <div className="h-12 bg-muted rounded animate-pulse"></div>
+          <div className="h-6 bg-muted rounded animate-pulse"></div>
+          <div className="h-6 bg-muted rounded animate-pulse w-3/4"></div>
+          <div className="h-6 bg-muted rounded animate-pulse w-1/2"></div>
         </div>
       </div>
     </div>

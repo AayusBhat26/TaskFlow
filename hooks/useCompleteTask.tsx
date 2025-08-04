@@ -16,6 +16,8 @@ interface CompleteTaskResponse {
   pointsEarned: number;
   totalPoints: number;
   message: string;
+  leveledUp?: boolean;
+  unlockedAchievements?: string[];
 }
 
 export const useCompleteTask = () => {
@@ -28,19 +30,39 @@ export const useCompleteTask = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      // Play task completion sound
-      playTaskCompletionSound();
-      
       // Show success message with points earned
       toast({
         title: "🎉 Task Completed!",
         description: data.message,
       });
 
+      // Show achievement notifications
+      if (data.unlockedAchievements && data.unlockedAchievements.length > 0) {
+        setTimeout(() => {
+          toast({
+            title: "🏆 Achievement Unlocked!",
+            description: `You've unlocked ${data.unlockedAchievements.length} new achievement(s)!`,
+            duration: 5000,
+          });
+        }, 1000);
+      }
+
+      // Show level up notification
+      if (data.leveledUp) {
+        setTimeout(() => {
+          toast({
+            title: "🎊 LEVEL UP!",
+            description: "Congratulations! You've leveled up!",
+            duration: 7000,
+          });
+        }, 2000);
+      }
+
       // Invalidate relevant queries to refresh data
       queryClient.invalidateQueries({ queryKey: ['userPoints'] });
       queryClient.invalidateQueries({ queryKey: ['getWorkspaceRecentActivity'] });
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['gaming'] });
     },
     onError: (error: any) => {
       const errorMessage = error.response?.data?.error || 'Failed to complete task';

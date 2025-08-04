@@ -73,11 +73,11 @@ export const PointsDisplay = () => {
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'POMODORO_COMPLETED':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
       case 'TASK_COMPLETED':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-muted-foreground';
     }
   };
 

@@ -240,13 +240,6 @@ export function ImportedQuestionsTab({ batchId }: ImportedQuestionsTabProps = {}
                       </p>
                     </div>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSelectedBatch(batch.batchId)}
-                  >
-                    View Questions
-                  </Button>
                 </div>
               ))}
             </div>

@@ -22,6 +22,15 @@ model User {
   isOnline                 Boolean             @default(false)
   lastSeen                 DateTime?
   points                   Int                 @default(0)
+  level                    Int                 @default(1)
+  experience               Int                 @default(0)
+  currentStreak            Int                 @default(0)
+  longestStreak            Int                 @default(0)
+  lastActivityDate         DateTime?
+  totalTasksCompleted      Int                 @default(0)
+  totalPomodoroCompleted   Int                 @default(0)
+  profileBadges            String[]            @default([])
+  currentTitle             String?
   
   // External service usernames
   leetcodeUsername         String?
@@ -40,6 +49,8 @@ model User {
   subscriptions            Subscription[]
   createdTasks             Task[]              @relation("TaskCreatedByUser")
   updatedTasks             Task[]              @relation("TaskUpdatedByUser")
+  taskComments             TaskComment[]
+  taskTimeEntries          TaskTimeEntry[]
   createdWorkspaces        Workspace[]         @relation("CreatedBy")
   assignedToMindMap        assignedToMindMap[]
   assignedToTask           assignedToTask[]
@@ -49,6 +60,11 @@ model User {
   // Points and Pomodoro relations
   pomodoroSessions         PomodoroSession[]
   pointTransactions        PointTransaction[]
+  userAchievements         UserAchievement[]
+  userChallenges           UserChallenge[]
+  userStreaks              UserStreak[]
+  pointsSpent              PointPurchase[]
+  leaderboardEntries       LeaderboardEntry[]
   
   // DSA Practice relations
   dsaProgress              DSAProgress[]
@@ -60,6 +76,14 @@ model User {
   // Notes relations
   notes                    Note[]
   noteBlocks              NoteBlock[]
+  noteCollaborations      NoteCollaborator[]
+  noteHistory             NoteHistory[]
+  
+  // Calendar relations
+  calendarEvents          CalendarEvent[]
+  calendarAttendees       CalendarAttendee[]
+  timeBlocks              TimeBlock[]
+  calendarTemplates       CalendarTemplate[]
   
   // External data uploads
   submissionData           UserSubmissionData[]
@@ -164,6 +188,10 @@ model Workspace {
   
   // Notes relations
   notes            Note[]
+  
+  // Calendar relations
+  calendarEvents   CalendarEvent[]
+  timeBlocks       TimeBlock[]
 }
 
 model Task {
@@ -179,13 +207,129 @@ model Task {
   dateId         String?
   isCompleted    Boolean          @default(false)
   completedAt    DateTime?
+  
+  // Advanced task features
+  isRecurring    Boolean          @default(false)
+  recurringType  RecurringType?   // daily, weekly, monthly, yearly
+  recurringData  Json?            // Stores recurring configuration
+  parentTaskId   String?          // For sub-tasks
+  isTemplate     Boolean          @default(false)
+  templateId     String?          // Reference to template used
+  
+  // Time tracking
+  estimatedHours Float?
+  actualHours    Float?           @default(0)
+  startedAt      DateTime?
+  
+  // Priority and status
+  priority       TaskPriority     @default(MEDIUM)
+  status         TaskStatus       @default(TODO)
+  
+  // Dependencies
+  dependsOn      TaskDependency[] @relation("DependentTask")
+  dependents     TaskDependency[] @relation("PrerequisiteTask")
+  
+  // Relations
   creator        User             @relation("TaskCreatedByUser", fields: [creatorId], references: [id], onDelete: Cascade)
   taskDate       TaskDate?        @relation(fields: [dateId], references: [id], onDelete: Cascade)
   updatedBy      User?            @relation("TaskUpdatedByUser", fields: [updatedUserId], references: [id], onDelete: Cascade)
   workspace      Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  parentTask     Task?            @relation("TaskHierarchy", fields: [parentTaskId], references: [id], onDelete: Cascade)
+  subTasks       Task[]           @relation("TaskHierarchy")
+  template       Task?            @relation("TaskTemplate", fields: [templateId], references: [id], onDelete: SetNull)
+  basedOn        Task[]           @relation("TaskTemplate")
+  
+  // Existing relations
   assignedToTask assignedToTask[]
   savedTask      savedTask[]
   tags           Tag[]            @relation("TagToTask")
+  
+  // New relations
+  comments       TaskComment[]
+  timeEntries    TaskTimeEntry[]
+  calendarEvents CalendarEvent[]
+}
+
+// Task Dependencies
+model TaskDependency {
+  id               String         @id @default(cuid())
+  dependentTaskId  String         // Task that depends on another
+  prerequisiteTaskId String       // Task that must be completed first
+  dependencyType   DependencyType @default(FINISH_TO_START)
+  createdAt        DateTime       @default(now())
+  
+  dependentTask    Task           @relation("DependentTask", fields: [dependentTaskId], references: [id], onDelete: Cascade)
+  prerequisiteTask Task           @relation("PrerequisiteTask", fields: [prerequisiteTaskId], references: [id], onDelete: Cascade)
+  
+  @@unique([dependentTaskId, prerequisiteTaskId])
+  @@index([dependentTaskId])
+  @@index([prerequisiteTaskId])
+}
+
+// Task Comments/Discussion
+model TaskComment {
+  id        String   @id @default(cuid())
+  taskId    String
+  authorId  String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  @@index([taskId])
+  @@index([authorId])
+  @@index([createdAt])
+}
+
+// Task Time Tracking
+model TaskTimeEntry {
+  id          String    @id @default(cuid())
+  taskId      String
+  userId      String
+  startTime   DateTime
+  endTime     DateTime?
+  duration    Float?    // Hours
+  description String?
+  createdAt   DateTime  @default(now())
+  
+  task        Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([taskId])
+  @@index([userId])
+  @@index([startTime])
+}
+
+enum RecurringType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+  CUSTOM
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+  CANCELLED
+}
+
+enum DependencyType {
+  FINISH_TO_START
+  START_TO_START
+  FINISH_TO_FINISH
+  START_TO_FINISH
 }
 
 model savedTask {
@@ -236,10 +380,159 @@ model Tag {
 }
 
 model TaskDate {
-  id   String  @id @default(cuid())
-  from String?
-  to   String?
-  Task Task[]
+  id        String    @id @default(cuid())
+  from      String?
+  to        String?
+  allDay    Boolean   @default(false)
+  timeZone  String?   @default("UTC")
+  Task      Task[]
+}
+
+// Enhanced Calendar System
+model CalendarEvent {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  allDay      Boolean          @default(false)
+  timeZone    String           @default("UTC")
+  location    String?
+  
+  // Event categorization
+  type        EventType        @default(MEETING)
+  color       String           @default("#3B82F6")
+  
+  // Recurrence
+  isRecurring Boolean          @default(false)
+  recurringRule Json?          // RRULE format
+  
+  // Relations
+  workspaceId String?
+  creatorId   String
+  taskId      String?          // Link to task if applicable
+  
+  // Attendees and sharing
+  attendees   CalendarAttendee[]
+  
+  // External integration
+  externalId  String?          // Google Calendar, Outlook ID
+  externalSource String?       // "google", "outlook", etc.
+  
+  // Metadata
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  
+  creator     User             @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  workspace   Workspace?       @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  task        Task?            @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  
+  @@index([creatorId])
+  @@index([workspaceId])
+  @@index([startTime])
+  @@index([endTime])
+  @@index([type])
+}
+
+// Calendar Event Attendees
+model CalendarAttendee {
+  id          String            @id @default(cuid())
+  eventId     String
+  userId      String?           // Internal user
+  email       String?           // External attendee
+  name        String?           // For external attendees
+  status      AttendeeStatus    @default(PENDING)
+  role        AttendeeRole      @default(ATTENDEE)
+  addedAt     DateTime          @default(now())
+  
+  event       CalendarEvent     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user        User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([eventId])
+  @@index([userId])
+  @@index([email])
+}
+
+// Time Blocking
+model TimeBlock {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  userId      String
+  workspaceId String?
+  category    String?     // "focus", "meeting", "break", etc.
+  color       String      @default("#8B5CF6")
+  createdAt   DateTime    @default(now())
+  
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   Workspace?  @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([startTime])
+  @@index([endTime])
+}
+
+// Calendar Templates
+model CalendarTemplate {
+  id          String             @id @default(cuid())
+  name        String
+  description String?
+  category    String             @default("general")
+  isPublic    Boolean            @default(false)
+  creatorId   String
+  createdAt   DateTime           @default(now())
+  
+  // Template events
+  events      CalendarTemplateEvent[]
+  
+  creator     User               @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  
+  @@index([creatorId])
+  @@index([category])
+  @@index([isPublic])
+}
+
+model CalendarTemplateEvent {
+  id          String           @id @default(cuid())
+  templateId  String
+  title       String
+  description String?
+  duration    Int              // Duration in minutes
+  offsetDays  Int              @default(0) // Days from template start
+  offsetHours Int              @default(0) // Hours from day start
+  type        EventType        @default(MEETING)
+  color       String           @default("#3B82F6")
+  
+  template    CalendarTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  
+  @@index([templateId])
+}
+
+enum EventType {
+  MEETING
+  DEADLINE
+  REMINDER
+  PERSONAL
+  WORK
+  BREAK
+  FOCUS_TIME
+  TRAVEL
+  APPOINTMENT
+}
+
+enum AttendeeStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  TENTATIVE
+}
+
+enum AttendeeRole {
+  ORGANIZER
+  ATTENDEE
+  OPTIONAL
 }
 
 model Subscription {
@@ -359,6 +652,17 @@ enum PointType {
   TASK_COMPLETED
   DSA_QUESTION_COMPLETED
   MANUAL_ADJUSTMENT
+  ACHIEVEMENT_UNLOCKED
+  CHALLENGE_COMPLETED
+  STREAK_BONUS
+  DAILY_LOGIN
+  COLLABORATION_BONUS
+  LEVEL_UP_BONUS
+  REFERRAL_BONUS
+  PURCHASE_SPENT
+  ADMIN_BONUS
+  EVENT_PARTICIPATION
+  MILESTONE_REACHED
 }
 
 // Chat System for Workspaces
@@ -378,33 +682,118 @@ model ChatMessage {
   @@index([createdAt])
 }
 
-// Notes System - Notion-like
+// Notes System - Enhanced with Templates, Tags, History, and Collaboration
 model Note {
-  id          String      @id @default(cuid())
-  title       String?     @default("Untitled")
-  icon        String?     // Emoji icon
-  coverImage  String?     // Cover image URL
-  isPublic    Boolean     @default(false)
-  isArchived  Boolean     @default(false)
-  isFavorite  Boolean     @default(false)
-  workspaceId String?     // Optional: link to workspace
-  parentId    String?     // For nested pages
-  position    Int         @default(0) // For ordering
+  id          String        @id @default(cuid())
+  title       String?       @default("Untitled")
+  icon        String?       // Emoji icon
+  coverImage  String?       // Cover image URL
+  isPublic    Boolean       @default(false)
+  isArchived  Boolean       @default(false)
+  isFavorite  Boolean       @default(false)
+  isTemplate  Boolean       @default(false) // For note templates
+  templateId  String?       // Reference to template used
+  workspaceId String?       // Optional: link to workspace
+  parentId    String?       // For nested pages
+  position    Int           @default(0) // For ordering
   authorId    String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   
-  author      User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  workspace   Workspace?  @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
-  parent      Note?       @relation("NoteHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
-  children    Note[]      @relation("NoteHierarchy")
+  // Collaboration features
+  collaborators NoteCollaborator[]
+  
+  // Template features
+  template    Note?         @relation("NoteTemplate", fields: [templateId], references: [id], onDelete: SetNull)
+  basedOn     Note[]        @relation("NoteTemplate")
+  
+  // Relations
+  author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  workspace   Workspace?    @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  parent      Note?         @relation("NoteHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Note[]        @relation("NoteHierarchy")
   blocks      NoteBlock[]
+  
+  // Tags and history
+  tags        NoteTag[]
+  history     NoteHistory[]
+  links       NoteLink[]    @relation("SourceNote")
+  linkedBy    NoteLink[]    @relation("TargetNote")
   
   @@index([authorId])
   @@index([workspaceId])
   @@index([parentId])
   @@index([position])
   @@index([createdAt])
+  @@index([isTemplate])
+}
+
+// Note Collaboration
+model NoteCollaborator {
+  id       String           @id @default(cuid())
+  noteId   String
+  userId   String
+  role     CollaboratorRole @default(EDITOR)
+  addedAt  DateTime         @default(now())
+  
+  note     Note             @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([noteId, userId])
+  @@index([noteId])
+  @@index([userId])
+}
+
+// Note Tags
+model NoteTag {
+  id      String @id @default(cuid())
+  name    String
+  color   String @default("#3B82F6") // Default blue
+  noteId  String
+  
+  note    Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  
+  @@index([noteId])
+  @@index([name])
+}
+
+// Note Linking (like Obsidian/Notion)
+model NoteLink {
+  id           String @id @default(cuid())
+  sourceNoteId String
+  targetNoteId String
+  createdAt    DateTime @default(now())
+  
+  sourceNote   Note   @relation("SourceNote", fields: [sourceNoteId], references: [id], onDelete: Cascade)
+  targetNote   Note   @relation("TargetNote", fields: [targetNoteId], references: [id], onDelete: Cascade)
+  
+  @@unique([sourceNoteId, targetNoteId])
+  @@index([sourceNoteId])
+  @@index([targetNoteId])
+}
+
+// Note History (Version Control)
+model NoteHistory {
+  id        String   @id @default(cuid())
+  noteId    String
+  title     String?
+  content   Json?    // Snapshot of blocks
+  version   Int
+  changeBy  String
+  createdAt DateTime @default(now())
+  
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [changeBy], references: [id], onDelete: Cascade)
+  
+  @@index([noteId])
+  @@index([version])
+  @@index([createdAt])
+}
+
+enum CollaboratorRole {
+  VIEWER
+  EDITOR
+  ADMIN
 }
 
 model NoteBlock {
@@ -430,25 +819,37 @@ model NoteBlock {
 }
 
 enum BlockType {
+  // Text blocks
   TEXT
   HEADING_1
   HEADING_2
   HEADING_3
+  
+  // Lists
   BULLET_LIST
   NUMBERED_LIST
   TODO
+  
+  // Rich content
   QUOTE
   CODE
+  TABLE
   DIVIDER
+  
+  // Media
   IMAGE
   VIDEO
   FILE
-  EMBED
-  TABLE
-  CALLOUT
+  
+  // Interactive
   TOGGLE
-  COLUMN
-  COLUMN_LIST
+  CALLOUT
+  
+  // Advanced
+  EMBED
+  EQUATION
+  BOOKMARK
+  TEMPLATE_BUTTON
 }
 
 model UserSubmissionData {
@@ -549,4 +950,224 @@ enum Difficulty {
   EASY
   MEDIUM
   HARD
+}
+
+// Gaming System Models
+
+model Achievement {
+  id                   String @id @default(cuid())
+  name                 String @unique
+  description          String
+  category             AchievementCategory
+  type                 AchievementType
+  iconName             String
+  iconColor            String
+  requirement          Int    // Number needed to unlock
+  pointsReward         Int
+  badgeId              String?
+  isSecret             Boolean @default(false)
+  rarity               AchievementRarity @default(COMMON)
+  
+  // Relations
+  userAchievements     UserAchievement[]
+  
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model UserAchievement {
+  id            String @id @default(cuid())
+  userId        String
+  achievementId String
+  unlockedAt    DateTime @default(now())
+  progress      Int @default(0)
+  isCompleted   Boolean @default(false)
+  
+  // Relations
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, achievementId])
+}
+
+model Challenge {
+  id               String @id @default(cuid())
+  name             String @unique
+  description      String
+  type             ChallengeType
+  category         ChallengeCategory
+  difficulty       ChallengeDifficulty
+  requirement      Int
+  timeLimit        Int? // In hours
+  pointsReward     Int
+  experienceReward Int
+  badgeReward      String?
+  isActive         Boolean @default(true)
+  startDate        DateTime
+  endDate          DateTime?
+  
+  // Relations
+  userChallenges   UserChallenge[]
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model UserChallenge {
+  id          String @id @default(cuid())
+  userId      String
+  challengeId String
+  progress    Int @default(0)
+  isCompleted Boolean @default(false)
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+  
+  // Relations
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, challengeId])
+}
+
+model UserStreak {
+  id              String @id @default(cuid())
+  userId          String
+  streakType      StreakType
+  currentCount    Int @default(0)
+  longestCount    Int @default(0)
+  lastActiveDate  DateTime?
+  multiplier      Float @default(1.0)
+  
+  // Relations
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, streakType])
+}
+
+model PointPurchase {
+  id          String @id @default(cuid())
+  userId      String
+  itemType    PurchaseItemType
+  itemId      String
+  pointsCost  Int
+  purchasedAt DateTime @default(now())
+  
+  // Relations
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LeaderboardEntry {
+  id              String @id @default(cuid())
+  userId          String
+  leaderboardType LeaderboardType
+  period          LeaderboardPeriod
+  score           Int
+  rank            Int
+  periodStart     DateTime
+  periodEnd       DateTime
+  
+  // Relations
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, leaderboardType, period, periodStart])
+}
+
+model GameSettings {
+  id                    String @id @default(cuid())
+  experiencePerLevel    Int @default(1000)
+  experienceMultiplier  Float @default(1.5)
+  maxLevel              Int @default(100)
+  streakBonusThreshold  Int @default(7)
+  streakBonusMultiplier Float @default(1.5)
+  dailyPointsLimit      Int @default(1000)
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+// Gaming System Enums
+
+enum AchievementCategory {
+  PRODUCTIVITY
+  COLLABORATION
+  CONSISTENCY
+  MASTERY
+  SOCIAL
+  SPECIAL
+}
+
+enum AchievementType {
+  MILESTONE
+  STREAK
+  CUMULATIVE
+  RARE_EVENT
+  SOCIAL
+}
+
+enum AchievementRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+enum ChallengeType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  SPECIAL_EVENT
+  PERSONAL
+}
+
+enum ChallengeCategory {
+  TASK_COMPLETION
+  POMODORO_FOCUS
+  DSA_PRACTICE
+  COLLABORATION
+  CONSISTENCY
+  SPEED
+}
+
+enum ChallengeDifficulty {
+  EASY
+  MEDIUM
+  HARD
+  EXTREME
+}
+
+enum StreakType {
+  DAILY_LOGIN
+  TASK_COMPLETION
+  POMODORO_SESSION
+  DSA_PRACTICE
+  CHAT_ACTIVITY
+  COLLABORATION
+}
+
+enum PurchaseItemType {
+  THEME
+  AVATAR
+  SOUND_PACK
+  BADGE
+  TITLE
+  FEATURE_UNLOCK
+  CUSTOMIZATION
+}
+
+enum LeaderboardType {
+  TOTAL_POINTS
+  WEEKLY_POINTS
+  TASK_COMPLETION
+  POMODORO_SESSIONS
+  DSA_SOLVED
+  STREAK_LENGTH
+  LEVEL_RANKING
+}
+
+enum LeaderboardPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  ALL_TIME
 }

@@ -133,8 +133,8 @@ export function MessageList({ workspaceId, currentUser }: MessageListProps) {
   const messageGroups = groupMessagesByDate(messages);
 
   return (
-    <div className="flex-1 flex flex-col min-h-0">
-      <ScrollArea className="flex-1 px-4 lg:px-6">
+    <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-white">
+      <ScrollArea className="flex-1 px-4">
         <div className="py-4">
           {Object.keys(messageGroups).length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 text-center">
@@ -154,7 +154,7 @@ export function MessageList({ workspaceId, currentUser }: MessageListProps) {
               {/* Date separator */}
               <div className="flex items-center my-4">
                 <div className="flex-1 border-t border-gray-200"></div>
-                <div className="px-3 lg:px-4 text-xs text-gray-500 bg-white">
+                <div className="px-3 py-1 text-xs text-gray-500 bg-gray-100 rounded-full">
                   {formatDate(dayMessages[0].createdAt)}
                 </div>
                 <div className="flex-1 border-t border-gray-200"></div>
@@ -171,8 +171,8 @@ export function MessageList({ workspaceId, currentUser }: MessageListProps) {
                     <div
                       key={message.id}
                       className={cn(
-                        "flex items-start space-x-3 hover:bg-gray-50 -mx-2 lg:-mx-4 px-2 lg:px-4 py-2 rounded-lg transition-colors",
-                        !showAvatar && "ml-10 lg:ml-12"
+                        "flex items-start space-x-3 hover:bg-gray-50 -mx-2 px-2 py-2 rounded-lg transition-colors group",
+                        !showAvatar && "ml-11"
                       )}
                     >
                       {showAvatar ? (
@@ -200,7 +200,7 @@ export function MessageList({ workspaceId, currentUser }: MessageListProps) {
                             <span className="font-semibold text-sm text-gray-900 truncate">
                               {message.author.name || message.author.username}
                               {isCurrentUser && (
-                                <span className="text-gray-500 font-normal ml-1">(you)</span>
+                                <span className="text-blue-600 font-normal ml-1 text-xs">(you)</span>
                               )}
                             </span>
                             <span className="text-xs text-gray-500 hidden sm:inline">
@@ -210,13 +210,15 @@ export function MessageList({ workspaceId, currentUser }: MessageListProps) {
                         )}
                         
                         <div className={cn(
-                          "bg-white border border-gray-200 rounded-lg px-3 py-2 max-w-full lg:max-w-2xl",
-                          isCurrentUser && "bg-blue-50 border-blue-200",
+                          "rounded-lg px-3 py-2 max-w-full lg:max-w-2xl border",
+                          isCurrentUser 
+                            ? "bg-blue-500 text-white border-blue-500 ml-8" 
+                            : "bg-white border-gray-200",
                           !showAvatar && "mt-1"
                         )}>
                           <p className={cn(
                             "text-sm whitespace-pre-wrap break-words",
-                            isCurrentUser ? "text-gray-900" : "text-gray-900"
+                            isCurrentUser ? "text-white" : "text-gray-900"
                           )}>
                             {message.content}
                           </p>

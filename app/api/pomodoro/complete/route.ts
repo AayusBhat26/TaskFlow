@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     const { duration, workspaceId } = result.data;
 
     // Record the completed pomodoro session and award points
-    const { session: pomodoroSession, user, transaction } = await recordPomodoroCompletion(
+    const result = await recordPomodoroCompletion(
       session.user.id,
       duration,
       workspaceId
@@ -37,10 +37,12 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      session: pomodoroSession,
-      pointsEarned: transaction.points,
-      totalPoints: user.points,
-      message: `Congratulations! You earned ${transaction.points} points for completing a ${duration}-minute pomodoro session!`,
+      session: result.session,
+      pointsEarned: result.transaction.points,
+      totalPoints: result.user.points,
+      message: `Congratulations! You earned ${result.transaction.points} points for completing a ${duration}-minute pomodoro session!`,
+      leveledUp: result.leveledUp,
+      unlockedAchievements: result.unlockedAchievements,
     });
   } catch (error) {
     console.error('Error completing pomodoro:', error);

@@ -1,5 +1,7 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescriptio                      <li key={index} className="text-sm text-destructive">
+                        {item}
+                      </li>CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -68,7 +70,7 @@ export const ExternalServicesDashboard = ({ data }: Props) => {
                   <h4 className="font-medium mb-2">Action Items</h4>
                   <ul className="space-y-1">
                     {dailyDigest.actionItems.map((item: string, index: number) => (
-                      <li key={index} className="text-sm text-orange-600 dark:text-orange-400">
+                      <li key={index} className="text-sm text-destructive">
                         • {item}
                       </li>
                     ))}
@@ -161,7 +163,7 @@ const LeetCodeOverview = ({ data }: { data: LeetCodeStats }) => (
   <Card>
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
-        <div className="w-4 h-4 bg-yellow-500 rounded"></div>
+        <div className="w-4 h-4 bg-primary rounded"></div>
         LeetCode
       </CardTitle>
     </CardHeader>
@@ -169,7 +171,7 @@ const LeetCodeOverview = ({ data }: { data: LeetCodeStats }) => (
       <div className="space-y-3">
         <div className="flex justify-between items-center">
           <span className="text-sm">Contest Rating</span>
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+          <Badge variant="secondary" className="bg-secondary text-secondary-foreground">
             {data.contestRating || 'Unrated'}
           </Badge>
         </div>
@@ -198,7 +200,7 @@ const CodeforcesOverview = ({ data }: { data: CodeforcesStats }) => (
   <Card>
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
-        <div className="w-4 h-4 bg-blue-500 rounded"></div>
+        <div className="w-4 h-4 bg-primary rounded"></div>
         Codeforces
       </CardTitle>
     </CardHeader>
@@ -308,14 +310,14 @@ const LeetCodeDetails = ({ data }: { data: LeetCodeStats }) => (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-yellow-500" />
+          <Trophy className="w-5 h-5 text-primary" />
           Contest Performance
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <div className="text-center">
-            <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
+            <div className="text-3xl font-bold text-primary">
               {data.contestRating || 'Unrated'}
             </div>
             <p className="text-sm text-muted-foreground">Contest Rating</p>
@@ -335,7 +337,7 @@ const LeetCodeDetails = ({ data }: { data: LeetCodeStats }) => (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Target className="w-5 h-5 text-green-500" />
+          <Target className="w-5 h-5 text-accent-foreground" />
           Problem Breakdown
         </CardTitle>
       </CardHeader>
@@ -343,19 +345,19 @@ const LeetCodeDetails = ({ data }: { data: LeetCodeStats }) => (
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <span>Easy</span>
-            <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+            <Badge className="bg-muted text-muted-foreground">
               {data.easySolved}
             </Badge>
           </div>
           <div className="flex justify-between items-center">
             <span>Medium</span>
-            <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+            <Badge className="bg-secondary text-secondary-foreground">
               {data.mediumSolved}
             </Badge>
           </div>
           <div className="flex justify-between items-center">
             <span>Hard</span>
-            <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+            <Badge className="bg-destructive text-destructive-foreground">
               {data.hardSolved}
             </Badge>
           </div>
@@ -372,7 +374,7 @@ const LeetCodeDetails = ({ data }: { data: LeetCodeStats }) => (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Activity className="w-5 h-5 text-blue-500" />
+          <Activity className="w-5 h-5 text-primary" />
           Progress Stats
         </CardTitle>
       </CardHeader>
@@ -549,7 +551,7 @@ const EmailDetails = ({ data }: { data: EmailStats }) => (
           <CardTitle>Unread</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-red-600">{data.totalUnread}</div>
+          <div className="text-2xl font-bold text-destructive">{data.totalUnread}</div>
           <div className="text-sm text-muted-foreground">Emails</div>
         </CardContent>
       </Card>

@@ -280,7 +280,7 @@ export const LeetCodeDataUploader = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                <File className="mx-auto w-12 h-12 text-gray-400" />
+                <File className="mx-auto w-12 h-12 text-muted-foreground" />
                 <div>
                   <div className="text-lg font-medium">
                     {isDragActive ? 'Drop your file here' : 'Drag & drop your data file'}
@@ -318,7 +318,7 @@ export const LeetCodeDataUploader = () => {
             <div>
               <strong>Optional fields:</strong> questionId, lang, timestamp, topics, runtime, memory
             </div>
-            <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded font-mono text-xs overflow-x-auto">
+            <div className="bg-muted/50 dark:bg-muted/30 p-3 rounded font-mono text-xs overflow-x-auto">
               {JSON.stringify({
                 title: "Two Sum",
                 questionId: 1,

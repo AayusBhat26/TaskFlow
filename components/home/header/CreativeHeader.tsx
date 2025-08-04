@@ -35,12 +35,12 @@ export const CreativeHeader = () => {
   }, []);
 
   return (
-    <header className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background/95 to-primary/5">
+    <header className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background/95 to-primary/5 dark:to-primary/10">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Floating orbs */}
         <div 
-          className="absolute w-96 h-96 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl animate-float"
+          className="absolute w-96 h-96 bg-gradient-to-br from-primary/20 to-accent/20 dark:from-primary/30 dark:to-accent/30 rounded-full blur-3xl animate-float"
           style={{ 
             top: '10%', 
             left: '10%',
@@ -48,7 +48,7 @@ export const CreativeHeader = () => {
           }}
         />
         <div 
-          className="absolute w-80 h-80 bg-gradient-to-br from-accent/15 to-secondary/15 rounded-full blur-3xl animate-float"
+          className="absolute w-80 h-80 bg-gradient-to-br from-accent/15 to-secondary/15 dark:from-accent/25 dark:to-secondary/25 rounded-full blur-3xl animate-float"
           style={{ 
             top: '60%', 
             right: '15%',
@@ -57,7 +57,7 @@ export const CreativeHeader = () => {
           }}
         />
         <div 
-          className="absolute w-64 h-64 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full blur-2xl animate-float"
+          className="absolute w-64 h-64 bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 rounded-full blur-2xl animate-float"
           style={{ 
             bottom: '20%', 
             left: '20%',
@@ -67,7 +67,7 @@ export const CreativeHeader = () => {
         />
 
         {/* Grid pattern */}
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-grid-black/[0.02]" />
+        <div className="absolute inset-0 bg-grid-white/[0.02] dark:bg-grid-white/[0.05]" />
         
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-background/40" />
@@ -78,7 +78,7 @@ export const CreativeHeader = () => {
         <div className="inline-flex items-center mb-8 group">
           <Badge 
             variant="secondary" 
-            className="px-6 py-3 text-sm font-medium bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 border-primary/20 hover:border-primary/40 transition-all duration-300 group-hover:scale-105 cursor-pointer"
+            className="px-6 py-3 text-sm font-medium bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 dark:from-primary/20 dark:via-accent/20 dark:to-primary/20 border-primary/20 hover:border-primary/40 transition-all duration-300 group-hover:scale-105 cursor-pointer"
           >
             <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
             ✨ Introducing TaskFlow 2.0 - Now with AI Magic

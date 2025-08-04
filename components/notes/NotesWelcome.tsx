@@ -99,7 +99,7 @@ export function NotesWelcome({ currentUser, onCreateNote }: NotesWelcomeProps) {
   ];
 
   return (
-    <div className="flex-1 flex flex-col bg-white">
+    <div className="flex-1 flex flex-col bg-background">
       {/* Hero Section */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="max-w-4xl mx-auto text-center">
@@ -127,7 +127,7 @@ export function NotesWelcome({ currentUser, onCreateNote }: NotesWelcomeProps) {
                 <button
                   key={index}
                   onClick={action.onClick}
-                  className="group p-6 bg-white border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:shadow-lg transition-all duration-200 text-left"
+                  className="group p-6 bg-card border-2 border-border rounded-xl hover:border-border/80 hover:shadow-lg transition-all duration-200 text-left"
                 >
                   <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 text-white ${action.color} group-hover:scale-110 transition-transform`}>
                     <action.icon className="w-6 h-6" />
@@ -147,11 +147,11 @@ export function NotesWelcome({ currentUser, onCreateNote }: NotesWelcomeProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {features.map((feature, index) => (
                 <div key={index} className="text-center">
-                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="w-8 h-8 text-gray-600" />
+                  <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <feature.icon className="w-8 h-8 text-muted-foreground" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <h3 className="font-semibold text-foreground mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
                 </div>
               ))}
             </div>

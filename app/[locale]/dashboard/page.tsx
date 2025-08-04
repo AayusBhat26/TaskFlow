@@ -4,6 +4,7 @@ import { HomeRecentActivityContainer } from "@/components/homeRecentActivity/Hom
 import { ExternalServicesPrompt } from "@/components/dashboard/ExternalServicesPrompt";
 import ExternalServicesDashboardWidget from "../../../components/dashboard/ExternalServicesDashboardWidget";
 import { DSAProgressDashboard } from "@/components/dashboard/DSAProgressDashboard";
+import GamingStatsWidget from "@/components/dashboard/GamingStatsWidget";
 import { getInitialHomeRecentActivity } from "@/lib/api";
 import { checkIfUserCompletedOnboarding } from "@/lib/checkIfUserCompletedOnboarding";
 import { db } from "@/lib/db";
@@ -54,6 +55,11 @@ const Dashboard = async () => {
         {/* DSA Progress Section */}
         <div className="px-4 py-2">
           <DSAProgressDashboard />
+        </div>
+        
+        {/* Achievements Section */}
+        <div className="px-4 py-2">
+          <GamingStatsWidget />
         </div>
         
         <HomeRecentActivityContainer

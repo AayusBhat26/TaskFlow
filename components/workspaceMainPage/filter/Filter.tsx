@@ -24,7 +24,7 @@ export const Filter = ({ sessionUserId }: Props) => {
       <DropdownMenuTrigger asChild>
         <Button
           size={"sm"}
-          className="text-white flex gap-2 items-center rounded-lg"
+          className="text-primary-foreground flex gap-2 items-center rounded-lg"
         >
           <FilterIcon size={16} /> {t("FILTER_BTN")}
         </Button>

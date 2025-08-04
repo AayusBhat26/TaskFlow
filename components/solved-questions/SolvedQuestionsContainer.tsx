@@ -55,7 +55,7 @@ interface Props {
 
 // Simple loading skeleton component
 const Skeleton = ({ className }: { className?: string }) => (
-  <div className={`animate-pulse bg-gray-200 dark:bg-gray-700 rounded ${className}`} />
+  <div className={`animate-pulse bg-muted rounded ${className}`} />
 );
 
 export const SolvedQuestionsContainer = ({ codeforcesUsername }: Props) => {

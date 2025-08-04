@@ -161,7 +161,7 @@ export function NotesSidebar({
   const NoteItem = ({ note, level = 0 }: { note: Note; level?: number }) => (
     <div
       className={cn(
-        "group flex items-center p-2 rounded-lg cursor-pointer transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800",
+        "group flex items-center p-2 rounded-lg cursor-pointer transition-all duration-200 hover:bg-muted/50",
         selectedNote?.id === note.id && "bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500",
         level > 0 && "ml-4"
       )}
@@ -172,7 +172,7 @@ export function NotesSidebar({
         <span className="text-lg mr-2 flex-shrink-0">
           {note.icon || '📝'}
         </span>
-        <span className="font-medium text-sm truncate text-gray-900 dark:text-gray-100">
+        <span className="font-medium text-sm truncate text-foreground">
           {note.title || 'Untitled'}
         </span>
       </div>
@@ -192,7 +192,7 @@ export function NotesSidebar({
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+              className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
               onClick={(e) => e.stopPropagation()}
             >
               <MoreHorizontal className="w-3 h-3" />
@@ -223,12 +223,12 @@ export function NotesSidebar({
 
   if (collapsed) {
     return (
-      <div className="w-16 border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex flex-col items-center py-4">
+      <div className="w-16 border-r border-border bg-muted/30 flex flex-col items-center py-4">
         <Button
           variant="ghost"
           size="sm"
           onClick={onToggleCollapse}
-          className="mb-4 text-gray-500 hover:text-gray-700"
+          className="mb-4 text-muted-foreground hover:text-foreground"
         >
           <ChevronRight className="w-4 h-4" />
         </Button>
@@ -268,15 +268,15 @@ export function NotesSidebar({
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
-            <FileText className="w-5 h-5 text-gray-600 mr-2" />
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Notes</h1>
+            <FileText className="w-5 h-5 text-muted-foreground mr-2" />
+            <h1 className="text-lg font-semibold text-foreground">Notes</h1>
           </div>
           <div className="flex items-center space-x-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleCreateNote}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-muted-foreground hover:text-foreground"
             >
               <Plus className="w-4 h-4" />
             </Button>
@@ -284,7 +284,7 @@ export function NotesSidebar({
               variant="ghost"
               size="sm"
               onClick={onToggleCollapse}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="w-4 h-4" />
             </Button>
@@ -311,7 +311,7 @@ export function NotesSidebar({
             <div>
               <button
                 onClick={() => toggleSection('favorites')}
-                className="flex items-center w-full text-left mb-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-300"
+                className="flex items-center w-full text-left mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground"
               >
                 {expandedSections.favorites ? (
                   <ChevronDown className="w-3 h-3 mr-1" />
@@ -335,7 +335,7 @@ export function NotesSidebar({
             <div>
               <button
                 onClick={() => toggleSection('recent')}
-                className="flex items-center w-full text-left mb-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider hover:text-gray-700 dark:hover:text-gray-300"
+                className="flex items-center w-full text-left mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground"
               >
                 {expandedSections.recent ? (
                   <ChevronDown className="w-3 h-3 mr-1" />
@@ -357,11 +357,11 @@ export function NotesSidebar({
           {/* Empty State */}
           {filteredNotes.length === 0 && (
             <div className="text-center py-8">
-              <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+              <FileText className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
+              <h3 className="text-sm font-medium text-foreground mb-2">
                 {searchQuery ? 'No notes found' : 'No notes yet'}
               </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+              <p className="text-xs text-muted-foreground mb-4">
                 {searchQuery 
                   ? 'Try adjusting your search terms'
                   : 'Create your first note to get started'

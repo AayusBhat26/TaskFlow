@@ -12,6 +12,8 @@ export const useThemeManager = () => {
 
   // Enhanced theme change handler with error handling and DOM updates
   const changeTheme = useCallback((newTheme: string) => {
+    if (typeof window === 'undefined') return;
+    
     try {
       // Temporarily disable transitions to prevent flash
       document.documentElement.classList.add('theme-transition-disable');
@@ -35,7 +37,9 @@ export const useThemeManager = () => {
     } catch (error) {
       console.error('Failed to change theme:', error);
       // Re-enable transitions even if there's an error
-      document.documentElement.classList.remove('theme-transition-disable');
+      if (typeof window !== 'undefined') {
+        document.documentElement.classList.remove('theme-transition-disable');
+      }
     }
   }, [setTheme]);
 

@@ -62,8 +62,8 @@ export default async function ChatPage() {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">No Workspaces Found</h1>
-          <p className="text-gray-600 mb-4">You need to be part of a workspace to use chat.</p>
+          <h1 className="text-2xl font-bold text-foreground mb-4">No Workspaces Found</h1>
+          <p className="text-muted-foreground mb-4">You need to be part of a workspace to use chat.</p>
           <a 
             href="/dashboard" 
             className="text-blue-600 hover:text-blue-800 underline"
@@ -96,7 +96,7 @@ export default async function ChatPage() {
   }));
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 -m-4 md:-m-6 lg:-mx-10 lg:-my-6">
+    <div className="flex h-full max-h-screen overflow-hidden bg-background">
       <Suspense fallback={
         <div className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>

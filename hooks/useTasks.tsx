@@ -48,7 +48,7 @@ interface UseTasksReturn {
     search?: string;
     filter?: 'all' | 'completed' | 'pending';
   }) => Promise<void>;
-  completeTask: (taskId: string) => Promise<void>;
+  completeTask: (taskId: string, workspaceId?: string) => Promise<void>;
   createTask: (taskData: {
     title: string;
     content?: any;
@@ -99,7 +99,8 @@ export function useTasks(): UseTasksReturn {
         // Process tasks to ensure they have the isCompleted field
         const processedTasks = data.tasks.map((task: any) => ({
           ...task,
-          isCompleted: Boolean(task.isCompleted || (task.content?.isCompleted))
+          // Use the database isCompleted field first, fallback to content if needed
+          isCompleted: Boolean(task.isCompleted)
         }));
 
         setState(prev => ({
@@ -128,21 +129,21 @@ export function useTasks(): UseTasksReturn {
     }
   }, [toast]);
 
-  const completeTask = useCallback(async (taskId: string) => {
+  const completeTask = useCallback(async (taskId: string, workspaceIdParam?: string) => {
     try {
-      let taskToUpdate: Task | undefined;
-      
-      setState(prev => {
-        taskToUpdate = prev.tasks.find(t => t.id === taskId);
-        return { 
-          ...prev, 
-          loading: true, 
-          error: null 
-        };
-      });
+      setState(prev => ({ 
+        ...prev, 
+        loading: true, 
+        error: null 
+      }));
 
-      if (!taskToUpdate) {
-        throw new Error('Task not found');
+      // Find the task to get workspaceId, but don't fail if not found locally
+      const taskToUpdate = state.tasks.find(t => t.id === taskId);
+      const workspaceId = workspaceIdParam || taskToUpdate?.workspaceId;
+
+      // If we can't find the workspaceId from parameters or local state
+      if (!workspaceId) {
+        throw new Error('Unable to determine workspace for task completion');
       }
 
       // Use our new points-enabled task completion endpoint
@@ -153,7 +154,7 @@ export function useTasks(): UseTasksReturn {
         },
         body: JSON.stringify({
           taskId: taskId,
-          workspaceId: taskToUpdate.workspaceId
+          workspaceId: workspaceId
         }),
       });
 
@@ -183,11 +184,6 @@ export function useTasks(): UseTasksReturn {
         
         // Invalidate points query to update points display immediately
         queryClient.invalidateQueries({ queryKey: ['userPoints'] });
-        
-        // Play task completion sound
-        import('@/lib/soundEffects').then(({ playTaskCompletionSound }) => {
-          playTaskCompletionSound();
-        });
         
         toast({
           title: "🎉 Task Completed!",

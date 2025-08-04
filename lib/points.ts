@@ -118,9 +118,16 @@ export async function recordPomodoroCompletion(
 ) {
   const { db } = await import('@/lib/db');
   
-  const pointsEarned = calculatePomodoroPoints(duration);
+  const basePoints = 25;
+  const bonusPoints = Math.floor(duration / 60) * 2; // 2 points per minute
+  const totalPoints = basePoints + bonusPoints;
+  const experienceEarned = 20;
   
   try {
+    // Import gaming service dynamically
+    const { GamingService } = await import('@/services/gamingService');
+    const { PointType, StreakType } = await import('@prisma/client');
+
     const result = await db.$transaction(async (tx) => {
       // Create pomodoro session record
       const session = await tx.pomodoroSession.create({
@@ -128,20 +135,62 @@ export async function recordPomodoroCompletion(
           userId,
           duration,
           workspaceId,
-          pointsEarned,
+          pointsEarned: totalPoints,
         },
       });
 
-      // Award points
-      const pointsResult = await awardPoints(
+      // Update user Pomodoro completion count
+      const user = await tx.user.update({
+        where: { id: userId },
+        data: {
+          totalPomodoroCompleted: { increment: 1 },
+          lastActivityDate: new Date()
+        }
+      });
+
+      // Award points using gaming service
+      await GamingService.awardPoints(
         userId,
-        pointsEarned,
-        'POMODORO_COMPLETED',
-        `Completed ${duration}-minute pomodoro session`,
-        session.id
+        totalPoints,
+        PointType.POMODORO_COMPLETED,
+        `Completed ${duration}-minute pomodoro session`
       );
 
-      return { session, ...pointsResult };
+      // Award experience
+      const leveledUp = await GamingService.awardExperience(
+        userId,
+        experienceEarned,
+        `Experience for completing ${duration}-minute pomodoro session`
+      );
+
+      // Update streaks
+      await GamingService.updateStreak(userId, StreakType.POMODORO_SESSION);
+      await GamingService.updateStreak(userId, StreakType.DAILY_LOGIN);
+
+      // Check for achievement unlocks
+      const unlockedAchievements = await GamingService.checkAchievements(userId);
+
+      // Check special achievements for pomodoro completion
+      const now = new Date();
+      GamingService.checkSpecialAchievements(userId, {
+        action: 'POMODORO_COMPLETED',
+        timestamp: now
+      }).catch(err => {
+        console.error('Error checking special achievements for pomodoro:', err);
+      });
+
+      // Update leaderboards
+      const { LeaderboardType } = await import('@prisma/client');
+      await GamingService.updateLeaderboard(userId, LeaderboardType.TOTAL_POINTS, totalPoints);
+      await GamingService.updateLeaderboard(userId, LeaderboardType.POMODORO_SESSIONS, 1);
+
+      return {
+        session,
+        user,
+        transaction: { points: totalPoints },
+        leveledUp,
+        unlockedAchievements
+      };
     });
 
     return result;
@@ -162,18 +211,86 @@ export async function recordTaskCompletion(
   taskId: string,
   taskTitle: string
 ) {
-  const pointsEarned = calculateTaskCompletionPoints();
+  const pointsEarned = 20; // Updated to match gaming system
+  const experienceEarned = 15;
   
   try {
-    const result = await awardPoints(
-      userId,
-      pointsEarned,
-      'TASK_COMPLETED',
-      `Completed task: ${taskTitle}`,
-      taskId
-    );
+    // Import gaming service and types dynamically
+    const { GamingService } = await import('@/services/gamingService');
+    const { PointType, StreakType, LeaderboardType } = await import('@prisma/client');
+    const { db } = await import('@/lib/db');
 
-    return result;
+    // Use a transaction with longer timeout for gaming operations
+    const result = await db.$transaction(async (tx) => {
+      // Update user task completion count
+      const user = await tx.user.update({
+        where: { id: userId },
+        data: {
+          totalTasksCompleted: { increment: 1 },
+          lastActivityDate: new Date()
+        }
+      });
+
+      return { user };
+    }, {
+      timeout: 10000, // 10 second timeout
+    });
+
+    // Handle gaming logic separately to avoid transaction timeout
+    const [pointsAwarded, leveledUp, unlockedAchievements] = await Promise.all([
+      GamingService.awardPoints(
+        userId,
+        pointsEarned,
+        PointType.TASK_COMPLETED,
+        `Completed task: ${taskTitle}`
+      ).catch(err => {
+        console.error('Error awarding points:', err);
+        return null;
+      }),
+      
+      GamingService.awardExperience(
+        userId,
+        experienceEarned,
+        `Experience for completing task: ${taskTitle}`
+      ).catch(err => {
+        console.error('Error awarding experience:', err);
+        return false;
+      }),
+      
+      GamingService.checkAchievements(userId).catch(err => {
+        console.error('Error checking achievements:', err);
+        return [];
+      })
+    ]);
+
+    // Check special achievements based on completion time
+    const now = new Date();
+    const isWeekend = now.getDay() === 0 || now.getDay() === 6; // Sunday = 0, Saturday = 6
+    
+    Promise.all([
+      GamingService.checkSpecialAchievements(userId, {
+        action: 'TASK_COMPLETED',
+        timestamp: now,
+        isWeekend
+      }).catch(err => {
+        console.error('Error checking special achievements:', err);
+      }),
+      
+      // Handle streaks and leaderboards in the background
+      GamingService.updateStreak(userId, StreakType.TASK_COMPLETION),
+      GamingService.updateStreak(userId, StreakType.DAILY_LOGIN),
+      GamingService.updateLeaderboard(userId, LeaderboardType.TOTAL_POINTS, pointsEarned),
+      GamingService.updateLeaderboard(userId, LeaderboardType.TASK_COMPLETION, 1)
+    ]).catch(err => {
+      console.error('Error updating streaks/leaderboards:', err);
+    });
+
+    return {
+      user: result.user,
+      transaction: { points: pointsEarned },
+      leveledUp: leveledUp || false,
+      unlockedAchievements: unlockedAchievements || []
+    };
   } catch (error) {
     console.error('❌ Error recording task completion:', error);
     throw error;
@@ -196,6 +313,7 @@ export async function recordDSAQuestionCompletion(
   const pointsEarned = calculateDSAQuestionPoints(difficulty);
   
   try {
+    // Award points for DSA completion
     const result = await awardPoints(
       userId,
       pointsEarned,
@@ -203,6 +321,19 @@ export async function recordDSAQuestionCompletion(
       `Completed ${difficulty.toLowerCase()} DSA question: ${questionTitle}`,
       questionId
     );
+
+    // Check for achievement unlocks after DSA completion
+    try {
+      const { GamingService } = await import('@/services/gamingService');
+      const unlockedAchievements = await GamingService.checkAchievements(userId);
+      
+      if (unlockedAchievements.length > 0) {
+        console.log(`🏆 DSA completion unlocked ${unlockedAchievements.length} achievements for user ${userId}`);
+      }
+    } catch (error) {
+      console.error('Error checking achievements after DSA completion:', error);
+      // Don't fail the main function if achievement checking fails
+    }
 
     return result;
   } catch (error) {

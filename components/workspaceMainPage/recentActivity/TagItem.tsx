@@ -12,31 +12,31 @@ export const TagItem = ({ tag: { color, id, name } }: Props) => {
   const tagColor = useMemo(() => {
     switch (color) {
       case CustomColors.PURPLE:
-        return "text-purple-600 hover:text-purple-500";
+        return "text-primary hover:text-primary/80";
       case CustomColors.GREEN:
-        return "text-green-600 hover:text-green-500";
+        return "text-accent-foreground hover:text-accent-foreground/80";
       case CustomColors.RED:
-        return "text-red-600 hover:text-red-500";
+        return "text-destructive hover:text-destructive/80";
       case CustomColors.BLUE:
-        return "text-blue-600 hover:text-blue-500";
+        return "text-primary hover:text-primary/80";
       case CustomColors.CYAN:
-        return "text-cyan-600 hover:text-cyan-500";
+        return "text-secondary-foreground hover:text-secondary-foreground/80";
       case CustomColors.EMERALD:
-        return "text-emerald-600 hover:text-emerald-500";
+        return "text-accent-foreground hover:text-accent-foreground/80";
       case CustomColors.INDIGO:
-        return "text-indigo-600 hover:text-indigo-500";
+        return "text-primary hover:text-primary/80";
       case CustomColors.LIME:
-        return "text-lime-600 hover:text-lime-500";
+        return "text-accent-foreground hover:text-accent-foreground/80";
       case CustomColors.ORANGE:
-        return "text-orange-600 hover:text-orange-500";
+        return "text-muted-foreground hover:text-muted-foreground/80";
       case CustomColors.FUCHSIA:
-        return "text-fuchsia-600 hover:text-fuchsia-500";
+        return "text-primary hover:text-primary/80";
       case CustomColors.PINK:
-        return "text-pink-600 hover:text-pink-500";
+        return "text-secondary-foreground hover:text-secondary-foreground/80";
       case CustomColors.YELLOW:
-        return "text-yellow-600 hover:text-yellow-500";
+        return "text-muted-foreground hover:text-muted-foreground/80";
       default:
-        return "text-green-600 hover:text-green-500";
+        return "text-accent-foreground hover:text-accent-foreground/80";
     }
   }, [color]);
 

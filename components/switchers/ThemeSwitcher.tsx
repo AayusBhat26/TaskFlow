@@ -46,7 +46,7 @@ export const ThemeSwitcher = ({
             <span className="sr-only">Toggle Theme</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align={alignDropdown}>
+        <DropdownMenuContent align={alignDropdown} className="max-h-80 overflow-y-auto">
           <DropdownMenuItem onClick={() => setTheme("light")}>
             Light
           </DropdownMenuItem>
@@ -55,6 +55,36 @@ export const ThemeSwitcher = ({
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setTheme("system")}>
             System
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("ocean")}>
+            Ocean
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("forest")}>
+            Forest
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("sunset")}>
+            Sunset
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("midnight")}>
+            Midnight
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("cherry")}>
+            Cherry
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("cyber")}>
+            Cyber
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("autumn")}>
+            Autumn
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("lavender")}>
+            Lavender
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("arctic")}>
+            Arctic
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setTheme("volcano")}>
+            Volcano
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

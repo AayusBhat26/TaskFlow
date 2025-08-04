@@ -59,7 +59,7 @@ export const TaskCompleteButton = ({
       ) : (
         <>
           <CheckCircle className="h-4 w-4 mr-2" />
-          Complete (+5 pts)
+          Complete (+20 pts)
         </>
       )}
     </Button>

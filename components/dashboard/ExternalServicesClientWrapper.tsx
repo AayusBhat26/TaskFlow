@@ -61,49 +61,49 @@ export const ExternalServicesClientWrapper = () => {
     <div className="space-y-6">
       {/* Key Stats Display - Updated to show other services */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
+        <Card className="bg-card border-border">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Codeforces Rating</p>
-                <p className="text-3xl font-bold text-blue-800 dark:text-blue-200">
+                <p className="text-sm font-medium text-primary">Codeforces Rating</p>
+                <p className="text-3xl font-bold text-foreground">
                   {data.codeforces?.user?.rating || 'N/A'}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                <Code className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+                <Code className="w-6 h-6 text-primary-foreground" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800">
+        <Card className="bg-card border-border">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-green-600 dark:text-green-400">GitHub Repos</p>
-                <p className="text-3xl font-bold text-green-800 dark:text-green-200">
+                <p className="text-sm font-medium text-accent-foreground">GitHub Repos</p>
+                <p className="text-3xl font-bold text-foreground">
                   {data.github?.user?.public_repos || 0}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-accent-foreground" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-purple-200 bg-purple-50 dark:bg-purple-950 dark:border-purple-800">
+        <Card className="bg-card border-border">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-purple-600 dark:text-purple-400">Reddit Karma</p>
-                <p className="text-3xl font-bold text-purple-800 dark:text-purple-200">
+                <p className="text-sm font-medium text-secondary-foreground">Reddit Karma</p>
+                <p className="text-3xl font-bold text-foreground">
                   {data.reddit?.totalKarma || 0}
                 </p>
               </div>
-              <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
-                <Settings className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center">
+                <Settings className="w-6 h-6 text-secondary-foreground" />
               </div>
             </div>
           </CardContent>
@@ -111,23 +111,23 @@ export const ExternalServicesClientWrapper = () => {
       </div>
 
       {/* External Services Status */}
-      <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
+      <Card className="bg-card border-border">
         <CardContent className="pt-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-primary-foreground" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-blue-800 dark:text-blue-200">
+              <h3 className="font-semibold text-foreground">
                 External Services Dashboard
               </h3>
-              <p className="text-sm text-blue-700 dark:text-blue-300">
+              <p className="text-sm text-muted-foreground">
                 Your activity across Codeforces, GitHub, Reddit, and email platforms
               </p>
             </div>
             <div className="text-right">
               <Link href="/dashboard/settings/external-services">
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className="bg-primary hover:bg-primary/90">
                   <Settings className="w-4 h-4 mr-2" />
                   Configure Services
                 </Button>

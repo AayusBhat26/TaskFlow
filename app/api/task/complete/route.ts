@@ -72,10 +72,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Task already completed' }, { status: 400 });
     }
 
-    // Use transaction to update task and award points
-    const transactionResult = await db.$transaction(async (tx) => {
+    // Use transaction to update task only
+    const updatedTask = await db.$transaction(async (tx) => {
       // Mark task as completed
-      const updatedTask = await tx.task.update({
+      const task = await tx.task.update({
         where: {
           id: taskId,
         },
@@ -86,22 +86,36 @@ export async function POST(request: Request) {
         },
       });
 
-      // Record task completion and award points
-      const pointsResult = await recordTaskCompletion(
+      return task;
+    });
+
+    // Handle points and gaming logic outside the main transaction
+    let pointsResult;
+    try {
+      pointsResult = await recordTaskCompletion(
         session.user.id,
         taskId,
         task.title
       );
-
-      return { task: updatedTask, ...pointsResult };
-    });
+    } catch (error) {
+      console.error('Error recording task completion points:', error);
+      // Don't fail the whole request if points fail
+      pointsResult = {
+        transaction: { points: 20 },
+        user: { points: 0 },
+        leveledUp: false,
+        unlockedAchievements: []
+      };
+    }
 
     return NextResponse.json({
       success: true,
-      task: transactionResult.task,
-      pointsEarned: transactionResult.transaction.points,
-      totalPoints: transactionResult.user.points,
-      message: `Task completed! You earned ${transactionResult.transaction.points} points!`,
+      task: updatedTask,
+      pointsEarned: pointsResult.transaction.points,
+      totalPoints: pointsResult.user.points,
+      message: `Task completed! You earned ${pointsResult.transaction.points} points!`,
+      leveledUp: pointsResult.leveledUp,
+      unlockedAchievements: pointsResult.unlockedAchievements,
     });
   } catch (error) {
     console.error('Error completing task:', error);
