@@ -158,3 +158,47 @@ docker-compose.override.yml
 .npmrc
 .yarnrc
 .yarnrc.yml
+
+# Documentation and guide files
+AWS_DEPLOYMENT_GUIDE.md
+./AWS_DEPLOYMENT_GUIDE.md
+build-optimized.md
+./build-optimized.md
+command_that_i_keep_forgetting.txt
+./command_that_i_keep_forgetting.txt
+components.json
+./components.json
+data_extraction_guide.md
+./data_extraction_guide.md
+DSA_POINTS_IMPLEMENTATION.md
+./DSA_POINTS_IMPLEMENTATION.md
+how_to_get_leetcode_data.md
+./how_to_get_leetcode_data.md
+leetcode_integration_summary.md
+./leetcode_integration_summary.md
+leetcode_console_script.md
+./leetcode_console_script.md
+sound_effects_implementation.md
+./sound_effects_implementation.md
+topic_normalization_summary.md
+./topic_normalization_summary.md
+updated_plans.txt
+./updated_plans.txt
+plans.txt
+./plans.txt
+
+# Development scripts
+start-dev.bat
+./start-dev.bat
+start-socket-server.bat
+./start-socket-server.bat
+start-socket-server.sh
+./start-socket-server.sh
+
+# Docker files
+docker-compose.yml
+./docker-compose.yml
+
+# Config files
+tailwind.config.performance.ts
+./tailwind.config.performance.ts
