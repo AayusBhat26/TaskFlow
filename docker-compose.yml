@@ -1,5 +1,6 @@
 version: "3.5"
 name: "taskflow-services"
+
 services:
   db:
     image: "postgres"
@@ -10,9 +11,29 @@ services:
       POSTGRES_DB: "taskflow"
       POSTGRES_PASSWORD: password
     volumes:
-      - database-data:/var/lib/postgresql-data/
+      - database-data:/var/lib/postgresql/data/
     ports:
-      - 8010:5432
+      - "8010:5432"
+
+  web:
+    image: node:18-alpine
+    restart: always
+    container_name: taskflow-web
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "80:3000"
+    env_file:
+      - .env.local                    
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - db
+    command: >
+      sh -c "npm install --legacy-peer-deps  &&
+            npm run dev"
 
 volumes:
   database-data:
