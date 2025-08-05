@@ -11,18 +11,18 @@ const createEventSchema = z.object({
   allDay: z.boolean().optional(),
   type: z.enum(['MEETING', 'DEADLINE', 'REMINDER', 'PERSONAL', 'WORK', 'BREAK', 'FOCUS_TIME']),
   location: z.string().optional(),
-  meetingLink: z.string().optional(),
   taskId: z.string().optional(),
   attendeeEmails: z.array(z.string().email()).optional(),
-  recurringPattern: z.object({
+  recurringRule: z.object({
     frequency: z.enum(['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY']),
     interval: z.number().min(1),
     endDate: z.string().transform(str => new Date(str)).optional()
   }).optional(),
-  reminders: z.array(z.object({
-    type: z.enum(['EMAIL', 'NOTIFICATION', 'SMS']),
-    minutesBefore: z.number().min(0)
-  })).optional()
+  // Reminders functionality not yet implemented
+  // reminders: z.array(z.object({
+  //   type: z.enum(['EMAIL', 'NOTIFICATION', 'SMS']),
+  //   minutesBefore: z.number().min(0)
+  // })).optional()
 });
 
 const updateEventSchema = createEventSchema.partial();
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
 
     let where: any = {
       OR: [
-        { createdById: session.user.id },
+        { creatorId: session.user.id },
         {
           attendees: {
             some: {
@@ -112,15 +112,7 @@ export async function GET(request: NextRequest) {
             priority: true
           }
         },
-        timeBlock: {
-          select: {
-            id: true,
-            title: true,
-            type: true
-          }
-        },
-        reminders: true,
-        createdBy: {
+        creator: {
           select: {
             id: true,
             name: true,
@@ -173,10 +165,9 @@ export async function POST(request: NextRequest) {
           allDay: data.allDay || false,
           type: data.type,
           location: data.location,
-          meetingLink: data.meetingLink,
           taskId: data.taskId,
-          createdById: session.user.id,
-          recurringPattern: data.recurringPattern,
+          creatorId: session.user.id,
+          recurringRule: data.recurringRule,
           color: getEventTypeColor(data.type)
         }
       });
@@ -201,6 +192,8 @@ export async function POST(request: NextRequest) {
       }
 
       // Add reminders
+      // TODO: Implement reminders functionality - EventReminder model not yet created
+      /*
       if (data.reminders && data.reminders.length > 0) {
         for (const reminder of data.reminders) {
           await tx.eventReminder.create({
@@ -212,6 +205,7 @@ export async function POST(request: NextRequest) {
           });
         }
       }
+      */
 
       return newEvent;
     });
@@ -240,8 +234,7 @@ export async function POST(request: NextRequest) {
             priority: true
           }
         },
-        reminders: true,
-        createdBy: {
+        creator: {
           select: {
             id: true,
             name: true,

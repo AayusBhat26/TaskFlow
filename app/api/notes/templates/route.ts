@@ -132,21 +132,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-// GET /api/notes/templates/categories - Get template categories
-export async function GET_CATEGORIES() {
-  const categories = [
-    { name: 'Meeting Notes', description: 'Templates for various types of meetings' },
-    { name: 'Project Planning', description: 'Project management and planning templates' },
-    { name: 'Daily Journal', description: 'Personal journaling and reflection templates' },
-    { name: 'Brainstorming', description: 'Creative thinking and ideation templates' },
-    { name: 'Task Management', description: 'Task lists and productivity templates' },
-    { name: 'Learning', description: 'Educational and learning-focused templates' },
-    { name: 'Documentation', description: 'Technical and process documentation templates' },
-    { name: 'Research', description: 'Research notes and analysis templates' },
-    { name: 'Personal', description: 'Personal life organization templates' },
-    { name: 'Business', description: 'Business planning and strategy templates' }
-  ];
-
-  return NextResponse.json(categories);
-}

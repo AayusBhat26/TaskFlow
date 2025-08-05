@@ -63,7 +63,7 @@ export async function GET(
 }
 
 // Helper function to broadcast messages
-export function broadcastMessage(workspaceId: string, message: any) {
+function broadcastMessage(workspaceId: string, message: any) {
   console.log(`Broadcasting message to workspace ${workspaceId}:`, message.content);
   
   const encoder = new TextEncoder();

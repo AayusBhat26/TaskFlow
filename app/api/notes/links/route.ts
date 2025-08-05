@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
               collaborators: {
                 some: {
                   userId: session.user.id,
-                  permission: { in: ['write', 'admin'] }
+                  role: { in: ['EDITOR', 'ADMIN'] }
                 }
               }
             }
@@ -206,7 +206,7 @@ export async function DELETE(request: NextRequest) {
                   collaborators: {
                     some: {
                       userId: session.user.id,
-                      permission: { in: ['write', 'admin'] }
+                      role: { in: ['EDITOR', 'ADMIN'] }
                     }
                   }
                 }

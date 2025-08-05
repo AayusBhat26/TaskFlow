@@ -1,7 +1,53 @@
 const nextConfig = {
-  // Performance optimizations
+  // Memory and performance optimizations
   poweredByHeader: false,
   compress: true,
+  
+  // Build optimizations to reduce memory usage
+  experimental: {
+    // Reduce memory usage during build
+    workerThreads: false,
+    cpuCount: 1,
+    // Enable SWC minification for better performance
+    swcMinify: true,
+  },
+  
+  // TypeScript and ESLint optimizations
+  typescript: {
+    // Disable type checking during build to save memory
+    // Type checking will be done separately
+    ignoreBuildErrors: false,
+  },
+  
+  eslint: {
+    // Disable ESLint during build to save memory
+    // ESLint will be run separately
+    ignoreDuringBuilds: false,
+  },
+  
+  // Webpack optimizations
+  webpack: (config, { dev, isServer }) => {
+    // Memory optimizations
+    if (!dev) {
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: {
+            minChunks: 1,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            reuseExistingChunk: true,
+          },
+        },
+      };
+    }
+    
+    return config;
+  },
   
   // Image optimizations
   images: {

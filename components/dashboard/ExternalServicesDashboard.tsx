@@ -1,7 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardDescriptio                      <li key={index} className="text-sm text-destructive">
-                        {item}
-                      </li>CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

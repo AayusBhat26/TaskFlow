@@ -17,19 +17,19 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const result = completePomodoroSchema.safeParse(body);
+    const validationResult = completePomodoroSchema.safeParse(body);
 
-    if (!result.success) {
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Invalid data', details: result.error.errors },
+        { error: 'Invalid data', details: validationResult.error.errors },
         { status: 400 }
       );
     }
 
-    const { duration, workspaceId } = result.data;
+    const { duration, workspaceId } = validationResult.data;
 
     // Record the completed pomodoro session and award points
-    const result = await recordPomodoroCompletion(
+    const pomodoroResult = await recordPomodoroCompletion(
       session.user.id,
       duration,
       workspaceId
@@ -37,12 +37,12 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      session: result.session,
-      pointsEarned: result.transaction.points,
-      totalPoints: result.user.points,
-      message: `Congratulations! You earned ${result.transaction.points} points for completing a ${duration}-minute pomodoro session!`,
-      leveledUp: result.leveledUp,
-      unlockedAchievements: result.unlockedAchievements,
+      session: pomodoroResult.session,
+      pointsEarned: pomodoroResult.transaction.points,
+      totalPoints: pomodoroResult.user.points,
+      message: `Congratulations! You earned ${pomodoroResult.transaction.points} points for completing a ${duration}-minute pomodoro session!`,
+      leveledUp: pomodoroResult.leveledUp,
+      unlockedAchievements: pomodoroResult.unlockedAchievements,
     });
   } catch (error) {
     console.error('Error completing pomodoro:', error);

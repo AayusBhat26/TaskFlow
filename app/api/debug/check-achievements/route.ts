@@ -27,11 +27,11 @@ export async function POST() {
 
     // Get additional stats for debugging
     const [dsaCount, messageCount, workspaceCount] = await Promise.all([
-      db.dsaProgress.count({
+      db.dSAProgress.count({
         where: { userId: session.user.id, status: 'COMPLETED' }
       }),
       db.chatMessage.count({
-        where: { senderId: session.user.id }
+        where: { authorId: session.user.id }
       }),
       db.subscription.count({
         where: { userId: session.user.id }

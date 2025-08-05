@@ -137,6 +137,15 @@ export default async function NotesPage() {
     username: session.user.username || '',
   };
 
+  // Transform notes to ensure author.name is never null
+  const transformedNotes = notes.map(note => ({
+    ...note,
+    author: {
+      ...note.author,
+      name: note.author.name || 'Unknown User'
+    }
+  }));
+
   return (
     <div className="h-full flex flex-col">
       {/* Mobile sidebar toggle button */}
@@ -146,7 +155,7 @@ export default async function NotesPage() {
       
       <Suspense fallback={<NotesLoading />}>
         <NotesApp 
-          notes={notes}
+          notes={transformedNotes}
           workspaces={workspaces}
           currentUser={currentUser}
         />

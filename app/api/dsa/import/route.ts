@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Batch insert questions (skip duplicates)
-    const results = {
+    const results: { created: number; skipped: number; errors: string[] } = {
       created: 0,
       skipped: 0,
       errors: []

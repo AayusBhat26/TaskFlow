@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
         }
       },
       orderBy: {
-        createdAt: 'asc'
+        addedAt: 'asc'
       }
     });
 
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
             collaborators: {
               some: {
                 userId: session.user.id,
-                permission: 'admin'
+                role: 'ADMIN'
               }
             }
           }
@@ -143,12 +143,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Map permission to role
+    const permissionToRole: Record<string, 'VIEWER' | 'EDITOR' | 'ADMIN'> = {
+      read: 'VIEWER',
+      write: 'EDITOR',
+      admin: 'ADMIN'
+    };
+
     const collaborator = await db.noteCollaborator.create({
       data: {
         noteId: data.noteId,
         userId: data.userId,
-        permission: data.permission,
-        invitedById: session.user.id
+        role: permissionToRole[data.permission]
       },
       include: {
         user: {
@@ -211,7 +217,7 @@ export async function PUT(request: NextRequest) {
               collaborators: {
                 some: {
                   userId: session.user.id,
-                  permission: 'admin'
+                  role: 'ADMIN'
                 }
               }
             }
@@ -230,9 +236,15 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    // Map permission to role for update
+    const permissionToRole: Record<string, 'VIEWER' | 'EDITOR' | 'ADMIN'> = {
+      read: 'VIEWER',
+      write: 'EDITOR',
+      admin: 'ADMIN'
+    };
     const updatedCollaborator = await db.noteCollaborator.update({
       where: { id: collaboratorId },
-      data: { permission: data.permission },
+      data: { role: permissionToRole[data.permission] },
       include: {
         user: {
           select: {
@@ -283,16 +295,16 @@ export async function DELETE(request: NextRequest) {
       where: {
         id: collaboratorId,
         OR: [
-          { userId: session.user.id }, // User can remove themselves
+          { userId: session.user.id }, 
           {
             note: {
               OR: [
-                { authorId: session.user.id }, // Note owner
+                { authorId: session.user.id }, 
                 {
                   collaborators: {
                     some: {
                       userId: session.user.id,
-                      permission: 'admin'
+                      role: 'ADMIN'
                     }
                   }
                 }

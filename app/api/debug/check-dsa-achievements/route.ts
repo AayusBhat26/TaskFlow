@@ -12,7 +12,7 @@ export async function POST() {
     }
 
     // Get user's DSA progress
-    const dsaProgress = await db.dsaProgress.findMany({
+    const dsaProgress = await db.dSAProgress.findMany({
       where: { 
         userId: session.user.id,
         status: 'COMPLETED'

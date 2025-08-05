@@ -21,7 +21,10 @@
     ],
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    // Memory optimizations
+    "preserveWatchOutput": true,
+    "tsBuildInfoFile": ".next/cache/tsbuildinfo"
   },
   "include": [
     "next-env.d.ts",
