@@ -2,6 +2,8 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
 
+  productionBrowserSourceMaps: true, // ✅ Enables readable error stack traces in production
+
   experimental: {
     serverComponentsExternalPackages: ["next-auth"],
     optimizePackageImports: [
