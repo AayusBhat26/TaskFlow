@@ -39,6 +39,14 @@ export const LocaleSwitcher = ({
   const locale = useLocale();
 
   const t = useTranslations("COMMON");
+  // Fallback for missing translation key
+  const langHover = (() => {
+    try {
+      return t("LANG_HOVER");
+    } catch {
+      return "Change language";
+    }
+  })();
 
   const { isLoading, isPending, onSelectChange } = useChangeLocale();
 
@@ -57,7 +65,7 @@ export const LocaleSwitcher = ({
             ) : (
               locale.toUpperCase()
             )}
-            <span className="sr-only">{t("LANG_HOVER")}</span>
+            <span className="sr-only">{langHover}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align={alignDropdown}>
@@ -80,7 +88,7 @@ export const LocaleSwitcher = ({
         </DropdownMenuContent>
       </DropdownMenu>
       <HoverCardContent align={alignHover}>
-        <span>{t("LANG_HOVER")}</span>
+        <span>{langHover}</span>
       </HoverCardContent>
     </HoverCard>
   );
