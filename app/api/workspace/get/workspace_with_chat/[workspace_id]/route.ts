@@ -28,12 +28,12 @@ export const GET = async (
         },
       },
       include: {
-        conversation: {
-          where: {
-            workspaceId: workspace_id,
-          },
+        chatMessages: {
           select: {
             id: true,
+            content: true,
+            authorId: true,
+            createdAt: true,
           },
         },
       },

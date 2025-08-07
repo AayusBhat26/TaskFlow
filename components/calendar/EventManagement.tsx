@@ -186,11 +186,17 @@ export function EventManagement({
     }));
   };
 
-  const updateReminder = (index: number, updates: Partial<{ type: string; minutesBefore: number }>) => {
+  const updateReminder = (index: number, updates: Partial<{ type: 'EMAIL' | 'NOTIFICATION' | 'SMS'; minutesBefore: number }>) => {
     setFormData(prev => ({
       ...prev,
-      reminders: prev.reminders?.map((reminder, i) => 
-        i === index ? { ...reminder, ...updates } : reminder
+      reminders: prev.reminders?.map((reminder, i) =>
+        i === index
+          ? {
+              ...reminder,
+              ...updates,
+              type: updates.type ?? reminder.type,
+            }
+          : reminder
       ) || []
     }));
   };

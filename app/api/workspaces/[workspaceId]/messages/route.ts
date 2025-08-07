@@ -112,8 +112,6 @@ export async function POST(
         content: validatedData.content,
         workspaceId: workspaceId,
         authorId: session.user.id,
-        type: validatedData.type || 'TEXT',
-        metadata: validatedData.metadata || {}
       },
       include: {
         author: {

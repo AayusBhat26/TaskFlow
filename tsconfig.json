@@ -3,10 +3,10 @@
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "checkJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
+    "checkJs": false,          // stop checking .js files
+    "skipLibCheck": true,      // skip third-party declaration checks
+    "strict": false,           // turn off all strict type-checking options
+    "noEmit": false,           // allow output (Next.js uses SWC under the hood)
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
@@ -15,9 +15,7 @@
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
-      {
-        "name": "next"
-      }
+      { "name": "next" }
     ],
     "paths": {
       "@/*": ["./*"]

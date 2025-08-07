@@ -28,64 +28,34 @@ export const GET = async (
           },
         },
       },
-      include: includeChat ? {
-        conversation: {
-          include: {
-            messages: {
+      include: includeChat
+        ? {
+            chatMessages: {
               where: {
-                isDeleted: false
+                // Optionally filter messages, e.g., isDeleted: false if such a field exists
               },
               include: {
-                sender: true,
-                replyTo: {
-                  include: {
-                    sender: true,
-                    reactions: {
-                      include: {
-                        user: true
-                      }
-                    },
-                    readBy: {
-                      include: {
-                        user: true
-                      }
-                    },
-                    attachments: {
-                      include: {
-                        uploadedBy: true
-                      }
-                    }
-                  }
-                },
-                reactions: {
-                  include: {
-                    user: true
-                  }
-                },
-                readBy: {
-                  include: {
-                    user: true
-                  }
-                },
-                attachments: {
-                  include: {
-                    uploadedBy: true
-                  }
-                }
+                author: true,
+                workspace: true,
               },
               orderBy: {
-                createdAt: "asc"
+                createdAt: "asc",
               },
-              take: 50
-            }
+              take: 50,
+            },
+            subscribers: {
+              include: {
+                user: true,
+              },
+            },
           }
-        },
-        subscribers: {
-          include: {
-            user: true
-          }
-        }
-      } : {}
+        : {
+            subscribers: {
+              include: {
+                user: true,
+              },
+            },
+          },
     });
 
     if (!workspace)

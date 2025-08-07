@@ -293,12 +293,14 @@ export function EnhancedCalendar({
       {showEventModal && (
         <EventModal
           event={selectedEvent}
-          onSave={(eventData) => {
+          onSave={(eventData: Partial<CalendarEvent>) => {
             if (selectedEvent) {
               onEventUpdate(selectedEvent.id, eventData);
             } else {
               // Create new event logic
-              onEventCreate(eventData.startTime, eventData.endTime);
+              if (eventData.startTime && eventData.endTime) {
+                onEventCreate(eventData.startTime, eventData.endTime);
+              }
             }
             setShowEventModal(false);
             setSelectedEvent(null);

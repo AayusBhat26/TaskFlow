@@ -23,11 +23,10 @@ export const NotificationItem = ({
     createdDate,
     workspace,
     newUserRole,
-    taskId,
-    mindMapId,
-    messageId,
-    notifyType,
-    id,
+  taskId,
+  mindMapId,
+  notifyType,
+  id,
   },
 }: Props) => {
   const name = useTruncateText(username, 20);
@@ -46,7 +45,6 @@ export const NotificationItem = ({
     workspace,
     taskId,
     mindMapId,
-    messageId
   );
 
   const { mutate: updateToClickStatus } = useMutation({

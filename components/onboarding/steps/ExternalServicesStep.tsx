@@ -13,6 +13,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { useOnboardingForm } from "@/context/OnboardingForm";
 import { externalServicesSchema, ExternalServicesSchema } from "@/schema/externalServicesSchema";
+
+type ExternalServicesFormValues = {
+  leetcodeUsername?: string;
+  codeforcesUsername?: string;
+  redditUsername?: string;
+  githubUsername?: string;
+  emailIds: string[];
+};
 import { ActionType } from "@/types/onBoardingContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, ArrowLeft, Plus, X, Github, Code, MessageCircle, Mail } from "lucide-react";
@@ -36,7 +44,7 @@ export const ExternalServicesStep = ({ currentStep }: Props) => {
   
   const [showOptionalMessage, setShowOptionalMessage] = useState(false);
 
-  const form = useForm<ExternalServicesSchema>({
+  const form = useForm<ExternalServicesFormValues>({
     resolver: zodResolver(externalServicesSchema),
     defaultValues: {
       leetcodeUsername: leetcodeUsername || "",
@@ -47,9 +55,10 @@ export const ExternalServicesStep = ({ currentStep }: Props) => {
     },
   });
 
+  // Let TypeScript infer the field array type
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "emailIds"
+    name: "emailIds",
   });
 
   const t = useTranslations("ONBOARDING_FORM");
@@ -223,7 +232,7 @@ export const ExternalServicesStep = ({ currentStep }: Props) => {
                   <div key={field.id} className="flex gap-2">
                     <FormField
                       control={form.control}
-                      name={`emailIds.${index}`}
+                      name={`emailIds.${index}` as const}
                       render={({ field }) => (
                         <FormItem className="flex-1">
                           <FormControl>
